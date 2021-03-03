@@ -2,6 +2,9 @@
 // Same as entities, struct and method in domain package will used in all layer.
 // syscheck.go is file that define model as struct and abstract method of model as interface.
 // Also, it declare usecase interface used as business layer.
+
+// syscheck domain is managing the state of the system (CPU, memory, disk, etc.) periodically
+
 // All model struct and interface is about 'system check' domain
 // Most importantly, it only defines and does not implement interfaces.
 
