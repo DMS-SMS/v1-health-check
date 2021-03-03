@@ -6,3 +6,17 @@
 // Most importantly, it only defines and does not implement interfaces.
 
 package domain
+
+import "time"
+
+// SystemCheckHistory is basic model using by embedded in every model struct about check history
+type SystemCheckHistory struct {
+	// Agent specifies name of service that created this model
+	Agent string
+
+	// version specifies health checker version when this model was created
+	Version string
+
+	// Timestamp specifies the time at which this model was created.
+	Timestamp time.Time
+}
