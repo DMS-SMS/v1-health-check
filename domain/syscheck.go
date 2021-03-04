@@ -33,3 +33,10 @@ type systemCheckHistoryRepository interface {
 type DiskCheckHistory struct {
 	systemCheckHistory
 }
+
+// DiskCheckHistoryRepository is abstract method used in business layer
+// Repository is implemented with elastic search in v.1.0.0
+type DiskCheckHistoryRepository interface {
+	systemCheckHistoryRepository
+	Store(*DiskCheckHistory) error
+}
