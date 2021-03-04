@@ -29,3 +29,6 @@ type esRepositoryRequiredComponent struct {
 	// indexReplicaNum represent replica number of index to replace index when node become unable
 	indexReplicaNum int
 }
+
+// FieldSetter is custom function type to set field value of interface with reflect package
+type FieldSetter func(interface{})
