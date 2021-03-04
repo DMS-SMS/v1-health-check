@@ -12,8 +12,8 @@ package domain
 
 import "time"
 
-// SystemCheckHistory is basic model using by embedded in every model struct about check history
-type SystemCheckHistory struct {
+// systemCheckHistory is basic model using by embedded in every model struct about check history
+type systemCheckHistory struct {
 	// Agent specifies name of service that created this model
 	Agent string
 
@@ -22,4 +22,9 @@ type SystemCheckHistory struct {
 
 	// Timestamp specifies the time at which this model was created.
 	Timestamp time.Time
+}
+
+// systemCheckHistoryRepository is basic interface using by embedded in every repository about check history
+type systemCheckHistoryRepository interface {
+	Migrate() error
 }
