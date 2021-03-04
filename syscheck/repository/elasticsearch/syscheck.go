@@ -8,8 +8,17 @@ import (
 	"github.com/elastic/go-elasticsearch/v7"
 )
 
-// esRepository contains the least information that elasticsearch repository should have in syscheck
-type esRepository struct {
+const (
+	// default primary shard number of system check  index in elasticsearch
+	defaultIndexShardNum = 1
+
+	// default replica shard number of system check index in elasticsearch
+	defaultIndexReplicaNum = 1
+
+	// default name of system check index in elasticsearch
+	defaultIndexName = "sms-system-check"
+)
+
 	// indexName represent name of index including esDiskCheckHistory document
 	indexName string
 
