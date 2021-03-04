@@ -2,11 +2,10 @@
 // elasticsearch package is for implementations of syscheck domain repository using elasticsearch
 // In practice, repository struct declaration and implementation is in this syscheck.go file
 
-package elasticsearch
+// syscheck.go is file that define structure to embed from another structures.
+// It also defines variables or constants used jointly in the package as private.
 
-import (
-	"github.com/elastic/go-elasticsearch/v7"
-)
+package elasticsearch
 
 const (
 	// default primary shard number of system check  index in elasticsearch
@@ -29,9 +28,4 @@ type esRepositoryRequiredComponent struct {
 
 	// indexReplicaNum represent replica number of index to replace index when node become unable
 	indexReplicaNum int
-}
-
-// esDiskCheckHistoryRepository is to handle DiskCheckHistory model using elasticsearch as data store
-type esDiskCheckHistoryRepository struct {
-	cli *elasticsearch.Client
 }
