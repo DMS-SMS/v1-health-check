@@ -21,13 +21,13 @@ const (
 // esRepositoryRequiredComponent contains the least information that elasticsearch repository should have in syscheck
 type esRepositoryRequiredComponent struct {
 	// indexName represent name of index including esDiskCheckHistory document
-	indexName string
+	IndexName string
 
 	// indexShardNum represent shard number of index including esDiskCheckHistory document
-	indexShardNum int
+	IndexShardNum int
 
 	// indexReplicaNum represent replica number of index to replace index when node become unable
-	indexReplicaNum int
+	IndexReplicaNum int
 }
 
 // FieldSetter is custom function type to set field value of interface with reflect package
