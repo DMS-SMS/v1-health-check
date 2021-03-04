@@ -19,6 +19,7 @@ const (
 )
 
 // esRepositoryRequiredComponent contains the least information that elasticsearch repository should have in syscheck
+// If you change field name or type, you should check and change FieldSetter about that changed field in field_setter.go
 type esRepositoryRequiredComponent struct {
 	// indexName represent name of index including esDiskCheckHistory document
 	IndexName string
