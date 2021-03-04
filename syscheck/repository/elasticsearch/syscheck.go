@@ -19,6 +19,8 @@ const (
 	defaultIndexName = "sms-system-check"
 )
 
+// esRepositoryRequiredComponent contains the least information that elasticsearch repository should have in syscheck
+type esRepositoryRequiredComponent struct {
 	// indexName represent name of index including esDiskCheckHistory document
 	indexName string
 
