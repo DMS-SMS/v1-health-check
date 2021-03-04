@@ -28,3 +28,8 @@ type systemCheckHistory struct {
 type systemCheckHistoryRepository interface {
 	Migrate() error
 }
+
+// DiskCheckHistory model is used for record disk health check history and result
+type DiskCheckHistory struct {
+	systemCheckHistory
+}
