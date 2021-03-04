@@ -3,3 +3,12 @@
 // In practice, repository struct declaration and implementation is in this syscheck.go file
 
 package elasticsearch
+
+import (
+	"github.com/elastic/go-elasticsearch/v7"
+)
+
+// esDiskCheckHistoryRepository is to handle DiskCheckHistory model using elasticsearch as data store
+type esDiskCheckHistoryRepository struct {
+	cli *elasticsearch.Client
+}
