@@ -32,12 +32,16 @@ type systemCheckHistoryRepositoryComponent interface {
 
 // DiskCheckHistory model is used for record disk health check history and result
 type DiskCheckHistory struct {
-	systemCheckHistory
+	// get required component by embedding systemCheckHistoryComponent
+	systemCheckHistoryComponent
 }
 
 // DiskCheckHistoryRepository is abstract method used in business layer
 // Repository is implemented with elastic search in v.1.0.0
 type DiskCheckHistoryRepository interface {
-	systemCheckHistoryRepository
+	// get required component by embedding systemCheckHistoryRepositoryComponent
+	systemCheckHistoryRepositoryComponent
+
+	// Store method save DiskCheckHistory model in repository
 	Store(*DiskCheckHistory) error
 }
