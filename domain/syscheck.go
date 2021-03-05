@@ -24,8 +24,9 @@ type systemCheckHistoryComponent struct {
 	Timestamp time.Time
 }
 
-// systemCheckHistoryRepository is basic interface using by embedded in every repository about check history
-type systemCheckHistoryRepository interface {
+// systemCheckHistoryRepositoryComponent is basic interface using by embedded in every repository about check history
+type systemCheckHistoryRepositoryComponent interface {
+	// Migrate method build environment for storage in stores such as Mysql or Elasticsearch, etc.
 	Migrate() error
 }
 
