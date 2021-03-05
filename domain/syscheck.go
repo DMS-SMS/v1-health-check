@@ -12,15 +12,15 @@ package domain
 
 import "time"
 
-// systemCheckHistory is basic model using by embedded in every model struct about check history
-type systemCheckHistory struct {
+// systemCheckHistoryComponent is basic model using by embedded in every model struct about check history
+type systemCheckHistoryComponent struct {
 	// Agent specifies name of service that created this model
 	Agent string
 
 	// version specifies health checker version when this model was created
 	Version string
 
-	// Timestamp specifies the time at which this model was created.
+	// Timestamp specifies the time when this model was created.
 	Timestamp time.Time
 }
 
