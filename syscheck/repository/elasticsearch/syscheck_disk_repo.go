@@ -6,6 +6,7 @@ package elasticsearch
 
 import (
 	"github.com/elastic/go-elasticsearch/v7"
+	"github.com/pkg/errors"
 )
 
 // esDiskCheckHistoryRepository is to handle DiskCheckHistory model using elasticsearch as data store
@@ -15,4 +16,24 @@ type esDiskCheckHistoryRepository struct {
 
 	// elasticsearch client connection injected from the outside package
 	esCli *elasticsearch.Client
+}
+
+// NewESDiskCheckHistoryRepository return new object that implement DiskCheckHistory.Repository interface
+func NewESDiskCheckHistoryRepository(cli *elasticsearch.Client, setters ...FieldSetter) (domain.DiskCheckHistoryRepository, error) {
+	repo := &esDiskCheckHistoryRepository{esCli: cli}
+
+	repo.IndexName = defaultIndexName
+	repo.IndexShardNum = defaultIndexShardNum
+	repo.IndexReplicaNum = defaultIndexReplicaNum
+
+	// set repository field by running FieldSetter type functions received from caller
+	for _, s := range setters {
+		s(repo)
+	}
+
+	if err := repo.Migrate(); err != nil {
+		return nil, errors.Wrap(err, "could not migrate repository")
+	}
+
+	return repo, nil
 }
