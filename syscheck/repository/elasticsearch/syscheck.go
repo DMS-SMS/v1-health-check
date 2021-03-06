@@ -7,6 +7,9 @@
 
 package elasticsearch
 
+import "io"
+
+// constant for default value of esRepositoryComponent field
 const (
 	// default primary shard number of system check  index in elasticsearch
 	defaultIndexShardNum = 1
@@ -33,3 +36,9 @@ type esRepositoryComponent struct {
 
 // FieldSetter is custom function type to set field value of interface with reflect package
 type FieldSetter func(interface{})
+
+// reqBodyWriter is private interface to use as writing []byte for request body
+type reqBodyWriter interface {
+	io.Writer
+	io.WriterTo
+}
