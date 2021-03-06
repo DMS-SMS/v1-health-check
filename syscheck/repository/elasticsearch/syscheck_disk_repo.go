@@ -14,13 +14,19 @@ type esDiskCheckHistoryRepository struct {
 	// get common field from embedding esRepositoryComponent
 	esRepositoryComponent
 
-	// elasticsearch client connection injected from the outside package
+	// esCli is elasticsearch client connection injected from the outside package
 	esCli *elasticsearch.Client
+
+	// bodyWriter is implementation of reqBodyWriter interface to write []byte for request body
+	bodyWriter reqBodyWriter
 }
 
 // NewESDiskCheckHistoryRepository return new object that implement DiskCheckHistory.Repository interface
-func NewESDiskCheckHistoryRepository(cli *elasticsearch.Client, setters ...FieldSetter) (domain.DiskCheckHistoryRepository, error) {
-	repo := &esDiskCheckHistoryRepository{esCli: cli}
+func NewESDiskCheckHistoryRepository(cli *elasticsearch.Client, w reqBodyWriter, setters ...FieldSetter) (domain.DiskCheckHistoryRepository, error) {
+	repo := &esDiskCheckHistoryRepository{
+		esCli:      cli,
+		bodyWriter: w,
+	}
 
 	repo.IndexName = defaultIndexName
 	repo.IndexShardNum = defaultIndexShardNum
