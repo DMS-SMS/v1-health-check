@@ -1,6 +1,7 @@
 // Create package in v.1.0.0
-// json package is a collection of convenience objects, specific interface implementations related to json
+// json package is a collection of convenience objects, specific interface implementations related to json.
 // map_writer.go is file that declare customized objects called MapWriter to convert map-type variable to json format.
+// Different things of mapWriter with json.Marshal() is that separate json value step with dot in map key .
 
 package json
 
