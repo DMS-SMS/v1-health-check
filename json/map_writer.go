@@ -6,6 +6,8 @@
 package json
 
 import (
+	"github.com/pkg/errors"
+	"io"
 	"sync"
 )
 
@@ -29,4 +31,25 @@ func MapWriter() *mapWriter {
 		written: false,
 		mu:      sync.Mutex{},
 	}
+}
+
+// WriteTo method write bytes buf created by Write method to Writer received from parameter.
+// Cannot use WriteTo method before calling Write method.
+func (mw *mapWriter) WriteTo(w io.Writer) (n int64, err error) {
+	// return error if Write method is not called before calling WriteTo method.
+	if !mw.written {
+		err = errors.New("you should call Write method before calling WriteTo method")
+		return
+	}
+
+	// able to call Write method after this method finished
+	defer mw.mu.Unlock()
+
+	mw.written = false
+	if _, err = w.Write(mw.buf); err != nil {
+		err = errors.Wrap(err, "failed to write to Writer received from parameter")
+		return
+	}
+	n = int64(len(mw.buf))
+	return
 }
