@@ -9,6 +9,7 @@ import (
 	"encoding/json"
 	"github.com/pkg/errors"
 	"io"
+	"strings"
 	"sync"
 )
 
@@ -46,6 +47,31 @@ func (mw *mapWriter) Write(b []byte) (n int, err error) {
 		mw.mu.Unlock()
 		return
 	}
+
+	km := map[string]bool{}
+	buf := map[string]interface{}{}
+	ctx := map[string]interface{}{}
+
+	// add front of key except last part with separated by dot in km(map[string]bool{}) and ctx(map[string]interface{}{})
+	for k, v := range m {
+		keys := strings.Split(k, ".")
+		tail := keys[len(keys)-1]
+		front := strings.Join(keys[:len(keys)-1], ".")
+
+		// if keys length is 1, save that key in buf directly. And don't add key in km & ctx
+		if len(keys) == 1 {
+			buf[k] = v
+			continue
+		}
+
+		km[front] = true
+		if _, ok := ctx[front]; !ok {
+			ctx[front] = map[string]interface{}{tail: v}
+		} else {
+			ctx[front].(map[string]interface{})[tail] = v
+		}
+	}
+
 }
 
 // WriteTo method write bytes buf created by Write method to Writer received from parameter.
