@@ -5,8 +5,16 @@
 package elasticsearch
 
 import (
+	"bytes"
+	"context"
+	"encoding/json"
+	"fmt"
+	"github.com/DMS-SMS/v1-health-check/domain"
 	"github.com/elastic/go-elasticsearch/v7"
+	"github.com/elastic/go-elasticsearch/v7/esapi"
 	"github.com/pkg/errors"
+	"net/http"
+	"time"
 )
 
 // esDiskCheckHistoryRepository is to handle DiskCheckHistory model using elasticsearch as data store
@@ -42,6 +50,25 @@ func NewESDiskCheckHistoryRepository(cli *elasticsearch.Client, w reqBodyWriter,
 	}
 
 	return repo, nil
+}
+
+// Implement Migrate method of DiskCheckHistoryRepository interface
+func (edr *esDiskCheckHistoryRepository) Migrate() error {
+	resp, err := (esapi.IndicesExistsRequest{
+		Index: []string{"gateway"},
+	}).Do(context.Background(), edr.esCli)
+
+	if err != nil {
+		return errors.Wrap(err, fmt.Sprintf("failed to call IndicesExists, resp: %+v", resp))
+	}
+
+	if resp.StatusCode == http.StatusNotFound {
+		if err := edr.createIndex(); err != nil {
+			return errors.Wrap(err, "failed to create index")
+		}
+	}
+
+	return nil
 }
 
 // createIndex method create index with name, share number in esDiskCheckHistoryRepository
