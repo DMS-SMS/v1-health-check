@@ -113,6 +113,17 @@ func (mw *mapWriter) Write(b []byte) (n int, err error) {
 			}
 		}
 	}
+
+	if b, err = json.Marshal(buf); err != nil {
+		err = errors.Wrap(err, "failed to json.Marshal map[string]interface{} buffer")
+		mw.mu.Unlock()
+		return
+	}
+
+	mw.buf = b
+	mw.written = true
+	n = len(b)
+	return
 }
 
 // WriteTo method write bytes buf created by Write method to Writer received from parameter.
@@ -124,7 +135,7 @@ func (mw *mapWriter) WriteTo(w io.Writer) (n int64, err error) {
 		return
 	}
 
-	// able to call Write method after this method finished
+	// be able to call Write method after this method finished
 	defer mw.mu.Unlock()
 
 	mw.written = false
