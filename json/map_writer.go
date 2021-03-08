@@ -1,11 +1,12 @@
 // Create package in v.1.0.0
 // json package is a collection of convenience objects, specific interface implementations related to json.
 // map_writer.go is file that declare customized objects called MapWriter to convert map-type variable to json format.
-// Different things of mapWriter with json.Marshal() is that separate json value step with dot in map key .
+// Different things of mapWriter with json.Marshal() is that separate json value step with dot in map key.
 
 package json
 
 import (
+	"encoding/json"
 	"github.com/pkg/errors"
 	"io"
 	"sync"
@@ -30,6 +31,20 @@ func MapWriter() *mapWriter {
 		buf:     []byte{},
 		written: false,
 		mu:      sync.Mutex{},
+	}
+}
+
+// Write method write bytes which is marshalling map[string]interface{} to field according to special rule.
+// special rule is that separate json value step with dot in map key.
+func (mw *mapWriter) Write(b []byte) (n int, err error) {
+	// be unable to call Write method again before calling WriteTo method.
+	mw.mu.Lock()
+
+	var m map[string]interface{}
+	if err = json.Unmarshal(b, &m); err != nil {
+		err = errors.Wrap(err, "failed to json.Unmarshal bytes to map[string]interface{} type")
+		mw.mu.Unlock()
+		return
 	}
 }
 
