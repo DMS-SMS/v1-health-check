@@ -81,6 +81,38 @@ func (mw *mapWriter) Write(b []byte) (n int, err error) {
 		i++
 	}
 	sort.Strings(ks)
+
+	// create derived maps with parsing key in ctx and put value in last map using agent
+	for _, k := range ks {
+		v := ctx[k]
+		keys := strings.Split(k, ".")
+		agent := &map[string]interface{}{}
+		for i, k := range keys {
+			if _, ok := buf[k]; i == 0 && ok {
+				(*agent)[k] = buf[k]
+			}
+
+			if _, ok := (*agent)[k]; ok {
+				// return error if cannot assert (*agent)[k] to *map[string]interface{} type
+				// asserting error means that already last value with that key is exists.
+				if agent, ok = (*agent)[k].(*map[string]interface{}); !ok {
+					err = errors.Errorf("invalid key for json format, key: %s", strings.Join(keys, "."))
+					mw.mu.Unlock()
+					return
+				}
+			} else {
+				(*agent)[k] = &map[string]interface{}{}
+				agent = (*agent)[k].(*map[string]interface{})
+				if i == 0 {
+					buf[k] = agent
+				}
+			}
+
+			if (i + 1) == len(keys) {
+				*agent = v.(map[string]interface{})
+			}
+		}
+	}
 }
 
 // WriteTo method write bytes buf created by Write method to Writer received from parameter.
