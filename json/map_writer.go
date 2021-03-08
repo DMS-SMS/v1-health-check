@@ -9,6 +9,7 @@ import (
 	"encoding/json"
 	"github.com/pkg/errors"
 	"io"
+	"sort"
 	"strings"
 	"sync"
 )
@@ -72,6 +73,14 @@ func (mw *mapWriter) Write(b []byte) (n int, err error) {
 		}
 	}
 
+	// change map witch store front of key to string array in alignment with sort.Strings
+	ks := make([]string, len(km))
+	var i int
+	for k := range km {
+		ks[i] = k
+		i++
+	}
+	sort.Strings(ks)
 }
 
 // WriteTo method write bytes buf created by Write method to Writer received from parameter.
