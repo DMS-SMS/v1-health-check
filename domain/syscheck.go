@@ -45,11 +45,11 @@ type systemCheckHistoryRepositoryComponent interface {
 
 // FillComponent fill field of systemCheckHistoryComponent if is empty
 func (sch *systemCheckHistoryComponent) FillComponent() {
-	if sch.Version != "" {
+	if sch.Version == "" {
 		sch.Version = version
 	}
 
-	if sch.Agent != "" {
+	if sch.Agent == "" {
 		sch.Agent = "sms-health-check"
 	}
 
