@@ -29,19 +29,3 @@ type systemCheckHistoryRepositoryComponent interface {
 	// Migrate method build environment for storage in stores such as Mysql or Elasticsearch, etc.
 	Migrate() error
 }
-
-// DiskCheckHistory model is used for record disk health check history and result
-type DiskCheckHistory struct {
-	// get required component by embedding systemCheckHistoryComponent
-	systemCheckHistoryComponent
-}
-
-// DiskCheckHistoryRepository is abstract method used in business layer
-// Repository is implemented with elastic search in v.1.0.0
-type DiskCheckHistoryRepository interface {
-	// get required component by embedding systemCheckHistoryRepositoryComponent
-	systemCheckHistoryRepositoryComponent
-
-	// Store method save DiskCheckHistory model in repository
-	Store(*DiskCheckHistory) error
-}
