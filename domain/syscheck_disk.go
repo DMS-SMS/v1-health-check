@@ -19,7 +19,8 @@ type DiskCheckHistoryRepository interface {
 	systemCheckHistoryRepositoryComponent
 
 	// Store method save DiskCheckHistory model in repository
-	Store(*DiskCheckHistory) error
+	// b in return represents bytes of response body(map[string]interface{})
+	Store(*DiskCheckHistory) (b []byte, err error)
 }
 
 
