@@ -4,6 +4,8 @@
 
 package domain
 
+import "context"
+
 // DiskCheckHistory model is used for record disk health check history and result
 type DiskCheckHistory struct {
 	// get required component by embedding systemCheckHistoryComponent
@@ -20,3 +22,17 @@ type DiskCheckHistoryRepository interface {
 	Store(*DiskCheckHistory) error
 }
 
+
+// MapWithPrefixKey convert DiskCheckHistory to dotted map and return using MapWithPrefixKey of upper struct
+// all key value of Map start with prefix received from parameter
+func (dh *DiskCheckHistory) MapWithPrefixKey(prefix string) (m map[string]interface{}) {
+	m = dh.systemCheckHistoryComponent.MapWithPrefixKey(prefix)
+
+	if prefix != "" {
+		prefix += "."
+	}
+
+	// add field in map
+
+	return
+}
