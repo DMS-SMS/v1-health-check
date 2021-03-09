@@ -10,7 +10,19 @@
 
 package domain
 
-import "time"
+import (
+	"log"
+	"os"
+	"time"
+)
+
+// get information from system environment variable
+var version string
+func init() {
+	if version = os.Getenv("VERSION"); version == "" {
+		log.Fatal("please set VERSION in environment variable")
+	}
+}
 
 // systemCheckHistoryComponent is basic model using by embedded in every model struct about check history
 type systemCheckHistoryComponent struct {
