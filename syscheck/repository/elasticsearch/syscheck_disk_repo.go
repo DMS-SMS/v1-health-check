@@ -98,17 +98,17 @@ func (edr *esDiskCheckHistoryRepository) createIndex() error {
 }
 
 // Implement Store method of DiskCheckHistoryRepository interface
-func (edr *esDiskCheckHistoryRepository) Store(history *domain.DiskCheckHistory) error {
-	body := history.MapWithPrefixKey("")
-
-	b, _ := json.Marshal(body)
-	if _, err := edr.bodyWriter.Write(b); err != nil {
-		return errors.Wrap(err, "failed to write map to body writer")
+func (edr *esDiskCheckHistoryRepository) Store(history *domain.DiskCheckHistory) (b []byte, err error) {
+	body, _ := json.Marshal(history.MapWithPrefixKey(""))
+	if _, err = edr.bodyWriter.Write(body); err != nil {
+		err = errors.Wrap(err, "failed to write map to body writer")
+		return
 	}
 
 	buf := &bytes.Buffer{}
-	if _, err := edr.bodyWriter.WriteTo(buf); err != nil {
-		return errors.Wrap(err, "failed to body writer WriteTo method")
+	if _, err = edr.bodyWriter.WriteTo(buf); err != nil {
+		err = errors.Wrap(err, "failed to body writer WriteTo method")
+		return
 	}
 
 	resp, err := (esapi.IndexRequest{
@@ -118,7 +118,13 @@ func (edr *esDiskCheckHistoryRepository) Store(history *domain.DiskCheckHistory)
 	}).Do(context.Background(), edr.esCli)
 
 	if err != nil || resp.IsError() {
-		return errors.Wrap(err, fmt.Sprintf("failed to call IndexRequest, resp: %+v", resp))
+		// 단순 err인지 status code상 오류인지 확인
+		err = errors.Wrap(err, fmt.Sprintf("failed to call IndexRequest, resp: %+v", resp))
+		return
 	}
-	return nil
+
+	result := map[string]interface{}{}
+	_ = json.NewDecoder(resp.Body).Decode(&result)
+	b, _ = json.Marshal(result)
+	return
 }
