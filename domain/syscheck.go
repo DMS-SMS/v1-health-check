@@ -24,6 +24,7 @@ func init() {
 	}
 }
 
+
 // systemCheckHistoryComponent is basic model using by embedded in every model struct about check history
 type systemCheckHistoryComponent struct {
 	// Agent specifies name of service that created this model
@@ -40,4 +41,22 @@ type systemCheckHistoryComponent struct {
 type systemCheckHistoryRepositoryComponent interface {
 	// Migrate method build environment for storage in stores such as Mysql or Elasticsearch, etc.
 	Migrate() error
+}
+
+// FillComponent fill field of systemCheckHistoryComponent if is empty
+func (sch *systemCheckHistoryComponent) FillComponent() {
+	if sch.Version != "" {
+		sch.Version = version
+	}
+
+	if sch.Agent != "" {
+		sch.Agent = "sms-health-check"
+	}
+
+	now := time.Now()
+	if now.Location().String() == time.UTC.String() {
+		now = now.Add(time.Hour * 9)
+	}
+
+	sch.Timestamp = now
 }
