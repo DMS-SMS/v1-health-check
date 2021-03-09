@@ -12,7 +12,7 @@ import "io"
 // constant for default value of esRepositoryComponent field
 const (
 	// default primary shard number of system check  index in elasticsearch
-	defaultIndexShardNum = 1
+	defaultIndexShardNum = 2
 
 	// default replica shard number of system check index in elasticsearch
 	defaultIndexReplicaNum = 0
