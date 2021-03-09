@@ -60,3 +60,18 @@ func (sch *systemCheckHistoryComponent) FillComponent() {
 
 	sch.Timestamp = now
 }
+
+// MapWithPrefixKey convert systemCheckHistoryComponent to dotted map and return that
+// all key value of Map start with prefix received from parameter
+func (sch *systemCheckHistoryComponent) MapWithPrefixKey(prefix string) (m map[string]interface{}) {
+	if prefix != "" {
+		prefix += "."
+	}
+
+	m = map[string]interface{}{}
+	m[prefix + "version"] = sch.Version
+	m[prefix + "agent"] = sch.Agent
+	m[prefix + "@timestamp"] = sch.Timestamp
+
+	return
+}
