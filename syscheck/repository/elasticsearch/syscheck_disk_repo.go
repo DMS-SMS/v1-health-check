@@ -96,3 +96,29 @@ func (edr *esDiskCheckHistoryRepository) createIndex() error {
 
 	return errors.Wrap(err, fmt.Sprintf("failed to call IndicesCreate, resp: %+v", resp))
 }
+
+// Implement Store method of DiskCheckHistoryRepository interface
+func (edr *esDiskCheckHistoryRepository) Store(history *domain.DiskCheckHistory) error {
+	body := history.MapWithPrefixKey("")
+
+	b, _ := json.Marshal(body)
+	if _, err := edr.bodyWriter.Write(b); err != nil {
+		return errors.Wrap(err, "failed to write map to body writer")
+	}
+
+	buf := &bytes.Buffer{}
+	if _, err := edr.bodyWriter.WriteTo(buf); err != nil {
+		return errors.Wrap(err, "failed to body writer WriteTo method")
+	}
+
+	resp, err := (esapi.IndexRequest{
+		Index:        edr.IndexName,
+		Body:         bytes.NewReader(buf.Bytes()),
+		Timeout:      time.Second * 5,
+	}).Do(context.Background(), edr.esCli)
+
+	if err != nil || resp.IsError() {
+		return errors.Wrap(err, fmt.Sprintf("failed to call IndexRequest, resp: %+v", resp))
+	}
+	return nil
+}
