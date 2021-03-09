@@ -15,7 +15,7 @@ const (
 	defaultIndexShardNum = 1
 
 	// default replica shard number of system check index in elasticsearch
-	defaultIndexReplicaNum = 1
+	defaultIndexReplicaNum = 0
 
 	// default name of system check index in elasticsearch
 	defaultIndexName = "sms-system-check"
