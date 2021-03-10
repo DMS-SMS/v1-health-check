@@ -27,6 +27,9 @@ type DiskCheckHistoryRepository interface {
 type DiskCheckUseCase interface {
 	// CheckDisk method check disk capacity status and store disk check history using repository
 	CheckDisk(ctx context.Context) error
+
+	// SaveHistory save DiskCheckHistory to repository in field of implementation
+	SaveHistory(history *DiskCheckHistory) error
 }
 
 // MapWithPrefixKey convert DiskCheckHistory to dotted map and return using MapWithPrefixKey of upper struct
