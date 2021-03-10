@@ -23,6 +23,11 @@ type DiskCheckHistoryRepository interface {
 	Store(*DiskCheckHistory) (b []byte, err error)
 }
 
+// DiskCheckUseCase is interface used as business process handler about disk check
+type DiskCheckUseCase interface {
+	// CheckDisk method check disk capacity status and store disk check history using repository
+	CheckDisk(ctx context.Context) error
+}
 
 // MapWithPrefixKey convert DiskCheckHistory to dotted map and return using MapWithPrefixKey of upper struct
 // all key value of Map start with prefix received from parameter
