@@ -7,3 +7,6 @@
 // It also defines variables or constants used jointly in the package as private.
 
 package usecase
+
+// systemCheckUsecaseComponent contains required component to syscheck usecase implementation as field
+type systemCheckUsecaseComponent struct {}
