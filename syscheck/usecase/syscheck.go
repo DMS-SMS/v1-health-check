@@ -4,9 +4,9 @@
 // This usecase layer will depends to Repository layer
 
 // syscheck.go is file that define structure to embed from another structures.
-// It also defines variables or constants used jointly in the package as private.
+// It also defines variables or constants, functions used jointly in the package as private.
 
 package usecase
 
 // systemCheckUsecaseComponent contains required component to syscheck usecase implementation as field
-type systemCheckUsecaseComponent struct {}
+type systemCheckUsecaseComponentConfig interface {}
