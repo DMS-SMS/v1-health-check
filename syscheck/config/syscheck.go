@@ -16,6 +16,7 @@ var App *syscheckConfig
 
 // syscheckConfig having config value and implement various interface about Config by declaring method
 type syscheckConfig struct {
+	// fields about index information in elasticsearch (implement esRepositoryComponentConfig)
 	// indexName represent name of elasticsearch index including syscheck history document
 	indexName *string
 
@@ -26,6 +27,7 @@ type syscheckConfig struct {
 	indexReplicaNum *int
 }
 
+// implement IndexName method of esRepositoryComponentConfig interface
 func (sc *syscheckConfig) IndexName() string {
 	var key = "domain.syscheck.elasticsearch.index.name"
 	if sc.indexName == nil {
@@ -34,6 +36,7 @@ func (sc *syscheckConfig) IndexName() string {
 	return *sc.indexName
 }
 
+// implement IndexShardNum method of esRepositoryComponentConfig interface
 func (sc *syscheckConfig) IndexShardNum() int {
 	var key = "domain.syscheck.elasticsearch.index.shardNum"
 	if sc.indexShardNum == nil {
@@ -42,6 +45,7 @@ func (sc *syscheckConfig) IndexShardNum() int {
 	return *sc.indexShardNum
 }
 
+// implement IndexReplicaNum method of esRepositoryComponentConfig interface
 func (sc *syscheckConfig) IndexReplicaNum() int {
 	var key = "domain.syscheck.elasticsearch.index.replicaNum"
 	if sc.indexReplicaNum == nil {
