@@ -9,13 +9,14 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/DMS-SMS/v1-health-check/domain"
 	"github.com/elastic/go-elasticsearch/v7"
 	"github.com/elastic/go-elasticsearch/v7/esapi"
 	"github.com/pkg/errors"
 	"log"
 	"net/http"
 	"time"
+
+	"github.com/DMS-SMS/v1-health-check/domain"
 )
 
 // esDiskCheckHistoryRepository is to handle DiskCheckHistory model using elasticsearch as data store
