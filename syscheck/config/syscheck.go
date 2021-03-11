@@ -6,3 +6,15 @@
 // Also, App implement various config interface each of package in syscheck domain by declaring method
 
 package config
+
+// syscheckConfig having config value and implement various interface about Config by declaring method
+type syscheckConfig struct {
+	// indexName represent name of elasticsearch index including syscheck history document
+	indexName *string
+
+	// indexShardNum represent shard number of elasticsearch index storing syscheck history document
+	indexShardNum *string
+
+	// indexReplicaNum represent replica number of elasticsearch index to replace index when node become unable
+	indexReplicaNum *string
+}
