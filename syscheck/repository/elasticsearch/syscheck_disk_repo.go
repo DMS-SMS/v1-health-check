@@ -29,6 +29,12 @@ type esDiskCheckHistoryRepository struct {
 	bodyWriter reqBodyWriter
 }
 
+// esDiskCheckHistoryRepoConfig is the config for disk check history repository using elasticsearch
+type esDiskCheckHistoryRepoConfig interface {
+	// get common method from embedding esRepositoryComponentConfig
+	esRepositoryComponentConfig
+}
+
 // NewESDiskCheckHistoryRepository return new object that implement DiskCheckHistory.Repository interface
 func NewESDiskCheckHistoryRepository(cli *elasticsearch.Client, w reqBodyWriter, setters ...FieldSetter) (domain.DiskCheckHistoryRepository, error) {
 	repo := &esDiskCheckHistoryRepository{
