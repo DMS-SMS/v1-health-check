@@ -7,6 +7,9 @@
 
 package config
 
+// App is the application config about syscheck domain
+var App *syscheckConfig
+
 // syscheckConfig having config value and implement various interface about Config by declaring method
 type syscheckConfig struct {
 	// indexName represent name of elasticsearch index including syscheck history document
