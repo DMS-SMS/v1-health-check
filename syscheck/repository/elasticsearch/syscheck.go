@@ -21,17 +21,17 @@ const (
 	defaultIndexName = "sms-system-check"
 )
 
-// esRepositoryComponent contains the least information that elasticsearch repository should have in syscheck
-// If you change field name or type, you should check and change FieldSetter about that changed field in field_setter.go
-type esRepositoryComponent struct {
-	// indexName represent name of index including esDiskCheckHistory document
-	IndexName string
+// esRepositoryComponentConfig is interface contains method to return config value that elasticsearch repository should have
+// It can be externally set as Config object that implements that interface.
+type esRepositoryComponentConfig interface {
+	// IndexName method returns the index name of elasticsearch about syscheck
+	IndexName() string
 
-	// indexShardNum represent shard number of index including esDiskCheckHistory document
-	IndexShardNum int
+	// IndexShardNum method returns the number of index shard in elasticsearch about syscheck
+	IndexShardNum() string
 
-	// indexReplicaNum represent replica number of index to replace index when node become unable
-	IndexReplicaNum int
+	// IndexReplicaNum method returns the number of index replica in elasticsearch about syscheck
+	IndexReplicaNum() string
 }
 
 // reqBodyWriter is private interface to use as writing []byte for request body
