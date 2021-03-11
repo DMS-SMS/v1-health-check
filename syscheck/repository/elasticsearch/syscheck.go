@@ -28,10 +28,10 @@ type esRepositoryComponentConfig interface {
 	IndexName() string
 
 	// IndexShardNum method returns the number of index shard in elasticsearch about syscheck
-	IndexShardNum() string
+	IndexShardNum() int
 
 	// IndexReplicaNum method returns the number of index replica in elasticsearch about syscheck
-	IndexReplicaNum() string
+	IndexReplicaNum() int
 }
 
 // reqBodyWriter is private interface to use as writing []byte for request body
