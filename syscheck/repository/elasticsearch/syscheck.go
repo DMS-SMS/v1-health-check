@@ -34,9 +34,6 @@ type esRepositoryComponent struct {
 	IndexReplicaNum int
 }
 
-// FieldSetter is custom function type to set field value of interface with reflect package
-type FieldSetter func(interface{})
-
 // reqBodyWriter is private interface to use as writing []byte for request body
 type reqBodyWriter interface {
 	io.Writer
