@@ -16,8 +16,8 @@ type syscheckConfig struct {
 	indexName *string
 
 	// indexShardNum represent shard number of elasticsearch index storing syscheck history document
-	indexShardNum *string
+	indexShardNum *int
 
 	// indexReplicaNum represent replica number of elasticsearch index to replace index when node become unable
-	indexReplicaNum *string
+	indexReplicaNum *int
 }
