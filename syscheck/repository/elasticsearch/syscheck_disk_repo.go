@@ -19,8 +19,8 @@ import (
 
 // esDiskCheckHistoryRepository is to handle DiskCheckHistory model using elasticsearch as data store
 type esDiskCheckHistoryRepository struct {
-	// get common field from embedding esRepositoryComponent
-	esRepositoryComponent
+	// myCfg is used for get disk check history repository config about elasticsearch
+	myCfg esDiskCheckHistoryRepoConfig
 
 	// esCli is elasticsearch client connection injected from the outside package
 	esCli *elasticsearch.Client
