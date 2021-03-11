@@ -54,7 +54,7 @@ func NewESDiskCheckHistoryRepository(cfg esDiskCheckHistoryRepoConfig, cli *elas
 // Implement Migrate method of DiskCheckHistoryRepository interface
 func (edr *esDiskCheckHistoryRepository) Migrate() error {
 	resp, err := (esapi.IndicesExistsRequest{
-		Index: []string{"gateway"},
+		Index: []string{edr.myCfg.IndexName()},
 	}).Do(context.Background(), edr.esCli)
 
 	if err != nil {
@@ -73,8 +73,8 @@ func (edr *esDiskCheckHistoryRepository) Migrate() error {
 // createIndex method create index with name, share number in esDiskCheckHistoryRepository
 func (edr *esDiskCheckHistoryRepository) createIndex() error {
 	body := map[string]interface{}{}
-	body["settings.number_of_shards"] = edr.IndexShardNum
-	body["settings.number_of_replicas"] = edr.IndexReplicaNum
+	body["settings.number_of_shards"] = edr.myCfg.IndexShardNum()
+	body["settings.number_of_replicas"] = edr.myCfg.IndexReplicaNum()
 
 	b, _ := json.Marshal(body)
 	if _, err := edr.bodyWriter.Write(b); err != nil {
@@ -87,7 +87,7 @@ func (edr *esDiskCheckHistoryRepository) createIndex() error {
 	}
 
 	resp, err := (esapi.IndicesCreateRequest{
-		Index:         edr.IndexName,
+		Index:         edr.myCfg.IndexName(),
 		Body:          bytes.NewReader(buf.Bytes()),
 		MasterTimeout: time.Second * 5,
 		Timeout:       time.Second * 5,
@@ -111,7 +111,7 @@ func (edr *esDiskCheckHistoryRepository) Store(history *domain.DiskCheckHistory)
 	}
 
 	resp, err := (esapi.IndexRequest{
-		Index:        edr.IndexName,
+		Index:        edr.myCfg.IndexName(),
 		Body:         bytes.NewReader(buf.Bytes()),
 		Timeout:      time.Second * 5,
 	}).Do(context.Background(), edr.esCli)
