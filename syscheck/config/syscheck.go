@@ -50,9 +50,11 @@ func (sc *syscheckConfig) IndexReplicaNum() int {
 	return *sc.indexReplicaNum
 }
 
+// init function initialize App global variable
 func init() {
 	App = &syscheckConfig{}
 }
 
+// _string and _int function returns pointer variable generated from parameter
 func _string(s string) *string { return &s }
 func _int(i int) *int {return &i}
