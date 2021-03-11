@@ -1,0 +1,7 @@
+domain:
+  syscheck:
+    elasticsearch:
+      index:
+        name: "sms-system-check"
+        shardNum: 2
+        replicaNum: 0
