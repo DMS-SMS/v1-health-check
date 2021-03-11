@@ -7,6 +7,10 @@
 
 package config
 
+import (
+	"github.com/spf13/viper"
+)
+
 // App is the application config about syscheck domain
 var App *syscheckConfig
 
@@ -21,3 +25,34 @@ type syscheckConfig struct {
 	// indexReplicaNum represent replica number of elasticsearch index to replace index when node become unable
 	indexReplicaNum *int
 }
+
+func (sc *syscheckConfig) IndexName() string {
+	var key = "domain.syscheck.elasticsearch.index.name"
+	if sc.indexName == nil {
+		sc.indexName = _string(viper.GetString(key))
+	}
+	return *sc.indexName
+}
+
+func (sc *syscheckConfig) IndexShardNum() int {
+	var key = "domain.syscheck.elasticsearch.index.shardNum"
+	if sc.indexShardNum == nil {
+		sc.indexShardNum = _int(viper.GetInt(key))
+	}
+	return *sc.indexShardNum
+}
+
+func (sc *syscheckConfig) IndexReplicaNum() int {
+	var key = "domain.syscheck.elasticsearch.index.replicaNum"
+	if sc.indexReplicaNum == nil {
+		sc.indexReplicaNum = _int(viper.GetInt(key))
+	}
+	return *sc.indexReplicaNum
+}
+
+func init() {
+	App = &syscheckConfig{}
+}
+
+func _string(s string) *string { return &s }
+func _int(i int) *int {return &i}
