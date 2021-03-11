@@ -13,6 +13,7 @@ import (
 	"github.com/elastic/go-elasticsearch/v7"
 	"github.com/elastic/go-elasticsearch/v7/esapi"
 	"github.com/pkg/errors"
+	"log"
 	"net/http"
 	"time"
 )
@@ -36,26 +37,18 @@ type esDiskCheckHistoryRepoConfig interface {
 }
 
 // NewESDiskCheckHistoryRepository return new object that implement DiskCheckHistory.Repository interface
-func NewESDiskCheckHistoryRepository(cli *elasticsearch.Client, w reqBodyWriter, setters ...FieldSetter) (domain.DiskCheckHistoryRepository, error) {
+func NewESDiskCheckHistoryRepository(cfg esDiskCheckHistoryRepoConfig, cli *elasticsearch.Client, w reqBodyWriter) domain.DiskCheckHistoryRepository {
 	repo := &esDiskCheckHistoryRepository{
+		myCfg:      cfg,
 		esCli:      cli,
 		bodyWriter: w,
 	}
 
-	repo.IndexName = defaultIndexName
-	repo.IndexShardNum = defaultIndexShardNum
-	repo.IndexReplicaNum = defaultIndexReplicaNum
-
-	// set repository field by running FieldSetter type functions received from caller
-	for _, s := range setters {
-		s(repo)
-	}
-
 	if err := repo.Migrate(); err != nil {
-		return nil, errors.Wrap(err, "could not migrate repository")
+		log.Fatal(errors.Wrap(err, "could not migrate repository").Error())
 	}
 
-	return repo, nil
+	return repo
 }
 
 // Implement Migrate method of DiskCheckHistoryRepository interface
