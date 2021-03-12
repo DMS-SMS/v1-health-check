@@ -44,7 +44,7 @@ const (
 
 // implement IndexName method of esRepositoryComponentConfig interface
 func (sc *syscheckConfig) IndexName() string {
-	var key = "domain.syscheck.elasticsearch.index.name"
+	var key = "domain.syscheck.repository.elasticsearch.index.name"\
 	if sc.indexName == nil {
 		sc.indexName = _string(viper.GetString(key))
 	}
@@ -53,7 +53,7 @@ func (sc *syscheckConfig) IndexName() string {
 
 // implement IndexShardNum method of esRepositoryComponentConfig interface
 func (sc *syscheckConfig) IndexShardNum() int {
-	var key = "domain.syscheck.elasticsearch.index.shardNum"
+	var key = "domain.syscheck.repository.elasticsearch.index.shardNum"
 	if sc.indexShardNum == nil {
 		sc.indexShardNum = _int(viper.GetInt(key))
 	}
@@ -62,7 +62,7 @@ func (sc *syscheckConfig) IndexShardNum() int {
 
 // implement IndexReplicaNum method of esRepositoryComponentConfig interface
 func (sc *syscheckConfig) IndexReplicaNum() int {
-	var key = "domain.syscheck.elasticsearch.index.replicaNum"
+	var key = "domain.syscheck.repository.elasticsearch.index.replicaNum"
 	if sc.indexReplicaNum == nil {
 		sc.indexReplicaNum = _int(viper.GetInt(key))
 	}
