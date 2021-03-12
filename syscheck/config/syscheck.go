@@ -27,6 +27,13 @@ type syscheckConfig struct {
 	indexReplicaNum *int
 }
 
+// default const value about syscheckConfig field
+const (
+	defaultIndexName       = "sms-system-check" // default const value for indexName
+	defaultIndexShardNum   = 2                  // default const value for indexShardNum
+	defaultIndexReplicaNum = 0                  // default const value for indexReplicaNum
+)
+
 // implement IndexName method of esRepositoryComponentConfig interface
 func (sc *syscheckConfig) IndexName() string {
 	var key = "domain.syscheck.elasticsearch.index.name"
