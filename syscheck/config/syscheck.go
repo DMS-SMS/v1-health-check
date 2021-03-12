@@ -8,6 +8,7 @@
 package config
 
 import (
+	"github.com/inhies/go-bytesize"
 	"github.com/spf13/viper"
 )
 
@@ -34,9 +35,11 @@ type syscheckConfig struct {
 
 // default const value about syscheckConfig field
 const (
-	defaultIndexName       = "sms-system-check" // default const value for indexName
-	defaultIndexShardNum   = 2                  // default const value for indexShardNum
-	defaultIndexReplicaNum = 0                  // default const value for indexReplicaNum
+	defaultIndexName       = "sms-system-check" // default const string for indexName
+	defaultIndexShardNum   = 2                  // default const int for indexShardNum
+	defaultIndexReplicaNum = 0                  // default const int for indexReplicaNum
+
+	defaultDiskMinCapacity = bytesize.GB * 2 // default const byte size for diskMinCapacity
 )
 
 // implement IndexName method of esRepositoryComponentConfig interface
