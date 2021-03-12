@@ -1,7 +1,10 @@
 domain:
   syscheck:
-    elasticsearch:
-      index:
-        name: "sms-system-check"
-        shardNum: 2
-        replicaNum: 0
+    repository:
+      elasticsearch:
+        index:
+          name: "sms-system-check"
+          shardNum: 2
+          replicaNum: 0
+    diskcheck:
+      minCapacity:
