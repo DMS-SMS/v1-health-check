@@ -7,4 +7,4 @@ domain:
           shardNum: 2
           replicaNum: 0
     diskcheck:
-      minCapacity:
+      minCapacity: "2GB"
