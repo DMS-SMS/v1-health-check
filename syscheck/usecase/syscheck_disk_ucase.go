@@ -27,3 +27,11 @@ type diskCheckUsecaseConfig interface {
 	// DiskMinCapacity method returns byte size represent disk minimum capacity
 	DiskMinCapacity() bytesize.ByteSize
 }
+
+// NewDiskCheckUsecase function return diskCheckUsecase ptr instance with initializing
+func NewDiskCheckUsecase(cfg diskCheckUsecaseConfig, hr domain.DiskCheckHistoryRepository) *diskCheckUsecase {
+	return &diskCheckUsecase{
+		myCfg:       cfg,
+		historyRepo: hr,
+	}
+}
