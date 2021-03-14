@@ -78,6 +78,23 @@ func (sc *syscheckConfig) IndexReplicaNum() int {
 	return *sc.indexReplicaNum
 }
 
+// implement DiskMinCapacity method of diskCheckUsecaseConfig interface
+func (sc *syscheckConfig) DiskMinCapacity() bytesize.ByteSize {
+	var key = "domain.syscheck.diskcheck.minCapacity"
+	if sc.diskMinCapacity != nil {
+		return *sc.diskMinCapacity
+	}
+
+	size, err := bytesize.Parse(viper.GetString(key))
+	if err != nil {
+		viper.Set(key, defaultDiskMinCapacity.String())
+		size = defaultDiskMinCapacity
+	}
+
+	sc.diskMinCapacity = &size
+	return *sc.diskMinCapacity
+}
+
 // init function initialize App global variable
 func init() {
 	App = &syscheckConfig{}
