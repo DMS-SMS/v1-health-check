@@ -14,3 +14,12 @@ type diskCheckUsecase struct {
 	// historyRepo is used for store disk check history and injected from outside
 	historyRepo domain.DiskCheckHistoryRepository
 }
+
+// diskCheckUsecaseConfig is the config getter interface for disk check usecase
+type diskCheckUsecaseConfig interface {
+	// get common config method from embedding systemCheckUsecaseComponentConfig
+	systemCheckUsecaseComponentConfig
+
+	// DiskMinCapacity method returns byte size represent disk minimum capacity
+	DiskMinCapacity() bytesize.ByteSize
+}
