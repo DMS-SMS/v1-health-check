@@ -4,12 +4,16 @@
 
 package usecase
 
-import "github.com/DMS-SMS/v1-health-check/domain"
+import (
+	"github.com/inhies/go-bytesize"
+
+	"github.com/DMS-SMS/v1-health-check/domain"
+)
 
 // diskCheckUsecase implement DiskCheckUsecase interface in domain and used in delivery layer
 type diskCheckUsecase struct {
-	// get required component by embedding systemCheckUsecaseComponent struct
-	systemCheckUsecaseComponent
+	// myCfg is used for getting disk check usecase config
+	myCfg diskCheckUsecaseConfig
 
 	// historyRepo is used for store disk check history and injected from outside
 	historyRepo domain.DiskCheckHistoryRepository
