@@ -46,7 +46,9 @@ const (
 func (sc *syscheckConfig) IndexName() string {
 	var key = "domain.syscheck.repository.elasticsearch.index.name"
 	if sc.indexName == nil {
-		viper.SetDefault(key, defaultIndexName)
+		if _, ok := viper.Get(key).(string); !ok {
+			viper.Set(key, defaultIndexName)
+		}
 		sc.indexName = _string(viper.GetString(key))
 	}
 	return *sc.indexName
@@ -56,7 +58,9 @@ func (sc *syscheckConfig) IndexName() string {
 func (sc *syscheckConfig) IndexShardNum() int {
 	var key = "domain.syscheck.repository.elasticsearch.index.shardNum"
 	if sc.indexShardNum == nil {
-		viper.SetDefault(key, defaultIndexShardNum)
+		if _, ok := viper.Get(key).(int); !ok {
+			viper.Set(key, defaultIndexShardNum)
+		}
 		sc.indexShardNum = _int(viper.GetInt(key))
 	}
 	return *sc.indexShardNum
@@ -66,7 +70,9 @@ func (sc *syscheckConfig) IndexShardNum() int {
 func (sc *syscheckConfig) IndexReplicaNum() int {
 	var key = "domain.syscheck.repository.elasticsearch.index.replicaNum"
 	if sc.indexReplicaNum == nil {
-		viper.SetDefault(key, defaultIndexReplicaNum)
+		if _, ok := viper.Get(key).(int); !ok {
+			viper.Set(key, defaultIndexReplicaNum)
+		}
 		sc.indexReplicaNum = _int(viper.GetInt(key))
 	}
 	return *sc.indexReplicaNum
