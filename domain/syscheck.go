@@ -73,17 +73,22 @@ func (sch *systemCheckHistoryComponent) FillPrivateComponent() {
 	sch.timestamp = now
 }
 
-// MapWithPrefixKey convert systemCheckHistoryComponent to dotted map and return that
+// DottedMapWithPrefix convert systemCheckHistoryComponent to dotted map and return that
 // all key value of Map start with prefix received from parameter
-func (sch *systemCheckHistoryComponent) MapWithPrefixKey(prefix string) (m map[string]interface{}) {
+func (sch *systemCheckHistoryComponent) DottedMapWithPrefix(prefix string) (m map[string]interface{}) {
 	if prefix != "" {
 		prefix += "."
 	}
 
 	m = map[string]interface{}{}
-	m[prefix + "version"] = sch.Version
-	m[prefix + "agent"] = sch.Agent
-	m[prefix + "@timestamp"] = sch.Timestamp
+
+	// setting private field value in dotted map
+	m[prefix + "version"] = sch.version
+	m[prefix + "agent"] = sch.agent
+	m[prefix + "@timestamp"] = sch.timestamp
+	m[prefix + "domain"] = sch.domain
+
+	// setting public field value in dotted map
 	m[prefix + "type"] = sch.Type
 	m[prefix + "process_level"] = sch.ProcessLevel
 	m[prefix + "alerted"] = sch.Alerted
