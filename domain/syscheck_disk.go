@@ -40,10 +40,10 @@ func (dh *DiskCheckHistory) FillPrivateComponent() {
 	dh.systemCheckHistoryComponent.FillPrivateComponent()
 }
 
-// MapWithPrefixKey convert DiskCheckHistory to dotted map and return using MapWithPrefixKey of upper struct
+// DottedMapWithPrefix convert DiskCheckHistory to dotted map and return using MapWithPrefixKey of upper struct
 // all key value of Map start with prefix received from parameter
-func (dh *DiskCheckHistory) MapWithPrefixKey(prefix string) (m map[string]interface{}) {
-	m = dh.systemCheckHistoryComponent.MapWithPrefixKey(prefix)
+func (dh *DiskCheckHistory) DottedMapWithPrefix(prefix string) (m map[string]interface{}) {
+	m = dh.systemCheckHistoryComponent.DottedMapWithPrefix(prefix)
 
 	if prefix != "" {
 		prefix += "."
