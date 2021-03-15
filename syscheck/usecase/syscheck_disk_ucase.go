@@ -17,6 +17,9 @@ type diskCheckUsecase struct {
 
 	// historyRepo is used for store disk check history and injected from outside
 	historyRepo domain.DiskCheckHistoryRepository
+
+	// dkrCli is docker client to call docker agent API
+	dkrCli *client.Client
 }
 
 // diskCheckUsecaseConfig is the config getter interface for disk check usecase
@@ -29,10 +32,11 @@ type diskCheckUsecaseConfig interface {
 }
 
 // NewDiskCheckUsecase function return diskCheckUsecase ptr instance with initializing
-func NewDiskCheckUsecase(cfg diskCheckUsecaseConfig, hr domain.DiskCheckHistoryRepository) *diskCheckUsecase {
+func NewDiskCheckUsecase(cfg diskCheckUsecaseConfig, hr domain.DiskCheckHistoryRepository, cli *client.Client) *diskCheckUsecase {
 	return &diskCheckUsecase{
 		myCfg:       cfg,
 		historyRepo: hr,
+		dkrCli:      cli,
 	}
 }
 
