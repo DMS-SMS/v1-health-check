@@ -28,10 +28,13 @@ func (ac *appConfig) ESAddress() string {
 		return *ac.esAddress
 	}
 
-	esAddr := os.Getenv("ES_ADDRESS")
-	if esAddr == "" {
+	if v := os.Getenv("ES_ADDRESS"); v == "" {
 		log.Fatal("please set ES_ADDRESS in environment variable")
+	} else {
+		ac.esAddress = &v
 	}
+	return *ac.esAddress
+}
 
 	ac.esAddress = &esAddr
 	return *ac.esAddress
