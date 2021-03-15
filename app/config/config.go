@@ -8,8 +8,15 @@
 
 package config
 
+// App is the application config using in main package
+var App *appConfig
+
 // appConfig having config value and return that value with method. Not implement interface
 type appConfig struct {
 	// esAddress represent host address of elasticsearch server
 	esAddress *string
+}
+
+func init() {
+	App = &appConfig{}
 }
