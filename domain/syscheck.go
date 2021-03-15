@@ -35,6 +35,21 @@ type systemCheckHistoryComponent struct {
 
 	// Timestamp specifies the time when this model was created.
 	Timestamp time.Time
+
+	// Domain specifies domain about right this package, syscheck
+	Domain string
+
+	// Type specifies detail service type in system check domain (Ex, DiskCheck, CPUCheck)
+	Type string
+
+	// ProcessLevel specifies about how level to handle system check process.
+	ProcessLevel string
+
+	// Alerted specifies if alert result or status in while handling system check process.
+	Alerted bool
+
+	// AlarmContent specifies content about alarm sent in system check process.
+	AlarmContent string
 }
 
 // systemCheckHistoryRepositoryComponent is basic interface using by embedded in every repository about check history
