@@ -1,6 +1,6 @@
 version: '3.5'
 services:
-  api-gateway:
+  health-check:
     image: jinhong0719/dms-sms-health-check:${VERSION}.RELEASE
     container_name: health-check
     networks:
