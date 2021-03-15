@@ -39,11 +39,11 @@ type systemCheckHistoryComponent struct {
 	// Domain specifies domain about right this package, syscheck
 	domain string
 
+	// _type specifies detail service type in system check domain (Ex, DiskCheck, CPUCheck)
+	_type string
+
 
 	// public field in below, these fields don't have fixed value so set in another package from custom user
-	// Type specifies detail service type in system check domain (Ex, DiskCheck, CPUCheck)
-	Type string
-
 	// ProcessLevel specifies about how level to handle system check process.
 	ProcessLevel string
 
