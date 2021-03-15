@@ -13,6 +13,7 @@ services:
     environment:
       - VERSION=${VERSION}
       - ES_ADDRESS=${ES_ADDRESS}
+      - CONFIG_FILE=${CONFIG_FILE}
     volumes:
       - ./config.yaml:/usr/share/health-check/config.yaml
       - /var/run/docker.sock:/var/run/docker.sock
