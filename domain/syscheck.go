@@ -24,7 +24,6 @@ func init() {
 	}
 }
 
-
 // systemCheckHistoryComponent is basic model using by embedded in every model struct about check history
 type systemCheckHistoryComponent struct {
 	// private field in below, these fields have fixed value so always set in FillPrivateComponent method
@@ -62,24 +61,16 @@ type systemCheckHistoryRepositoryComponent interface {
 }
 
 // FillComponent fill field of systemCheckHistoryComponent if is empty
-func (sch *systemCheckHistoryComponent) FillComponent() {
-	if sch.Version == "" {
-		sch.Version = version
-	}
-
-	if sch.Agent == "" {
-		sch.Agent = "sms-health-check"
-	}
+func (sch *systemCheckHistoryComponent) FillPrivateComponent() {
+	sch.version = version
+	sch.agent = "sms-health-check"
+	sch.domain = "syscheck"
 
 	now := time.Now()
 	if now.Location().String() == time.UTC.String() {
 		now = now.Add(time.Hour * 9)
 	}
-	sch.Timestamp = now
-
-	if sch.Domain == "" {
-		sch.Domain = "syscheck"
-}
+	sch.timestamp = now
 }
 
 // MapWithPrefixKey convert systemCheckHistoryComponent to dotted map and return that
