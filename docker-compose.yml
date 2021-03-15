@@ -1,0 +1,25 @@
+version: '3.5'
+services:
+  api-gateway:
+    image: jinhong0719/dms-sms-health-check:${VERSION}.RELEASE
+    container_name: health-check
+    networks:
+      - dms-sms-local
+    ports:
+      - target: 8888
+        published: 8888
+        protocol: tcp
+        mode: host
+    environment:
+      - ES_ADDRESS=${ES_ADDRESS}
+    volumes:
+      - ./config.yml:/usr/share/health-check/config.yml
+    deploy:
+      mode: replicated
+      replicas: 1
+      labels: [APP=health-check]
+
+networks:
+  dms-sms-local:
+    name: dms-sms-local
+    driver: overlay
