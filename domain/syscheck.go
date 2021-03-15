@@ -16,14 +16,6 @@ import (
 	"time"
 )
 
-// get information from system environment variable
-var version string
-func init() {
-	if version = os.Getenv("VERSION"); version == "" {
-		log.Fatal("please set VERSION in environment variable")
-	}
-}
-
 // systemCheckHistoryComponent is basic model using by embedded in every model struct about check history
 type systemCheckHistoryComponent struct {
 	// private field in below, these fields have fixed value so always set in FillPrivateComponent method
@@ -100,4 +92,12 @@ func (sch *systemCheckHistoryComponent) DottedMapWithPrefix(prefix string) (m ma
 	m[prefix + "error"] = sch.Error
 
 	return
+}
+
+// get information from system environment variable
+var version string
+func init() {
+	if version = os.Getenv("VERSION"); version == "" {
+		log.Fatal("please set VERSION in environment variable")
+	}
 }
