@@ -87,6 +87,10 @@ func (sch *systemCheckHistoryComponent) MapWithPrefixKey(prefix string) (m map[s
 	m[prefix + "version"] = sch.Version
 	m[prefix + "agent"] = sch.Agent
 	m[prefix + "@timestamp"] = sch.Timestamp
+	m[prefix + "type"] = sch.Type
+	m[prefix + "process_level"] = sch.ProcessLevel
+	m[prefix + "alerted"] = sch.Alerted
+	m[prefix + "alarm_content"] = sch.AlarmContent
 
 	return
 }
