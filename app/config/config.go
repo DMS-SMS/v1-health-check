@@ -11,6 +11,7 @@ package config
 import (
 	"log"
 	"os"
+	"time"
 )
 
 // App is the application config using in main package
@@ -51,6 +52,14 @@ func (ac *appConfig) ConfigFile() string {
 		ac.configFile = &v
 	}
 	return *ac.configFile
+}
+
+func (ac *appConfig) DockerCliVer() string {
+	return "1.40"
+}
+
+func (ac *appConfig) DockerCliTimeout() time.Duration {
+	return time.Second * 5
 }
 
 func init() {
