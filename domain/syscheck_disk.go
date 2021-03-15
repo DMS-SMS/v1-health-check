@@ -49,7 +49,8 @@ func (dh *DiskCheckHistory) MapWithPrefixKey(prefix string) (m map[string]interf
 		prefix += "."
 	}
 
-	// add field in map
+	// setting public field value in dotted map
+	m[prefix + "disk_capacity"] = dh.DiskCapacity.String()
 
 	return
 }
