@@ -65,6 +65,7 @@ func (sch *systemCheckHistoryComponent) FillPrivateComponent() {
 	sch.version = version
 	sch.agent = "sms-health-check"
 	sch.domain = "syscheck"
+	sch._type = "None"
 
 	now := time.Now()
 	if now.Location().String() == time.UTC.String() {

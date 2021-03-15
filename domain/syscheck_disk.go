@@ -38,6 +38,7 @@ type DiskCheckUseCase interface {
 // FillPrivateComponent overriding FillPrivateComponent method of systemCheckHistoryComponent
 func (dh *DiskCheckHistory) FillPrivateComponent() {
 	dh.systemCheckHistoryComponent.FillPrivateComponent()
+	dh._type = "DiskCheck"
 }
 
 // DottedMapWithPrefix convert DiskCheckHistory to dotted map and return using MapWithPrefixKey of upper struct
