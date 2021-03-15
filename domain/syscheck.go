@@ -27,18 +27,21 @@ func init() {
 
 // systemCheckHistoryComponent is basic model using by embedded in every model struct about check history
 type systemCheckHistoryComponent struct {
+	// private field in below, these fields have fixed value so always set in FillPrivateComponent method
 	// Agent specifies name of service that created this model
-	Agent string
+	agent string
 
 	// version specifies health checker version when this model was created
-	Version string
+	version string
 
 	// Timestamp specifies the time when this model was created.
-	Timestamp time.Time
+	timestamp time.Time
 
 	// Domain specifies domain about right this package, syscheck
-	Domain string
+	domain string
 
+
+	// public field in below, these fields don't have fixed value so set in another package from custom user
 	// Type specifies detail service type in system check domain (Ex, DiskCheck, CPUCheck)
 	Type string
 
