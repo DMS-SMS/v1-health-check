@@ -7,3 +7,9 @@
 // Also, App implement various config interface each of package in syscheck domain by declaring method
 
 package config
+
+// appConfig having config value and return that value with method. Not implement interface
+type appConfig struct {
+	// esAddress represent host address of elasticsearch server
+	esAddress *string
+}
