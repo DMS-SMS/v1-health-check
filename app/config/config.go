@@ -20,6 +20,9 @@ var App *appConfig
 type appConfig struct {
 	// esAddress represent host address of elasticsearch server
 	esAddress *string
+
+	// configFile represent full name of config file
+	configFile *string
 }
 
 // return elasticsearch address get from environment variable
@@ -36,8 +39,18 @@ func (ac *appConfig) ESAddress() string {
 	return *ac.esAddress
 }
 
-	ac.esAddress = &esAddr
-	return *ac.esAddress
+// return elasticsearch address get from environment variable
+func (ac *appConfig) ConfigFile() string {
+	if ac.configFile != nil {
+		return *ac.configFile
+	}
+
+	if v := os.Getenv("CONFIG_FILE"); v == "" {
+		log.Fatal("please set CONFIG_FILE in environment variable")
+	} else {
+		ac.configFile = &v
+	}
+	return *ac.configFile
 }
 
 func init() {
