@@ -13,7 +13,7 @@ services:
     environment:
       - ES_ADDRESS=${ES_ADDRESS}
     volumes:
-      - ./config.yml:/usr/share/health-check/config.yml
+      - ./config.yaml:/usr/share/health-check/config.yaml
     deploy:
       mode: replicated
       replicas: 1
