@@ -8,6 +8,11 @@
 
 package config
 
+import (
+	"log"
+	"os"
+)
+
 // App is the application config using in main package
 var App *appConfig
 
@@ -15,6 +20,21 @@ var App *appConfig
 type appConfig struct {
 	// esAddress represent host address of elasticsearch server
 	esAddress *string
+}
+
+// return elasticsearch address get from environment variable
+func (ac *appConfig) ESAddress() string {
+	if ac.esAddress != nil {
+		return *ac.esAddress
+	}
+
+	esAddr := os.Getenv("ES_ADDRESS")
+	if esAddr == "" {
+		log.Fatal("please set ES_ADDRESS in environment variable")
+	}
+
+	ac.esAddress = &esAddr
+	return *ac.esAddress
 }
 
 func init() {
