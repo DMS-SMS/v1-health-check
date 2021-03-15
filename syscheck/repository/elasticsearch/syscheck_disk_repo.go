@@ -99,7 +99,7 @@ func (edr *esDiskCheckHistoryRepository) createIndex() error {
 
 // Implement Store method of DiskCheckHistoryRepository interface
 func (edr *esDiskCheckHistoryRepository) Store(history *domain.DiskCheckHistory) (b []byte, err error) {
-	body, _ := json.Marshal(history.MapWithPrefixKey(""))
+	body, _ := json.Marshal(history.DottedMapWithPrefix(""))
 	if _, err = edr.bodyWriter.Write(body); err != nil {
 		err = errors.Wrap(err, "failed to write map to body writer")
 		return
