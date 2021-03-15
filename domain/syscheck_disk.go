@@ -4,12 +4,18 @@
 
 package domain
 
-import "context"
+import (
+	"context"
+	"github.com/inhies/go-bytesize"
+)
 
 // DiskCheckHistory model is used for record disk health check history and result
 type DiskCheckHistory struct {
 	// get required component by embedding systemCheckHistoryComponent
 	systemCheckHistoryComponent
+
+	// DiskCapacity specifies remain disk capacity of runtime system looked in disk check
+	DiskCapacity bytesize.ByteSize
 }
 
 // DiskCheckHistoryRepository is abstract method used in business layer
