@@ -72,8 +72,11 @@ func (sch *systemCheckHistoryComponent) FillComponent() {
 	if now.Location().String() == time.UTC.String() {
 		now = now.Add(time.Hour * 9)
 	}
-
 	sch.Timestamp = now
+
+	if sch.Domain == "" {
+		sch.Domain = "syscheck"
+}
 }
 
 // MapWithPrefixKey convert systemCheckHistoryComponent to dotted map and return that
