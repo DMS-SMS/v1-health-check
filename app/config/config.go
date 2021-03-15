@@ -54,10 +54,12 @@ func (ac *appConfig) ConfigFile() string {
 	return *ac.configFile
 }
 
+// return docker client version as literal
 func (ac *appConfig) DockerCliVer() string {
 	return "1.40"
 }
 
+// return docker client connection time out as literal
 func (ac *appConfig) DockerCliTimeout() time.Duration {
 	return time.Second * 5
 }
