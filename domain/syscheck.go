@@ -88,9 +88,9 @@ func (sch *systemCheckHistoryComponent) DottedMapWithPrefix(prefix string) (m ma
 	m[prefix + "agent"] = sch.agent
 	m[prefix + "@timestamp"] = sch.timestamp
 	m[prefix + "domain"] = sch.domain
+	m[prefix + "type"] = sch._type
 
 	// setting public field value in dotted map
-	m[prefix + "type"] = sch.Type
 	m[prefix + "process_level"] = sch.ProcessLevel
 	m[prefix + "alerted"] = sch.Alerted
 	m[prefix + "alarm_content"] = sch.AlarmContent
