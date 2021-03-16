@@ -5,7 +5,14 @@
 package usecase
 
 import (
+	"context"
+	"github.com/docker/docker/api/types"
+	"github.com/docker/docker/api/types/filters"
+	"github.com/docker/docker/client"
 	"github.com/inhies/go-bytesize"
+	"github.com/pkg/errors"
+	"golang.org/x/sys/unix"
+	"os"
 
 	"github.com/DMS-SMS/v1-health-check/domain"
 )
@@ -38,6 +45,42 @@ func NewDiskCheckUsecase(cfg diskCheckUsecaseConfig, hr domain.DiskCheckHistoryR
 		historyRepo: hr,
 		dkrCli:      cli,
 	}
+}
+
+// pruneDockerSystem prune docker system(build cache, containers, images, networks) and return reclaimed space size
+func (du *diskCheckUsecase) pruneDockerSystem() (reclaimed bytesize.ByteSize, err error) {
+	var (
+		ctx = context.Background()
+		args = filters.Args{}
+	)
+
+	if report, pruneErr := du.dkrCli.BuildCachePrune(ctx, types.BuildCachePruneOptions{}); pruneErr != nil {
+		err = errors.Wrap(pruneErr, "failed to prune build cache in docker")
+		return
+	} else {
+		reclaimed = bytesize.ByteSize(uint64(reclaimed) + report.SpaceReclaimed)
+	}
+
+	if report, pruneErr := du.dkrCli.ContainersPrune(ctx, args); pruneErr != nil {
+		err = errors.Wrap(pruneErr, "failed to prune containers in docker")
+		return
+	} else {
+		reclaimed = bytesize.ByteSize(uint64(reclaimed) + report.SpaceReclaimed)
+	}
+
+	if report, pruneErr := du.dkrCli.ImagesPrune(ctx, args); pruneErr != nil {
+		err = errors.Wrap(pruneErr, "failed to prune image in docker")
+		return
+	} else {
+		reclaimed = bytesize.ByteSize(uint64(reclaimed) + report.SpaceReclaimed)
+	}
+
+	if _, pruneErr := du.dkrCli.NetworksPrune(ctx, args); pruneErr != nil {
+		err = errors.Wrap(pruneErr, "failed to prune networks in docker")
+		return
+	}
+
+	return
 }
 
 // getRemainDiskCapacity returns remain disk capacity as bytesize.Bytesize
