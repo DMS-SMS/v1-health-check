@@ -39,6 +39,9 @@ type systemCheckHistoryComponent struct {
 	// ProcessLevel specifies about how level to handle system check process.
 	ProcessLevel string
 
+	// Message specifies additional description of result about system check process.
+	Message string
+
 	// Alerted specifies if alert result or status in while handling system check process.
 	Alerted bool
 
@@ -87,6 +90,7 @@ func (sch *systemCheckHistoryComponent) DottedMapWithPrefix(prefix string) (m ma
 
 	// setting public field value in dotted map
 	m[prefix + "process_level"] = sch.ProcessLevel
+	m[prefix + "message"] = sch.ProcessLevel
 	m[prefix + "alerted"] = sch.Alerted
 	m[prefix + "alarm_content"] = sch.AlarmContent
 	m[prefix + "error"] = sch.Error
