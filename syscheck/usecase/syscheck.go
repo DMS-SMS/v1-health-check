@@ -10,3 +10,11 @@ package usecase
 
 // systemCheckUsecaseComponent contains required component to syscheck usecase implementation as field
 type systemCheckUsecaseComponentConfig interface {}
+
+// processLevel is string custom type used for representing status check process level
+type processLevel string
+
+// String method return instance value of processLevel type to string
+func (pl processLevel) String() string {
+	return string(pl)
+}
