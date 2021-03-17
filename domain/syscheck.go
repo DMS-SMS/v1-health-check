@@ -49,7 +49,7 @@ type systemCheckHistoryComponent struct {
 	AlarmContent string
 
 	// Error specifies error message if health check's been handled abnormally.
-	Error string
+	Error error
 }
 
 // systemCheckHistoryRepositoryComponent is basic interface using by embedded in every repository about check history
@@ -93,7 +93,7 @@ func (sch *systemCheckHistoryComponent) DottedMapWithPrefix(prefix string) (m ma
 	m[prefix + "message"] = sch.ProcessLevel
 	m[prefix + "alerted"] = sch.Alerted
 	m[prefix + "alarm_content"] = sch.AlarmContent
-	m[prefix + "error"] = sch.Error
+	m[prefix + "error"] = sch.Error.Error()
 
 	return
 }
