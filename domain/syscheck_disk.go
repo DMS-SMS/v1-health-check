@@ -16,6 +16,9 @@ type DiskCheckHistory struct {
 
 	// DiskCapacity specifies remain disk capacity of runtime system looked in disk check
 	DiskCapacity bytesize.ByteSize
+
+	// ReclaimedSize specifies reclaimed disk size get from docker system prune
+	ReclaimedSize bytesize.ByteSize
 }
 
 // DiskCheckHistoryRepository is abstract method used in business layer
@@ -52,6 +55,7 @@ func (dh *DiskCheckHistory) DottedMapWithPrefix(prefix string) (m map[string]int
 
 	// setting public field value in dotted map
 	m[prefix + "disk_capacity"] = dh.DiskCapacity.String()
+	m[prefix + "reclaimed_size"] = dh.ReclaimedSize.String()
 
 	return
 }
