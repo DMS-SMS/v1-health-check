@@ -14,6 +14,9 @@ import (
 	"golang.org/x/sys/unix"
 	"os"
 
+	"github.com/DMS-SMS/v1-health-check/domain"
+)
+
 // diskCheckStatus is type to int constant represent current disk check process status
 type diskCheckStatus int
 const (
@@ -32,6 +35,9 @@ type diskCheckUsecase struct {
 
 	// dkrCli is docker client to call docker agent API
 	dkrCli *client.Client
+
+	// status represent current process status of disk health check
+	status diskCheckStatus
 }
 
 // diskCheckUsecaseConfig is the config getter interface for disk check usecase
@@ -46,9 +52,13 @@ type diskCheckUsecaseConfig interface {
 // NewDiskCheckUsecase function return diskCheckUsecase ptr instance with initializing
 func NewDiskCheckUsecase(cfg diskCheckUsecaseConfig, hr domain.DiskCheckHistoryRepository, cli *client.Client) *diskCheckUsecase {
 	return &diskCheckUsecase{
+		// initialize field with parameter received from caller
 		myCfg:       cfg,
 		historyRepo: hr,
 		dkrCli:      cli,
+
+		// initialize field with default value
+		status: checkAvailableStatus,
 	}
 }
 
