@@ -14,7 +14,12 @@ import (
 	"golang.org/x/sys/unix"
 	"os"
 
-	"github.com/DMS-SMS/v1-health-check/domain"
+// diskCheckStatus is type to int constant represent current disk check process status
+type diskCheckStatus int
+const (
+	checkAvailableStatus diskCheckStatus = iota // to represent able to check disk health
+	dockerPruningStatus                         // to represent current pruning docker system
+	recoverUnavailableStatus                    // to represent unable to recover disk health (set to 0 at specific interval)
 )
 
 // diskCheckUsecase implement DiskCheckUsecase interface in domain and used in delivery layer
