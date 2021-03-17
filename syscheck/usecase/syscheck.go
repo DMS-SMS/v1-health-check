@@ -8,6 +8,15 @@
 
 package usecase
 
+// global variable used in usecase which is type of processLevel
+var (
+	healthyLevel       = processLevel("HEALTHY")       // represent that system status is healthy now
+	weakDetectedLevel  = processLevel("WEAK_DETECTED") // represent that weak of system status is detected
+	recoveringLevel    = processLevel("RECOVERING")    // represent that recovering weak of system status now
+	unhealthyLevel     = processLevel("UNHEALTHY")     // represent that system status is unhealthy now (not recovered)
+	errorLevel         = processLevel("ERROR")         // represent that error occurs while checking system status
+)
+
 // systemCheckUsecaseComponent contains required component to syscheck usecase implementation as field
 type systemCheckUsecaseComponentConfig interface {}
 
