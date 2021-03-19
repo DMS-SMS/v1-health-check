@@ -13,11 +13,15 @@ import "github.com/slack-go/slack"
 type slackAgent struct {
 	// slkCli is slack client connection injected from the outside package
 	slkCli *slack.Client
+
+	// chatChannel is having channel ID value to send chat in SendMessage method
+	chatChannel string
 }
 
-// NewAgent return new initialized instance of slackAgent pointer type with slack API token & options
-func NewAgent(token string, opts ...slack.Option) *slackAgent {
+// New return new initialized instance of slackAgent pointer type with slack client & chat channel
+func New(cli *slack.Client, cnl string) *slackAgent {
 	return &slackAgent{
-		slkCli: slack.New(token, opts...),
+		slkCli:      cli,
+		chatChannel: cnl,
 	}
 }
