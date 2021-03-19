@@ -36,6 +36,9 @@ type diskCheckUsecase struct {
 	// dockerCli is docker client to call docker agent API
 	dockerCli *client.Client
 
+	// slackChat is used for agent slack API about chatting
+	slackChatAgency slackChatAgency
+
 	// status represent current process status of disk health check
 	status diskCheckStatus
 }
@@ -50,12 +53,13 @@ type diskCheckUsecaseConfig interface {
 }
 
 // NewDiskCheckUsecase function return diskCheckUsecase ptr instance with initializing
-func NewDiskCheckUsecase(cfg diskCheckUsecaseConfig, hr domain.DiskCheckHistoryRepository, cli *client.Client) *diskCheckUsecase {
+func NewDiskCheckUsecase(cfg diskCheckUsecaseConfig, hr domain.DiskCheckHistoryRepository, dc *client.Client, sca slackChatAgency) *diskCheckUsecase {
 	return &diskCheckUsecase{
 		// initialize field with parameter received from caller
-		myCfg:       cfg,
-		historyRepo: hr,
-		dkrCli:      cli,
+		myCfg:           cfg,
+		historyRepo:     hr,
+		dockerCli:       dc,
+		slackChatAgency: sca,
 
 		// initialize field with default value
 		status: checkAvailableStatus,
