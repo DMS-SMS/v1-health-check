@@ -9,8 +9,8 @@
 package config
 
 import (
+	"github.com/spf13/viper"
 	"log"
-	"os"
 	"time"
 )
 
@@ -24,6 +24,12 @@ type appConfig struct {
 
 	// configFile represent full name of config file
 	configFile *string
+
+	// slackAPIToken represent token to using in slack API
+	slackAPIToken *string
+
+	// slackChatCnl represent slack channel ID to send chat
+	slackChatCnl *string
 }
 
 // return elasticsearch address get from environment variable
@@ -52,6 +58,34 @@ func (ac *appConfig) ConfigFile() string {
 		log.Fatal("please set CONFIG_FILE in environment variable")
 	}
 	return *ac.configFile
+}
+
+// return slack api token get from environment variable
+func (ac *appConfig) SlackAPIToken() string {
+	if ac.slackAPIToken != nil {
+		return *ac.slackAPIToken
+	}
+
+	if viper.IsSet("SLACK_API_TOKEN") {
+		ac.slackAPIToken = _string(viper.GetString("SLACK_API_TOKEN"))
+	} else {
+		log.Fatal("please set SLACK_API_TOKEN in environment variable")
+	}
+	return *ac.slackAPIToken
+}
+
+// return slack chat channel ID get from environment variable
+func (ac *appConfig) SlackChatChannel() string {
+	if ac.slackChatCnl != nil {
+		return *ac.slackChatCnl
+	}
+
+	if viper.IsSet("SLACK_CHAT_CHANNEL") {
+		ac.slackChatCnl = _string(viper.GetString("SLACK_CHAT_CHANNEL"))
+	} else {
+		log.Fatal("please set SLACK_CHAT_CHANNEL in environment variable")
+	}
+	return *ac.slackChatCnl
 }
 
 // return docker client version as literal
