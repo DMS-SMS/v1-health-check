@@ -25,11 +25,11 @@ var (
 // systemCheckUsecaseComponent contains required component to syscheck usecase implementation as field
 type systemCheckUsecaseComponentConfig interface {}
 
-// slackChatAgent is interface that agent the slack api about chatting
+// slackChatAgency is interface that agent the slack api about chatting
 // you can see implementation in slack package
-type slackChatAgent interface {
+type slackChatAgency interface {
 	// SendMessage send message with text & emoji using slack API and return send time & error
-	SendMessage(text, emoji string, opts slack.MsgOption) (t time.Time, err error)
+	SendMessage(emoji, text string, opts ...slack.MsgOption) (t time.Time, err error)
 }
 
 // processLevel is string custom type used for representing status check process level
