@@ -32,10 +32,10 @@ func (ac *appConfig) ESAddress() string {
 		return *ac.esAddress
 	}
 
-	if v := os.Getenv("ES_ADDRESS"); v == "" {
-		log.Fatal("please set ES_ADDRESS in environment variable")
+	if viper.IsSet("ES_ADDRESS") {
+		ac.esAddress = _string(viper.GetString("ES_ADDRESS"))
 	} else {
-		ac.esAddress = &v
+		log.Fatal("please set ES_ADDRESS in environment variable")
 	}
 	return *ac.esAddress
 }
@@ -46,10 +46,10 @@ func (ac *appConfig) ConfigFile() string {
 		return *ac.configFile
 	}
 
-	if v := os.Getenv("CONFIG_FILE"); v == "" {
-		log.Fatal("please set CONFIG_FILE in environment variable")
+	if viper.IsSet("CONFIG_FILE") {
+		ac.configFile = _string(viper.GetString("CONFIG_FILE"))
 	} else {
-		ac.configFile = &v
+		log.Fatal("please set CONFIG_FILE in environment variable")
 	}
 	return *ac.configFile
 }
@@ -67,3 +67,6 @@ func (ac *appConfig) DockerCliTimeout() time.Duration {
 func init() {
 	App = &appConfig{}
 }
+
+// _string and _int function returns pointer variable generated from parameter
+func _string(s string) *string { return &s }
