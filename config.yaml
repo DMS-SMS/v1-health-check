@@ -1,3 +1,8 @@
+app:
+  ES_ADDRESS:         # set value in environment variable
+  CONFIG_FILE:        # set value in environment variable
+  SLACK_CHAT_CHANNEL: # set value in environment variable
+
 domain:
   syscheck:
     repository:
