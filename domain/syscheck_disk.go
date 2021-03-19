@@ -59,3 +59,9 @@ func (dh *DiskCheckHistory) DottedMapWithPrefix(prefix string) (m map[string]int
 
 	return
 }
+
+// SetError method set Message & Error field with err get from param
+func (dh *DiskCheckHistory) SetError(err error) {
+	dh.Message = err.Error()
+	dh.Error = err
+}
