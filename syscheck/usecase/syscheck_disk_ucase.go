@@ -33,8 +33,8 @@ type diskCheckUsecase struct {
 	// historyRepo is used for store disk check history and injected from outside
 	historyRepo domain.DiskCheckHistoryRepository
 
-	// dkrCli is docker client to call docker agent API
-	dkrCli *client.Client
+	// dockerCli is docker client to call docker agent API
+	dockerCli *client.Client
 
 	// status represent current process status of disk health check
 	status diskCheckStatus
@@ -70,27 +70,28 @@ func (du *diskCheckUsecase) pruneDockerSystem() (reclaimed bytesize.ByteSize, er
 	)
 
 	if report, pruneErr := du.dkrCli.BuildCachePrune(ctx, types.BuildCachePruneOptions{}); pruneErr != nil {
+	if report, pruneErr := du.dockerCli.BuildCachePrune(ctx, types.BuildCachePruneOptions{}); pruneErr != nil {
 		err = errors.Wrap(pruneErr, "failed to prune build cache in docker")
 		return
 	} else {
 		reclaimed = bytesize.ByteSize(uint64(reclaimed) + report.SpaceReclaimed)
 	}
 
-	if report, pruneErr := du.dkrCli.ContainersPrune(ctx, args); pruneErr != nil {
+	if report, pruneErr := du.dockerCli.ContainersPrune(ctx, args); pruneErr != nil {
 		err = errors.Wrap(pruneErr, "failed to prune containers in docker")
 		return
 	} else {
 		reclaimed = bytesize.ByteSize(uint64(reclaimed) + report.SpaceReclaimed)
 	}
 
-	if report, pruneErr := du.dkrCli.ImagesPrune(ctx, args); pruneErr != nil {
+	if report, pruneErr := du.dockerCli.ImagesPrune(ctx, args); pruneErr != nil {
 		err = errors.Wrap(pruneErr, "failed to prune image in docker")
 		return
 	} else {
 		reclaimed = bytesize.ByteSize(uint64(reclaimed) + report.SpaceReclaimed)
 	}
 
-	if _, pruneErr := du.dkrCli.NetworksPrune(ctx, args); pruneErr != nil {
+	if _, pruneErr := du.dockerCli.NetworksPrune(ctx, args); pruneErr != nil {
 		err = errors.Wrap(pruneErr, "failed to prune networks in docker")
 		return
 	}
