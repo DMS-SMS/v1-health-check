@@ -68,7 +68,7 @@ func NewDiskCheckUsecase(cfg diskCheckUsecaseConfig, hr domain.DiskCheckHistoryR
 		slackChatAgency: sca,
 
 		// initialize field with default value
-		status: healthyStatus,
+		status: diskStatusHealthy,
 		mutex:  sync.Mutex{},
 	}
 }
@@ -109,15 +109,15 @@ func (du *diskCheckUsecase) checkDisk(ctx context.Context) (history *domain.Disk
 	history.RemainingCap = _cap
 
 	switch du.status {
-	case healthyStatus:
+	case diskStatusHealthy:
 		break
-	case recoveringStatus:
+	case diskStatusRecovering:
 		history.ProcessLevel = recoveringLevel.String()
 		history.Message = "pruning docker system is already on process"
 		return
-	case unhealthyStatus:
+	case diskStatusUnhealthy:
 		if du.isMinCapacityLessThan(_cap) {
-			du.setStatus(healthyStatus)
+			du.setStatus(diskStatusHealthy)
 			history.ProcessLevel = recoveredLevel.String()
 			history.Message = "disk check is recovered to be healthy"
 			msg := fmt.Sprintf("!disk check recovered to health! remain capacity - %s", _cap.String())
@@ -130,7 +130,7 @@ func (du *diskCheckUsecase) checkDisk(ctx context.Context) (history *domain.Disk
 	}
 
 	if !du.isMinCapacityLessThan(_cap) {
-		du.setStatus(recoveringStatus)
+		du.setStatus(diskStatusRecovering)
 		history.ProcessLevel = weakDetectedLevel.String()
 		msg := "!weak detected in disk check! start to prune docker system"
 		history.SetAlarmResult(du.slackChatAgency.SendMessage("warning", msg, _uuid))
@@ -146,11 +146,11 @@ func (du *diskCheckUsecase) checkDisk(ctx context.Context) (history *domain.Disk
 		}
 
 		if _cap, _ = getRemainDiskCapacity(); du.isMinCapacityLessThan(_cap) {
-			du.setStatus(healthyStatus)
+			du.setStatus(diskStatusHealthy)
 			msg := fmt.Sprintf("!disk check is healthy by pruning! remain capacity - %s", _cap.String())
 			_, _, _ = du.slackChatAgency.SendMessage("heart", msg, _uuid)
 		} else {
-			du.setStatus(unhealthyStatus)
+			du.setStatus(diskStatusUnhealthy)
 			msg := "!disk check has deteriorated! please check for yourself"
 			_, _, _ = du.slackChatAgency.SendMessage("broken_heart", msg, _uuid)
 		}
