@@ -50,6 +50,9 @@ const (
 	defaultIndexReplicaNum = 0                  // default const int for indexReplicaNum
 
 	defaultDiskMinCapacity = bytesize.GB * 2 // default const byte size for diskMinCapacity
+
+	defaultCPUWarningUsage = float64(1.0) // default const float64 for cpuWarningUsage
+	defaultCPUMaximumUsage = float64(1.5) // default const float64 for cpuMaximumUsage
 )
 
 // implement IndexName method of esRepositoryComponentConfig interface
