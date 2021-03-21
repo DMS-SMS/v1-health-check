@@ -45,8 +45,11 @@ type cpuCheckUsecaseConfig interface {
 	// get common config method from embedding systemCheckUsecaseComponentConfig
 	systemCheckUsecaseComponentConfig
 
-	// CPUUsageLimit method returns float32 represent cpu usage limit value
-	CPUUsageLimit() float32
+	// CPUWarningUsage method returns float64 represent cpu warning usage
+	CPUWarningUsage() float64
+
+	// CPUMaximumUsage method returns float64 represent cpu maximum usage
+	CPUMaximumUsage() float64
 }
 
 // NewCPUCheckUsecase function return cpuCheckUsecase ptr instance after initializing
