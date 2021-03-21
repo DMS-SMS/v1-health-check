@@ -108,11 +108,24 @@ func (sc *syscheckConfig) DiskMinCapacity() bytesize.ByteSize {
 	return *sc.diskMinCapacity
 }
 
+// implement CPUWarningUsage method of cpuCheckUsecaseConfig interface
+func (sc *syscheckConfig) CPUWarningUsage() float64 {
+	var key = "domain.syscheck.cpucheck.cpuWarningUsage"
+	if sc.cpuWarningUsage == nil {
+		if _, ok := viper.Get(key).(float64); !ok {
+			viper.Set(key, defaultCPUWarningUsage)
+		}
+		sc.cpuWarningUsage = _float64(viper.GetFloat64(key))
+	}
+	return *sc.cpuWarningUsage
+}
+
 // init function initialize App global variable
 func init() {
 	App = &syscheckConfig{}
 }
 
-// _string and _int function returns pointer variable generated from parameter
+// function returns pointer variable generated from parameter
 func _string(s string) *string { return &s }
 func _int(i int) *int {return &i}
+func _float64(f float64) *float64 {return &f}
