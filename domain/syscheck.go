@@ -120,6 +120,14 @@ func (sch *systemCheckHistoryComponent) DottedMapWithPrefix(prefix string) (m ma
 	return
 }
 
+// SetAlarmResult set field value about alarm result with parameter
+func (sch *systemCheckHistoryComponent) SetAlarmResult(t time.Time, text string, err error) {
+	sch.alerted = true
+	sch.alarmTime = t
+	sch.alarmText = text
+	sch.alarmErr = err
+}
+
 // get information from system environment variable
 var version string
 func init() {
