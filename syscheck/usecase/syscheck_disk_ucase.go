@@ -59,10 +59,10 @@ type diskCheckUsecaseConfig interface {
 	DiskMinCapacity() bytesize.ByteSize
 }
 
-// diskMeasurer is measurer that measure various value about disk system
-type diskMeasurer interface {
-	// RemainDiskCapacity return remain disk capacity expressed in bytesize package
-	RemainDiskCapacity() (size bytesize.ByteSize, err error)
+// diskSysAgency is agency that agent various command about disk system
+type diskSysAgency interface {
+	// GetRemainDiskCapacity return remain disk capacity expressed in bytesize package
+	GetRemainDiskCapacity() (size bytesize.ByteSize, err error)
 }
 
 // NewDiskCheckUsecase function return diskCheckUsecase ptr instance with initializing
