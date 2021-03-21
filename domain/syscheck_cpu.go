@@ -37,3 +37,9 @@ type CPUCheckUseCase interface {
 	// CheckCPU method check cpu usage status and store cpu check history using repository
 	CheckCPU(ctx context.Context) error
 }
+
+// FillPrivateComponent overriding FillPrivateComponent method of systemCheckHistoryComponent
+func (ch *CPUCheckHistory) FillPrivateComponent() {
+	ch.systemCheckHistoryComponent.FillPrivateComponent()
+	ch._type = "CPUCheck"
+}
