@@ -29,8 +29,8 @@ type systemCheckUsecaseComponentConfig interface {}
 // slackChatAgency is interface that agent the slack api about chatting
 // you can see implementation in slack package
 type slackChatAgency interface {
-	// SendMessage send message with text & emoji using slack API and return send time & error
-	SendMessage(emoji, text string, opts ...slack.MsgOption) (t time.Time, err error)
+	// SendMessage send message with text & emoji using slack API and return send time & text & error
+	SendMessage(emoji, text, uuid string, opts ...slack.MsgOption) (t time.Time, _text string, err error)
 }
 
 // processLevel is string custom type used for representing status check process level
