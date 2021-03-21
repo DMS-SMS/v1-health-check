@@ -120,6 +120,18 @@ func (sc *syscheckConfig) CPUWarningUsage() float64 {
 	return *sc.cpuWarningUsage
 }
 
+// implement CPUMaximumUsage method of cpuCheckUsecaseConfig interface
+func (sc *syscheckConfig) CPUMaximumUsage() float64 {
+	var key = "domain.syscheck.cpucheck.cpuMaximumUsage"
+	if sc.cpuMaximumUsage == nil {
+		if _, ok := viper.Get(key).(float64); !ok {
+			viper.Set(key, defaultCPUMaximumUsage)
+		}
+		sc.cpuMaximumUsage = _float64(viper.GetFloat64(key))
+	}
+	return *sc.cpuMaximumUsage
+}
+
 // init function initialize App global variable
 func init() {
 	App = &syscheckConfig{}
