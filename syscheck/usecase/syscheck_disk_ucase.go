@@ -73,6 +73,18 @@ func NewDiskCheckUsecase(cfg diskCheckUsecaseConfig, hr domain.DiskCheckHistoryR
 	}
 }
 
+// CheckDisk check disk health with checkDisk method & store check log in repository
+// Implement CheckDisk method of domain.DiskCheckUseCase interface
+func (du *diskCheckUsecase) CheckDisk(ctx context.Context) error {
+	history := du.checkDisk(ctx)
+
+	if b, err := du.historyRepo.Store(history); err != nil {
+		return errors.Wrapf(err, "failed to store disk check history, response: %s", string(b))
+	}
+
+	return nil
+}
+
 // method with below logic about handling health check process according to current disk check status
 // 0 : 정상적으로 인지된 상태 (상태 확인 수행)
 // 0 -> 1 : Docker Prune 실행 (Docker Prune 알림 발행)
