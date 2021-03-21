@@ -6,9 +6,11 @@ package usecase
 
 import (
 	"context"
+	"fmt"
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/api/types/filters"
 	"github.com/docker/docker/client"
+	"github.com/google/uuid"
 	"github.com/inhies/go-bytesize"
 	"github.com/pkg/errors"
 	"golang.org/x/sys/unix"
@@ -91,7 +93,28 @@ func (du *diskCheckUsecase) checkDisk(ctx context.Context) (history *domain.Disk
 		history.ProcessLevel = errorLevel.String()
 		history.SetError(err)
 		return
+	}
 	history.DiskCapacity = _cap
+
+	switch du.status {
+	case healthyStatus:
+		break
+	case recoveringStatus:
+		history.ProcessLevel = recoveringLevel.String()
+		history.Message = "pruning docker system is already on process"
+		return
+	case unhealthyStatus:
+		if du.isMinCapacityLessThan(_cap) {
+			du.setStatus(healthyStatus)
+			history.ProcessLevel = recoveredLevel.String()
+			history.Message = "disk check is recovered to be healthy"
+			msg := fmt.Sprintf("!disk check recovered to health! remain capacity - %s", _cap.String())
+			_, _, _ = du.slackChatAgency.SendMessage("heart", msg, _uuid)
+		} else {
+			history.ProcessLevel = unhealthyLevel.String()
+			history.Message = "disk check is unhealthy now"
+		}
+		return
 }
 
 // pruneDockerSystem prune docker system(build cache, containers, images, networks) and return reclaimed space size
