@@ -4,7 +4,10 @@
 
 package domain
 
-import "github.com/inhies/go-bytesize"
+import (
+	"context"
+	"github.com/inhies/go-bytesize"
+)
 
 // CPUCheckHistory model is used for record cpu health check history and result
 type CPUCheckHistory struct {
@@ -27,4 +30,10 @@ type CPUCheckHistoryRepository interface {
 	// Store method save CPUCheckHistory model in repository
 	// b in return represents bytes of response body(map[string]interface{})
 	Store(*CPUCheckHistory) (b []byte, err error)
+}
+
+// DiskCheckUseCase is interface used as business process handler about cpu check
+type CPUCheckUseCase interface {
+	// CheckCPU method check cpu usage status and store cpu check history using repository
+	CheckCPU(ctx context.Context) error
 }
