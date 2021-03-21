@@ -5,7 +5,7 @@
 // in agent.go file, define struct type of slack agent & initializer that are not method.
 // Also if exist, custom type or variable used in common in each of method will declared in this file.
 
-package slack
+package slackagent
 
 import "github.com/slack-go/slack"
 
