@@ -80,6 +80,18 @@ func NewDiskCheckUsecase(cfg diskCheckUsecaseConfig, hr domain.DiskCheckHistoryR
 // 2 : 관리자가 직접 확인해야함 (상태 확인 수행 X)
 // 2 -> 0 : 관리자 직접 상태 회복 완료 (상태 회복 알림 발행)
 func (du *diskCheckUsecase) checkDisk(ctx context.Context) (history *domain.DiskCheckHistory) {
+	_uuid := uuid.New().String()
+	history = new(domain.DiskCheckHistory)
+	history.FillPrivateComponent()
+	history.UUID = _uuid
+
+	_cap, err := getRemainDiskCapacity()
+	if err != nil {
+		err = errors.Wrap(err, "failed to get disk capacity")
+		history.ProcessLevel = errorLevel.String()
+		history.SetError(err)
+		return
+	history.DiskCapacity = _cap
 }
 
 // pruneDockerSystem prune docker system(build cache, containers, images, networks) and return reclaimed space size
