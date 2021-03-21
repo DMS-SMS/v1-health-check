@@ -106,7 +106,7 @@ func (du *diskCheckUsecase) checkDisk(ctx context.Context) (history *domain.Disk
 		history.SetError(err)
 		return
 	}
-	history.DiskCapacity = _cap
+	history.RemainingCap = _cap
 
 	switch du.status {
 	case healthyStatus:
@@ -141,7 +141,7 @@ func (du *diskCheckUsecase) checkDisk(ctx context.Context) (history *domain.Disk
 			err = errors.Wrap(err, "failed to prune docker system")
 			history.SetError(err)
 		} else {
-			history.ReclaimedSize = r
+			history.ReclaimedCap = r
 			history.Message = "pruned docker system as current disk capacity is less than the minimum"
 		}
 
