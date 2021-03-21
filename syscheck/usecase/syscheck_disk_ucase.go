@@ -77,7 +77,6 @@ func (du *diskCheckUsecase) pruneDockerSystem() (reclaimed bytesize.ByteSize, er
 		args = filters.Args{}
 	)
 
-	if report, pruneErr := du.dkrCli.BuildCachePrune(ctx, types.BuildCachePruneOptions{}); pruneErr != nil {
 	if report, pruneErr := du.dockerCli.BuildCachePrune(ctx, types.BuildCachePruneOptions{}); pruneErr != nil {
 		err = errors.Wrap(pruneErr, "failed to prune build cache in docker")
 		return
