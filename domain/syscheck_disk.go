@@ -14,11 +14,11 @@ type DiskCheckHistory struct {
 	// get required component by embedding systemCheckHistoryComponent
 	systemCheckHistoryComponent
 
-	// DiskCapacity specifies remain disk capacity of runtime system looked in disk check
-	DiskCapacity bytesize.ByteSize
+	// RemainingCap specifies remain disk capacity of runtime system looked in disk check
+	RemainingCap bytesize.ByteSize
 
-	// ReclaimedSize specifies reclaimed disk size get from docker system prune
-	ReclaimedSize bytesize.ByteSize
+	// ReclaimedCap specifies reclaimed disk capacity get from docker system prune
+	ReclaimedCap bytesize.ByteSize
 }
 
 // DiskCheckHistoryRepository is abstract method used in business layer
@@ -54,8 +54,8 @@ func (dh *DiskCheckHistory) DottedMapWithPrefix(prefix string) (m map[string]int
 	}
 
 	// setting public field value in dotted map
-	m[prefix + "disk_capacity"] = dh.DiskCapacity.String()
-	m[prefix + "reclaimed_size"] = dh.ReclaimedSize.String()
+	m[prefix + "remaining_capacity"] = dh.RemainingCap.String()
+	m[prefix + "reclaimed_capacity"] = dh.ReclaimedCap.String()
 
 	return
 }
