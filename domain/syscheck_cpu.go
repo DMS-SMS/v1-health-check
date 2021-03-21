@@ -42,3 +42,19 @@ func (ch *CPUCheckHistory) FillPrivateComponent() {
 	ch.systemCheckHistoryComponent.FillPrivateComponent()
 	ch._type = "CPUCheck"
 }
+
+// DottedMapWithPrefix convert CPUCheckHistory to dotted map and return using MapWithPrefixKey of upper struct
+// all key value of Map start with prefix received from parameter
+func (ch *CPUCheckHistory) DottedMapWithPrefix(prefix string) (m map[string]interface{}) {
+	m = ch.systemCheckHistoryComponent.DottedMapWithPrefix(prefix)
+
+	if prefix != "" {
+		prefix += "."
+	}
+
+	// setting public field value in dotted map
+	m[prefix + "usage_size"] = ch.UsageSize
+	m[prefix + "free_size"] = ch.FreeSize
+
+	return
+}
