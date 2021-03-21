@@ -59,11 +59,11 @@ type diskCheckUsecaseConfig interface {
 }
 
 // NewDiskCheckUsecase function return diskCheckUsecase ptr instance with initializing
-func NewDiskCheckUsecase(cfg diskCheckUsecaseConfig, hr domain.DiskCheckHistoryRepository, dc *client.Client, sca slackChatAgency) *diskCheckUsecase {
+func NewDiskCheckUsecase(cfg diskCheckUsecaseConfig, dhr domain.DiskCheckHistoryRepository, dc *client.Client, sca slackChatAgency) domain.DiskCheckUseCase {
 	return &diskCheckUsecase{
 		// initialize field with parameter received from caller
 		myCfg:           cfg,
-		historyRepo:     hr,
+		historyRepo:     dhr,
 		dockerCli:       dc,
 		slackChatAgency: sca,
 
