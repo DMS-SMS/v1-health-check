@@ -3,3 +3,9 @@
 // this cpu repository struct embed esRepositoryRequiredComponent struct in ./syscheck.go file
 
 package elasticsearch
+
+// esCPUCheckHistoryRepoConfig is the config for cpu check history repository using elasticsearch
+type esCPUCheckHistoryRepoConfig interface {
+	// get common method from embedding esRepositoryComponentConfig
+	esRepositoryComponentConfig
+}
