@@ -6,7 +6,6 @@ package domain
 
 import (
 	"context"
-	"github.com/inhies/go-bytesize"
 )
 
 // CPUCheckHistory model is used for record cpu health check history and result
@@ -14,11 +13,11 @@ type CPUCheckHistory struct {
 	// get required component by embedding systemCheckHistoryComponent
 	systemCheckHistoryComponent
 
-	// Usage specifies current cpu usage of runtime system looked in cpu check
-	Usage bytesize.ByteSize
+	// UsageSize specifies current cpu usage of runtime system looked in cpu check
+	UsageSize float32
 
-	// Free specifies freed cpu size while recovering cpu health
-	Free bytesize.ByteSize
+	// FreeSize specifies freed cpu size while recovering cpu health
+	FreeSize float32
 }
 
 // CPUCheckHistoryRepository is interface for repository layer used in usecase layer
