@@ -17,3 +17,14 @@ type CPUCheckHistory struct {
 	// Free specifies freed cpu size while recovering cpu health
 	Free bytesize.ByteSize
 }
+
+// CPUCheckHistoryRepository is interface for repository layer used in usecase layer
+// Repository is implemented with elasticsearch in v.1.0.0
+type CPUCheckHistoryRepository interface {
+	// get required component by embedding systemCheckHistoryRepositoryComponent
+	systemCheckHistoryRepositoryComponent
+
+	// Store method save CPUCheckHistory model in repository
+	// b in return represents bytes of response body(map[string]interface{})
+	Store(*CPUCheckHistory) (b []byte, err error)
+}
