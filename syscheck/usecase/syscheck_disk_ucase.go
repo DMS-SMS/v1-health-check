@@ -112,6 +112,13 @@ func (du *diskCheckUsecase) isMinCapacityLessThan(_cap bytesize.ByteSize) bool {
 	return du.myCfg.DiskMinCapacity() < _cap
 }
 
+// setStatus set status field value using mutex Lock & Unlock
+func (du *diskCheckUsecase) setStatus(status diskCheckStatus) {
+	du.mutex.Lock()
+	defer du.mutex.Unlock()
+	du.status = status
+}
+
 // getRemainDiskCapacity returns remain disk capacity as bytesize.Bytesize
 func getRemainDiskCapacity() (size bytesize.ByteSize, err error) {
 	var stat unix.Statfs_t
