@@ -13,8 +13,6 @@ import (
 	"github.com/google/uuid"
 	"github.com/inhies/go-bytesize"
 	"github.com/pkg/errors"
-	"golang.org/x/sys/unix"
-	"os"
 	"sync"
 
 	"github.com/DMS-SMS/v1-health-check/domain"
@@ -115,7 +113,7 @@ func (du *diskCheckUsecase) checkDisk(ctx context.Context) (history *domain.Disk
 	history.FillPrivateComponent()
 	history.UUID = _uuid
 
-	_cap, err := getRemainDiskCapacity()
+	_cap, err := du.diskMeasurer.RemainDiskCapacity()
 	if err != nil {
 		err = errors.Wrap(err, "failed to get disk capacity")
 		history.ProcessLevel = errorLevel.String()
@@ -161,7 +159,7 @@ func (du *diskCheckUsecase) checkDisk(ctx context.Context) (history *domain.Disk
 			history.Message = "pruned docker system as current disk capacity is less than the minimum"
 		}
 
-		if _cap, _ = getRemainDiskCapacity(); du.isMinCapacityLessThan(_cap) {
+		if _cap, _ = du.diskMeasurer.RemainDiskCapacity(); du.isMinCapacityLessThan(_cap) {
 			du.setStatus(diskStatusHealthy)
 			msg := fmt.Sprintf("!disk check is healthy by pruning! remain capacity - %s", _cap.String())
 			_, _, _ = du.slackChatAgency.SendMessage("heart", msg, _uuid)
