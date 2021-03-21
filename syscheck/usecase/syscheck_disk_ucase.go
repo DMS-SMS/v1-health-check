@@ -71,6 +71,17 @@ func NewDiskCheckUsecase(cfg diskCheckUsecaseConfig, hr domain.DiskCheckHistoryR
 	}
 }
 
+// method with below logic about handling health check process according to current disk check status
+// 0 : 정상적으로 인지된 상태 (상태 확인 수행)
+// 0 -> 1 : Docker Prune 실행 (Docker Prune 알림 발행)
+// 1 : Docker Prune 실행중 (상태 확인 수행 X)
+// 1 -> 0 : Docker Prune 으로 인해 상태 회복 완료 (상태 회복 알림 발행)
+// 1 -> 2 : Docker Prune 을 해도 상태 회복 X (상태 회복 불가능 상태 알림 발행)
+// 2 : 관리자가 직접 확인해야함 (상태 확인 수행 X)
+// 2 -> 0 : 관리자 직접 상태 회복 완료 (상태 회복 알림 발행)
+func (du *diskCheckUsecase) checkDisk(ctx context.Context) (history *domain.DiskCheckHistory) {
+}
+
 // pruneDockerSystem prune docker system(build cache, containers, images, networks) and return reclaimed space size
 func (du *diskCheckUsecase) pruneDockerSystem() (reclaimed bytesize.ByteSize, err error) {
 	var (
