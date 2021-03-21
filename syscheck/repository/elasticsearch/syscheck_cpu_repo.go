@@ -36,6 +36,21 @@ type esCPUCheckHistoryRepoConfig interface {
 	esRepositoryComponentConfig
 }
 
+// NewESCPUCheckHistoryRepository return new object that implement CPUCheckHistoryRepository interface
+func NewESCPUCheckHistoryRepository(cfg esCPUCheckHistoryRepoConfig, cli *elasticsearch.Client, w reqBodyWriter) domain.CPUCheckHistoryRepository {
+	repo := &esCPUCheckHistoryRepository{
+		myCfg:      cfg,
+		esCli:      cli,
+		bodyWriter: w,
+	}
+
+	if err := repo.Migrate(); err != nil {
+		log.Fatal(errors.Wrap(err, "could not migrate repository").Error())
+	}
+
+	return repo
+}
+
 // Implement Migrate method of CPUCheckHistoryRepository interface
 func (esr *esCPUCheckHistoryRepository) Migrate() error {
 	resp, err := (esapi.IndicesExistsRequest{
