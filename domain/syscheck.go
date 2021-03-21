@@ -34,6 +34,7 @@ type systemCheckHistoryComponent struct {
 	// _type specifies detail service type in system check domain (Ex, DiskCheck, CPUCheck)
 	_type string
 
+	// ---
 
 	// public field in below, these fields don't have fixed value so set in another package from custom user
 	// UUID specifies Universally unique identifier in each of system check process
@@ -45,14 +46,23 @@ type systemCheckHistoryComponent struct {
 	// Message specifies additional description of result about system check process.
 	Message string
 
-	// Alerted specifies if alert result or status in while handling system check process.
-	Alerted bool
-
-	// AlarmContent specifies content about alarm sent in system check process.
-	AlarmContent string
-
 	// Error specifies error message if health check's been handled abnormally.
 	Error error
+
+	// ---
+
+	// field in below is about alarm result and is private so call SetAlarmResult method to set this field value
+	// Alerted specifies if alert result or status in while handling system check process.
+	alerted bool
+
+	// alarmText specifies alarm text sent in system check process.
+	alarmText string
+
+	// alarmTime specifies time when this system check sent alarm.
+	alarmTime time.Time
+
+	// alarmErr specifies Error occurred when sending alarm.
+	alarmErr error
 }
 
 // systemCheckHistoryRepositoryComponent is basic interface using by embedded in every repository about check history
@@ -98,8 +108,14 @@ func (sch *systemCheckHistoryComponent) DottedMapWithPrefix(prefix string) (m ma
 	if sch.Error == nil {
 		m[prefix + "error"] = nil
 	} else {
-	m[prefix + "error"] = sch.Error.Error()
+		m[prefix + "error"] = sch.Error.Error()
 	}
+
+	// setting alarm result field value in dotted map
+	m[prefix + "alerted"] = sch.alerted
+	m[prefix + "alarm_text"] = sch.alarmText
+	m[prefix + "alarm_time"] = sch.alarmTime
+	m[prefix + "alarm_error"] = sch.alarmErr
 
 	return
 }
