@@ -62,7 +62,7 @@ func NewDiskCheckUsecase(cfg diskCheckUsecaseConfig, hr domain.DiskCheckHistoryR
 		slackChatAgency: sca,
 
 		// initialize field with default value
-		status: checkAvailableStatus,
+		status: healthyStatus,
 	}
 }
 
