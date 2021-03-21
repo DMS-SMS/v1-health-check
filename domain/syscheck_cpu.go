@@ -58,3 +58,9 @@ func (ch *CPUCheckHistory) DottedMapWithPrefix(prefix string) (m map[string]inte
 
 	return
 }
+
+// SetError method set Message & Error field with err get from param
+func (ch *CPUCheckHistory) SetError(err error) {
+	ch.Message = err.Error()
+	ch.Error = err
+}
