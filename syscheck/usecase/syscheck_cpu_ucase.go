@@ -3,3 +3,11 @@
 // cpu check usecase struct embed systemCheckUsecaseComponent struct in ./syscheck.go file
 
 package usecase
+
+// cpuCheckStatus is type to int constant represent current cpu check process status
+type cpuCheckStatus int
+const (
+	cpuStatusHealthy    cpuCheckStatus = iota // represent cpu check status is healthy
+	cpuStatusRecovering                       // represent it's recovering cpu status now
+	cpuStatusUnhealthy                        // represent cpu check status is unhealthy
+)
