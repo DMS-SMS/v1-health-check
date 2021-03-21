@@ -36,6 +36,9 @@ type systemCheckHistoryComponent struct {
 
 
 	// public field in below, these fields don't have fixed value so set in another package from custom user
+	// UUID specifies Universally unique identifier in each of system check process
+	UUID string
+
 	// ProcessLevel specifies about how level to handle system check process.
 	ProcessLevel string
 
@@ -89,6 +92,7 @@ func (sch *systemCheckHistoryComponent) DottedMapWithPrefix(prefix string) (m ma
 	m[prefix + "type"] = sch._type
 
 	// setting public field value in dotted map
+	m[prefix + "uuid"] = sch.UUID
 	m[prefix + "process_level"] = sch.ProcessLevel
 	m[prefix + "message"] = sch.ProcessLevel
 	m[prefix + "alerted"] = sch.Alerted
