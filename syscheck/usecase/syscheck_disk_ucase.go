@@ -41,6 +41,9 @@ type diskCheckUsecase struct {
 
 	// status represent current process status of disk health check
 	status diskCheckStatus
+
+	// mutex help to prevent race condition when set status field value
+	mutex sync.Mutex
 }
 
 // diskCheckUsecaseConfig is the config getter interface for disk check usecase
@@ -63,6 +66,7 @@ func NewDiskCheckUsecase(cfg diskCheckUsecaseConfig, hr domain.DiskCheckHistoryR
 
 		// initialize field with default value
 		status: healthyStatus,
+		mutex:  sync.Mutex{},
 	}
 }
 
