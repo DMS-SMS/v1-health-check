@@ -23,9 +23,9 @@ import (
 // diskCheckStatus is type to int constant represent current disk check process status
 type diskCheckStatus int
 const (
-	healthyStatus diskCheckStatus = iota // represent disk check status is healthy
-	recoveringStatus                     // represent it's recovering disk status now
-	unhealthyStatus                      // represent disk check status is unhealthy
+	diskStatusHealthy    diskCheckStatus = iota // represent disk check status is healthy
+	diskStatusRecovering                        // represent it's recovering disk status now
+	diskStatusUnhealthy                         // represent disk check status is unhealthy
 )
 
 // diskCheckUsecase implement DiskCheckUsecase interface in domain and used in delivery layer
