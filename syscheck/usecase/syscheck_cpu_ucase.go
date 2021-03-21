@@ -48,3 +48,18 @@ type cpuCheckUsecaseConfig interface {
 	// CPUUsageLimit method returns float32 represent cpu usage limit value
 	CPUUsageLimit() float32
 }
+
+// NewCPUCheckUsecase function return cpuCheckUsecase ptr instance after initializing
+func NewCPUCheckUsecase(cfg cpuCheckUsecaseConfig, chr domain.CPUCheckHistoryRepository, dc *client.Client, sca slackChatAgency) domain.CPUCheckUseCase {
+	return &cpuCheckUsecase{
+		// initialize field with parameter received from caller
+		myCfg:           cfg,
+		historyRepo:     chr,
+		dockerCli:       dc,
+		slackChatAgency: sca,
+
+		// initialize field with default value
+		status: cpuStatusHealthy,
+		mutex:  sync.Mutex{},
+	}
+}
