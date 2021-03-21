@@ -95,9 +95,11 @@ func (sch *systemCheckHistoryComponent) DottedMapWithPrefix(prefix string) (m ma
 	m[prefix + "uuid"] = sch.UUID
 	m[prefix + "process_level"] = sch.ProcessLevel
 	m[prefix + "message"] = sch.ProcessLevel
-	m[prefix + "alerted"] = sch.Alerted
-	m[prefix + "alarm_content"] = sch.AlarmContent
+	if sch.Error == nil {
+		m[prefix + "error"] = nil
+	} else {
 	m[prefix + "error"] = sch.Error.Error()
+	}
 
 	return
 }
