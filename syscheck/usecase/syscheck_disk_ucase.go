@@ -58,6 +58,12 @@ type diskCheckUsecaseConfig interface {
 	DiskMinCapacity() bytesize.ByteSize
 }
 
+// diskMeasurer is measurer that measure various value about disk system
+type diskMeasurer interface {
+	// RemainDiskCapacity return remain disk capacity expressed in bytesize package
+	RemainDiskCapacity() (size bytesize.ByteSize, err error)
+}
+
 // NewDiskCheckUsecase function return diskCheckUsecase ptr instance with initializing
 func NewDiskCheckUsecase(cfg diskCheckUsecaseConfig, dhr domain.DiskCheckHistoryRepository, dc *client.Client, sca slackChatAgency) domain.DiskCheckUseCase {
 	return &diskCheckUsecase{
