@@ -41,7 +41,7 @@ type diskCheckUsecase struct {
 	slackChatAgency slackChatAgency
 
 	// diskMeasurer is used for measuring various value about disk
-	diskMeasurer diskMeasurer
+	diskSysAgency diskSysAgency
 
 	// status represent current process status of disk health check
 	status diskCheckStatus
@@ -71,7 +71,7 @@ func NewDiskCheckUsecase(
 	dhr domain.DiskCheckHistoryRepository,
 	dc *client.Client,
 	sca slackChatAgency,
-	dm diskMeasurer,
+	dsa diskSysAgency,
 ) domain.DiskCheckUseCase {
 	return &diskCheckUsecase{
 		// initialize field with parameter received from caller
@@ -79,7 +79,7 @@ func NewDiskCheckUsecase(
 		historyRepo:     dhr,
 		dockerCli:       dc,
 		slackChatAgency: sca,
-		diskMeasurer:    dm,
+		diskSysAgency:   dsa,
 
 		// initialize field with default value
 		status: diskStatusHealthy,
