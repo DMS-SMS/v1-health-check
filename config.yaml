@@ -13,3 +13,6 @@ domain:
           replicaNum: 0
     diskcheck:
       minCapacity: "2GB"
+    cpucheck:
+      cpuWarningUsage: 1.0
+      cpuMaximumUsage: 1.5
