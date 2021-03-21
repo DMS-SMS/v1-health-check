@@ -66,3 +66,15 @@ func NewCPUCheckUsecase(cfg cpuCheckUsecaseConfig, chr domain.CPUCheckHistoryRep
 		mutex:  sync.Mutex{},
 	}
 }
+
+// CheckCPU check cpu health with checkCPU method & store check history in repository
+// Implement CheckCPU method of domain.CPUCheckUseCase interface
+func (cu *cpuCheckUsecase) CheckCPU(ctx context.Context) error {
+	history := cu.checkCPU(ctx)
+
+	if b, err := cu.historyRepo.Store(history); err != nil {
+		return errors.Wrapf(err, "failed to store cpu check history, response: %s", string(b))
+	}
+
+	return nil
+}
