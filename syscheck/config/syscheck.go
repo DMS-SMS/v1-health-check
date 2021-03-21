@@ -27,10 +27,20 @@ type syscheckConfig struct {
 	// indexReplicaNum represent replica number of elasticsearch index to replace index when node become unable
 	indexReplicaNum *int
 
+	// ---
 
 	// fields using in disk health checking (implement diskCheckUsecaseConfig)
-	// diskMinCapacity represent minimum disk capacity and is standard to decide to if clean disk.
+	// diskMinCapacity represent minimum disk capacity and is standard to decide to if disk is healthy.
 	diskMinCapacity *bytesize.ByteSize
+
+	// ---
+
+	// fields using in cpu health check (implement cpuCheckUsecaseConfig)
+	// cpuWarningUsage represent warning cpu usage.
+	cpuWarningUsage *float64
+
+	// cpuMaximumUsage represent cpu maximum usage and is standard to decide to if cpu is healthy.
+	cpuMaximumUsage *float64
 }
 
 // default const value about syscheckConfig field
