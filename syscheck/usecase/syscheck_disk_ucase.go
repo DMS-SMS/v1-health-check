@@ -13,6 +13,7 @@ import (
 	"github.com/pkg/errors"
 	"golang.org/x/sys/unix"
 	"os"
+	"sync"
 
 	"github.com/DMS-SMS/v1-health-check/domain"
 )
@@ -104,6 +105,11 @@ func (du *diskCheckUsecase) pruneDockerSystem() (reclaimed bytesize.ByteSize, er
 	}
 
 	return
+}
+
+// isMinCapacityLessThan return bool if disk min capacity is less than parameter
+func (du *diskCheckUsecase) isMinCapacityLessThan(_cap bytesize.ByteSize) bool {
+	return du.myCfg.DiskMinCapacity() < _cap
 }
 
 // getRemainDiskCapacity returns remain disk capacity as bytesize.Bytesize
