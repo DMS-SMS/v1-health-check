@@ -209,23 +209,3 @@ func (du *diskCheckUsecase) setStatus(status diskCheckStatus) {
 	defer du.mutex.Unlock()
 	du.status = status
 }
-
-// getRemainDiskCapacity returns remain disk capacity as bytesize.Bytesize
-func getRemainDiskCapacity() (size bytesize.ByteSize, err error) {
-	var stat unix.Statfs_t
-
-	wd, err := os.Getwd()
-	if err != nil {
-		err = errors.Wrap(err, "failed to call os.Getwd")
-		return
-	}
-
-	if err = unix.Statfs(wd, &stat); err != nil {
-		err = errors.Wrap(err, "failed to call unix.Statfs")
-		return
-	}
-
-	// Available blocks * size per block = available space in bytes
-	size = bytesize.New(float64(stat.Bavail * uint64(stat.Bsize)))
-	return
-}
