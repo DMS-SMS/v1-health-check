@@ -115,6 +115,39 @@ func (du *diskCheckUsecase) checkDisk(ctx context.Context) (history *domain.Disk
 			history.Message = "disk check is unhealthy now"
 		}
 		return
+	}
+
+	if !du.isMinCapacityLessThan(_cap) {
+		du.setStatus(recoveringStatus)
+		history.ProcessLevel = weakDetectedLevel.String()
+		msg := "!weak detected in disk check! start to prune docker system"
+		history.SetAlarmResult(du.slackChatAgency.SendMessage("warning", msg, _uuid))
+
+		if r, err := du.pruneDockerSystem(); err != nil {
+			msg := "!disk check error occurred! failed to prune docker system"
+			_, _, _ = du.slackChatAgency.SendMessage("anger", msg, _uuid)
+			err = errors.Wrap(err, "failed to prune docker system")
+			history.SetError(err)
+		} else {
+			history.ReclaimedSize = r
+			history.Message = "pruned docker system as current disk capacity is less than the minimum"
+		}
+
+		if _cap, _ = getRemainDiskCapacity(); du.isMinCapacityLessThan(_cap) {
+			du.setStatus(healthyStatus)
+			msg := fmt.Sprintf("!disk check is healthy by pruning! remain capacity - %s", _cap.String())
+			_, _, _ = du.slackChatAgency.SendMessage("heart", msg, _uuid)
+		} else {
+			du.setStatus(unhealthyStatus)
+			msg := "!disk check has deteriorated! please check for yourself"
+			_, _, _ = du.slackChatAgency.SendMessage("broken_heart", msg, _uuid)
+		}
+	} else {
+		history.ProcessLevel = healthyLevel.String()
+		history.Message = "disk system is healthy now"
+	}
+
+	return
 }
 
 // pruneDockerSystem prune docker system(build cache, containers, images, networks) and return reclaimed space size
