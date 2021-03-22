@@ -17,8 +17,8 @@ type calculateContainersCPUUsageResult struct {
 	// cpuNum represent number of cpu core
 	cpuNum int
 
-	// containersCPUUsage is to keep cpu usage each of container get from GetTotalCPUUsage
-	containersCPUUsage []struct {
+	// containers is to keep cpu usage each of container get from GetTotalCPUUsage
+	containers []struct {
 		id, name string
 		cpuUsage float64
 	}
