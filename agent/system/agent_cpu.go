@@ -24,6 +24,14 @@ type calculateContainersCPUUsageResult struct {
 	}
 }
 
+// TotalCPUUsage return total cpu usage in docker containers
+func (cr calculateContainersCPUUsageResult) TotalCPUUsage() (usage float64) {
+	for _, container := range cr.containers {
+		usage += container.cpuUsage
+	}
+	return
+}
+
 // CalculateContainersCPUUsage calculate cpu usage & return calculateContainersCPUUsageResult
 func (sa *sysAgent) CalculateContainersCPUUsage() (usage float64, err error) {
 	var (
