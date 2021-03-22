@@ -14,6 +14,8 @@ services:
       - VERSION=${VERSION}
       - ES_ADDRESS=${ES_ADDRESS}
       - CONFIG_FILE=${CONFIG_FILE}
+      - SLACK_API_TOKEN=${SLACK_API_TOKEN}
+      - SLACK_CHAT_CHANNEL=${SLACK_CHAT_CHANNEL}
     volumes:
       - ./config.yaml:/usr/share/health-check/config.yaml
       - /var/run/docker.sock:/var/run/docker.sock
