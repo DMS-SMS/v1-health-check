@@ -23,8 +23,12 @@ func (sa *sysAgent) GetTotalCPUUsage() (usage float64, err error) {
 		err = errors.Wrap(err, "failed to get container list from docker")
 		return
 	}
+	sa.containersCPUUsage = make([]struct{
+		id, name string
+		cpuUsage float64
+	}, len(lists))
 
-	for _, list := range lists {
+	for i, list := range lists {
 		var stats types.ContainerStats
 		if stats, err = sa.dockerCli.ContainerStats(ctx, list.ID, false); err != nil {
 			err = errors.Wrap(err, "failed to get container stats from docker")
@@ -36,7 +40,15 @@ func (sa *sysAgent) GetTotalCPUUsage() (usage float64, err error) {
 			err = errors.Wrap(err, "failed to decode stats response body to struct")
 			return
 		}
-		usage += getCPUUsagePercentFrom(v)
+
+		sa.containersCPUUsage[i] = struct {
+			id, name string
+			cpuUsage float64
+		}{
+			id: v.ID, name: v.Name,
+			cpuUsage: getCPUUsagePercentFrom(v),
+		}
+		usage += sa.containersCPUUsage[i].cpuUsage
 	}
 
 	usage = float64(runtime.NumCPU()) / 100 * usage
