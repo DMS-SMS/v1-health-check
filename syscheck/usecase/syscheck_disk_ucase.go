@@ -63,6 +63,9 @@ type diskCheckUsecaseConfig interface {
 type diskSysAgency interface {
 	// GetRemainDiskCapacity return remain disk capacity expressed in bytesize package
 	GetRemainDiskCapacity() (size bytesize.ByteSize, err error)
+
+	// PruneDockerSystem prune all about docker system and return reclaimed size
+	PruneDockerSystem() (reclaimed bytesize.ByteSize, err error)
 }
 
 // NewDiskCheckUsecase function return diskCheckUsecase ptr instance with initializing
