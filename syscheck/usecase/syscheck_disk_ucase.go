@@ -7,9 +7,6 @@ package usecase
 import (
 	"context"
 	"fmt"
-	"github.com/docker/docker/api/types"
-	"github.com/docker/docker/api/types/filters"
-	"github.com/docker/docker/client"
 	"github.com/google/uuid"
 	"github.com/inhies/go-bytesize"
 	"github.com/pkg/errors"
@@ -33,9 +30,6 @@ type diskCheckUsecase struct {
 
 	// historyRepo is used for store disk check history and injected from outside
 	historyRepo domain.DiskCheckHistoryRepository
-
-	// dockerCli is docker client to call docker agent API
-	dockerCli *client.Client
 
 	// slackChat is used for agent slack API about chatting
 	slackChatAgency slackChatAgency
@@ -72,7 +66,6 @@ type diskSysAgency interface {
 func NewDiskCheckUsecase(
 	cfg diskCheckUsecaseConfig,
 	dhr domain.DiskCheckHistoryRepository,
-	dc *client.Client,
 	sca slackChatAgency,
 	dsa diskSysAgency,
 ) domain.DiskCheckUseCase {
@@ -80,7 +73,6 @@ func NewDiskCheckUsecase(
 		// initialize field with parameter received from caller
 		myCfg:           cfg,
 		historyRepo:     dhr,
-		dockerCli:       dc,
 		slackChatAgency: sca,
 		diskSysAgency:   dsa,
 
