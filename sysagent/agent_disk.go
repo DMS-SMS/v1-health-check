@@ -5,6 +5,9 @@
 package sysagent
 
 import (
+	"context"
+	"github.com/docker/docker/api/types"
+	"github.com/docker/docker/api/types/filters"
 	"github.com/inhies/go-bytesize"
 	"github.com/pkg/errors"
 	"golang.org/x/sys/unix"
@@ -28,5 +31,41 @@ func (sa *sysAgent) GetRemainDiskCapacity() (size bytesize.ByteSize, err error) 
 
 	// Available blocks * size per block = available space in bytes
 	size = bytesize.New(float64(stat.Bavail * uint64(stat.Bsize)))
+	return
+}
+
+// PruneDockerSystem prune docker system(build cache, containers, images, networks) and return reclaimed space size
+func (sa *sysAgent) PruneDockerSystem() (reclaimed bytesize.ByteSize, err error) {
+	var (
+		ctx = context.Background()
+		args = filters.Args{}
+	)
+
+	if report, pruneErr := sa.dockerCli.BuildCachePrune(ctx, types.BuildCachePruneOptions{}); pruneErr != nil {
+		err = errors.Wrap(pruneErr, "failed to prune build cache in docker")
+		return
+	} else {
+		reclaimed = bytesize.ByteSize(uint64(reclaimed) + report.SpaceReclaimed)
+	}
+
+	if report, pruneErr := sa.dockerCli.ContainersPrune(ctx, args); pruneErr != nil {
+		err = errors.Wrap(pruneErr, "failed to prune containers in docker")
+		return
+	} else {
+		reclaimed = bytesize.ByteSize(uint64(reclaimed) + report.SpaceReclaimed)
+	}
+
+	if report, pruneErr := sa.dockerCli.ImagesPrune(ctx, args); pruneErr != nil {
+		err = errors.Wrap(pruneErr, "failed to prune image in docker")
+		return
+	} else {
+		reclaimed = bytesize.ByteSize(uint64(reclaimed) + report.SpaceReclaimed)
+	}
+
+	if _, pruneErr := sa.dockerCli.NetworksPrune(ctx, args); pruneErr != nil {
+		err = errors.Wrap(pruneErr, "failed to prune networks in docker")
+		return
+	}
+
 	return
 }
