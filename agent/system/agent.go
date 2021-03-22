@@ -5,7 +5,7 @@
 // in agent.go file, define agent struct & initializer
 // this agent implement various interface about system agency defined and using in usecase layer of syscheck domain
 
-package sysagent
+package system
 
 import "github.com/docker/docker/client"
 
