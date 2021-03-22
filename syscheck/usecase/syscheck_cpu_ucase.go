@@ -30,6 +30,9 @@ type cpuCheckUsecase struct {
 	// slackChat is used for agent slack API about chatting
 	slackChatAgency slackChatAgency
 
+	// cpuSysAgency is used as agency about cpu system command
+	cpuSysAgency cpuSysAgency
+
 	// status represent current process status of cpu health check
 	status cpuCheckStatus
 
@@ -56,12 +59,18 @@ type cpuSysAgency interface {
 }
 
 // NewCPUCheckUsecase function return cpuCheckUsecase ptr instance after initializing
-func NewCPUCheckUsecase(cfg cpuCheckUsecaseConfig, chr domain.CPUCheckHistoryRepository, dc *client.Client, sca slackChatAgency) domain.CPUCheckUseCase {
+func NewCPUCheckUsecase(
+	cfg cpuCheckUsecaseConfig,
+	chr domain.CPUCheckHistoryRepository,
+	sca slackChatAgency,
+	csa cpuSysAgency,
+) domain.CPUCheckUseCase {
 	return &cpuCheckUsecase{
 		// initialize field with parameter received from caller
 		myCfg:           cfg,
 		historyRepo:     chr,
 		slackChatAgency: sca,
+		cpuSysAgency:    csa,
 
 		// initialize field with default value
 		status: cpuStatusHealthy,
