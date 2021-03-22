@@ -171,42 +171,6 @@ func (du *diskCheckUsecase) checkDisk(ctx context.Context) (history *domain.Disk
 	return
 }
 
-// pruneDockerSystem prune docker system(build cache, containers, images, networks) and return reclaimed space size
-func (du *diskCheckUsecase) pruneDockerSystem() (reclaimed bytesize.ByteSize, err error) {
-	var (
-		ctx = context.Background()
-		args = filters.Args{}
-	)
-
-	if report, pruneErr := du.dockerCli.BuildCachePrune(ctx, types.BuildCachePruneOptions{}); pruneErr != nil {
-		err = errors.Wrap(pruneErr, "failed to prune build cache in docker")
-		return
-	} else {
-		reclaimed = bytesize.ByteSize(uint64(reclaimed) + report.SpaceReclaimed)
-	}
-
-	if report, pruneErr := du.dockerCli.ContainersPrune(ctx, args); pruneErr != nil {
-		err = errors.Wrap(pruneErr, "failed to prune containers in docker")
-		return
-	} else {
-		reclaimed = bytesize.ByteSize(uint64(reclaimed) + report.SpaceReclaimed)
-	}
-
-	if report, pruneErr := du.dockerCli.ImagesPrune(ctx, args); pruneErr != nil {
-		err = errors.Wrap(pruneErr, "failed to prune image in docker")
-		return
-	} else {
-		reclaimed = bytesize.ByteSize(uint64(reclaimed) + report.SpaceReclaimed)
-	}
-
-	if _, pruneErr := du.dockerCli.NetworksPrune(ctx, args); pruneErr != nil {
-		err = errors.Wrap(pruneErr, "failed to prune networks in docker")
-		return
-	}
-
-	return
-}
-
 // isMinCapacityLessThan return bool if disk min capacity is less than parameter
 func (du *diskCheckUsecase) isMinCapacityLessThan(_cap bytesize.ByteSize) bool {
 	return du.myCfg.DiskMinCapacity() < _cap
