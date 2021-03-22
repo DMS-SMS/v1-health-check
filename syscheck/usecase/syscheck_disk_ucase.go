@@ -144,7 +144,7 @@ func (du *diskCheckUsecase) checkDisk(ctx context.Context) (history *domain.Disk
 		msg := "!weak detected in disk check! start to prune docker system"
 		history.SetAlarmResult(du.slackChatAgency.SendMessage("warning", msg, _uuid))
 
-		if r, err := du.pruneDockerSystem(); err != nil {
+		if r, err := du.diskSysAgency.PruneDockerSystem(); err != nil {
 			msg := "!disk check error occurred! failed to prune docker system"
 			_, _, _ = du.slackChatAgency.SendMessage("anger", msg, _uuid)
 			err = errors.Wrap(err, "failed to prune docker system")
