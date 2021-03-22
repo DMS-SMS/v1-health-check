@@ -7,10 +7,17 @@
 
 package sysagent
 
+import "github.com/docker/docker/client"
+
 // sysAgent is struct that agent various command about system of disk, cpu, memory, etc ...
-type sysAgent struct {}
+type sysAgent struct {
+	// dockerCli is docker client to call docker agent API
+	dockerCli *client.Client
+}
 
 // New return new instance of sysAgent pointer type initialized with parameter
-func New() *sysAgent {
-	return &sysAgent{}
+func New(dc *client.Client) *sysAgent {
+	return &sysAgent{
+		dockerCli: dc,
+	}
 }
