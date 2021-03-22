@@ -49,6 +49,12 @@ type cpuCheckUsecaseConfig interface {
 	CPUMaximumUsage() float64
 }
 
+// cpuSysAgency is agency that agent various command about cpu system
+type cpuSysAgency interface {
+	// GetTotalCPUUsage return total using cpu usage with float64
+	GetTotalCPUUsage() (usage float64, err error)
+}
+
 // NewCPUCheckUsecase function return cpuCheckUsecase ptr instance after initializing
 func NewCPUCheckUsecase(cfg cpuCheckUsecaseConfig, chr domain.CPUCheckHistoryRepository, dc *client.Client, sca slackChatAgency) domain.CPUCheckUseCase {
 	return &cpuCheckUsecase{
