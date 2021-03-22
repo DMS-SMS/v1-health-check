@@ -13,12 +13,6 @@ import "github.com/docker/docker/client"
 type sysAgent struct {
 	// dockerCli is docker client to call docker agent API
 	dockerCli *client.Client
-
-	// containersCPUUsage is to keep cpu usage each of container get from GetTotalCPUUsage
-	containersCPUUsage []struct {
-		id, name string
-		cpuUsage float64
-	}
 }
 
 // New return new instance of sysAgent pointer type initialized with parameter
