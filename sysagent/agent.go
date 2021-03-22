@@ -6,3 +6,11 @@
 // this agent implement various interface about system agency defined and using in usecase layer of syscheck domain
 
 package sysagent
+
+// sysAgent is struct that agent various command about system of disk, cpu, memory, etc ...
+type sysAgent struct {}
+
+// New return new instance of sysAgent pointer type initialized with parameter
+func New() *sysAgent {
+	return &sysAgent{}
+}
