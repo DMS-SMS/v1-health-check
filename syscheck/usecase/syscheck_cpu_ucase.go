@@ -5,7 +5,7 @@
 package usecase
 
 import (
-	"github.com/docker/docker/client"
+	"context"
 	"sync"
 
 	"github.com/DMS-SMS/v1-health-check/domain"
@@ -26,9 +26,6 @@ type cpuCheckUsecase struct {
 
 	// historyRepo is used for store cpu check history and injected from outside
 	historyRepo domain.CPUCheckHistoryRepository
-
-	// dockerCli is docker client to call docker agent API
-	dockerCli *client.Client
 
 	// slackChat is used for agent slack API about chatting
 	slackChatAgency slackChatAgency
@@ -58,7 +55,6 @@ func NewCPUCheckUsecase(cfg cpuCheckUsecaseConfig, chr domain.CPUCheckHistoryRep
 		// initialize field with parameter received from caller
 		myCfg:           cfg,
 		historyRepo:     chr,
-		dockerCli:       dc,
 		slackChatAgency: sca,
 
 		// initialize field with default value
