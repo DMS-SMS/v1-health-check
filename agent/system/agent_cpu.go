@@ -42,3 +42,17 @@ func (sa *sysAgent) GetTotalCPUUsage() (usage float64, err error) {
 	usage = float64(runtime.NumCPU()) / 100 * usage
 	return
 }
+
+// getCPUUsagePercentFrom get cpu usage as percent from types.StatsJson struct
+func getCPUUsagePercentFrom(v *types.StatsJSON) (per float64) {
+	// calculate the change for the cpu usage of the container in between readings
+	cpuDelta := float64(v.CPUStats.CPUUsage.TotalUsage) - float64(v.PreCPUStats.CPUUsage.TotalUsage)
+	// calculate the change for the entire system between readings
+	systemDelta := float64(v.CPUStats.SystemUsage) - float64(v.PreCPUStats.SystemUsage)
+
+	if systemDelta > 0.0 && cpuDelta > 0.0 {
+		per = (cpuDelta / systemDelta) * float64(len(v.CPUStats.CPUUsage.PercpuUsage)) * 100.0
+	}
+
+	return
+}
