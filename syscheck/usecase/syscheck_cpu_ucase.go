@@ -54,8 +54,14 @@ type cpuCheckUsecaseConfig interface {
 
 // cpuSysAgency is agency that agent various command about cpu system
 type cpuSysAgency interface {
-	// GetTotalCPUUsage return total using cpu usage with float64
-	GetTotalCPUUsage() (usage float64, err error)
+	// CalculateContainersCPUUsage calculate container cpu usage & return result interface implementation
+	CalculateContainersCPUUsage() (result interface{
+		// TotalCPUUsage return total cpu usage in docker containers
+		TotalCPUUsage() float64
+
+		// MostConsumerExceptFor return container consume the most CPU except container names received from param
+		MostConsumerExceptFor([]string) (id, name string, usage float64)
+	}, err error)
 }
 
 // NewCPUCheckUsecase function return cpuCheckUsecase ptr instance after initializing
