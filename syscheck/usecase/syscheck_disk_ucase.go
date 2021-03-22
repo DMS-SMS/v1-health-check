@@ -34,7 +34,7 @@ type diskCheckUsecase struct {
 	// slackChat is used for agent slack API about chatting
 	slackChatAgency slackChatAgency
 
-	// diskMeasurer is used for measuring various value about disk
+	// diskSysAgency is used as agency about disk system command
 	diskSysAgency diskSysAgency
 
 	// status represent current process status of disk health check
