@@ -12,8 +12,20 @@ import (
 	"runtime"
 )
 
-// GetTotalCPUUsage method return total using cpu usage with float64
-func (sa *sysAgent) GetTotalCPUUsage() (usage float64, err error) {
+// calculateContainersCPUUsageResult is result type of CalculateContainersCPUUsage
+type calculateContainersCPUUsageResult struct {
+	// cpuNum represent number of cpu core
+	cpuNum int
+
+	// containersCPUUsage is to keep cpu usage each of container get from GetTotalCPUUsage
+	containersCPUUsage []struct {
+		id, name string
+		cpuUsage float64
+	}
+}
+
+// CalculateContainersCPUUsage calculate cpu usage & return calculateContainersCPUUsageResult
+func (sa *sysAgent) CalculateContainersCPUUsage() (usage float64, err error) {
 	var (
 		ctx = context.Background()
 	)
