@@ -12,28 +12,6 @@ import (
 	"runtime"
 )
 
-// calculateContainersCPUUsageResult is result type of CalculateContainersCPUUsage
-type calculateContainersCPUUsageResult struct {
-	// cpuNum represent number of cpu core
-	cpuNum int
-
-	// containers is to keep cpu usage each of container get from GetTotalCPUUsage
-	containers []struct {
-		id, name   string
-		cpuPercent float64
-	}
-}
-
-// TotalCPUUsage return total cpu usage in docker containers
-func (cr calculateContainersCPUUsageResult) TotalCPUUsage() (usage float64) {
-	var percent float64 = 0
-	for _, container := range cr.containers {
-		percent += container.cpuPercent
-	}
-	usage = float64(runtime.NumCPU()) / 100 * percent
-	return
-}
-
 // CalculateContainersCPUUsage calculate cpu usage & return calculateContainersCPUUsageResult
 func (sa *sysAgent) CalculateContainersCPUUsage() (interface {
 	TotalCPUUsage() (usage float64)
@@ -91,3 +69,5 @@ func getCPUUsagePercentFrom(v *types.StatsJSON) (per float64) {
 
 	return
 }
+
+//func is
