@@ -63,7 +63,7 @@ type cpuSysAgency interface {
 		TotalCPUUsage() (usage float64)
 
 		// MostConsumerExceptFor return container consume the most CPU except container names received from param
-		MostConsumerExceptFor(names []string) (id, name string, cpuPercent float64)
+		MostConsumerExceptFor(names []string) (id, name string, usage float64)
 	}, err error)
 }
 
