@@ -6,6 +6,8 @@ package usecase
 
 import (
 	"context"
+	"github.com/google/uuid"
+	"github.com/pkg/errors"
 	"sync"
 
 	"github.com/DMS-SMS/v1-health-check/domain"
@@ -113,6 +115,16 @@ func (cu *cpuCheckUsecase) checkCPU(ctx context.Context) (history *domain.CPUChe
 	history.FillPrivateComponent()
 	history.UUID = _uuid
 
+	result, err := cu.cpuSysAgency.CalculateContainersCPUUsage()
+	if err != nil {
+		err = errors.Wrap(err, "failed to calculate container cpu usage")
+		history.ProcessLevel = errorLevel.String()
+		history.SetError(err)
+		return
+	}
+	usage := result.TotalCPUUsage()
+	history.UsageSize = usage
+	
 	return
 }
 
