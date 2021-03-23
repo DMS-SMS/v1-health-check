@@ -125,6 +125,14 @@ func (cu *cpuCheckUsecase) checkCPU(ctx context.Context) (history *domain.CPUChe
 	usage := result.TotalCPUUsage()
 	history.UsageSize = usage
 	
+	if cu.isWarningUsageLessThan(usage) {
+		cu.setStatus(cpuStatusWarning)
+		history.ProcessLevel = warningLevel.String()
+		history.Message = "warning"
+		msg := fmt.Sprintf("!cpu check warning! current cpu usage - %.02f", usage)
+		history.SetAlarmResult(cu.slackChatAgency.SendMessage("warning", msg, _uuid))
+	}
+
 	return
 }
 
