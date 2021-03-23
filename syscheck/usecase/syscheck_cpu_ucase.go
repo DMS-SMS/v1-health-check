@@ -17,6 +17,7 @@ const (
 	cpuStatusHealthy    cpuCheckStatus = iota // represent cpu check status is healthy
 	cpuStatusRecovering                       // represent it's recovering cpu status now
 	cpuStatusUnhealthy                        // represent cpu check status is unhealthy
+	cpuStatusWarning                          // represent cpu check status is warning now
 )
 
 // cpuCheckUsecase implement CPUCheckUsecase interface in domain and used in delivery layer
