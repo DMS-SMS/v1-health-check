@@ -14,10 +14,10 @@ type CPUCheckHistory struct {
 	systemCheckHistoryComponent
 
 	// UsageSize specifies current cpu usage of runtime system looked in cpu check
-	UsageSize float32
+	UsageSize float64
 
 	// FreeSize specifies freed cpu size while recovering cpu health
-	FreeSize float32
+	FreeSize float64
 }
 
 // CPUCheckHistoryRepository is interface for repository layer used in usecase layer
