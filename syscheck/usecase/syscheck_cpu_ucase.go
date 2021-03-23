@@ -101,3 +101,8 @@ func (cu *cpuCheckUsecase) CheckCPU(ctx context.Context) error {
 func (cu *cpuCheckUsecase) isWarningUsageLessThan(usage float64) bool {
 	return cu.myCfg.CPUWarningUsage() < usage
 }
+
+// isMaximumUsageLessThan return bool if cpu maximum usage is less than parameter
+func (cu *cpuCheckUsecase) isMaximumUsageLessThan(usage float64) bool {
+	return cu.myCfg.CPUMaximumUsage() < usage
+}
