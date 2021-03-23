@@ -191,11 +191,16 @@ func (cu *cpuCheckUsecase) checkCPU(ctx context.Context) (history *domain.CPUChe
 			_, _, _ = cu.slackChatAgency.SendMessage("broken_heart", msg, _uuid)
 		}
 	} else if cu.isWarningUsageLessThan(totalUsage) {
-		cu.setStatus(cpuStatusWarning)
 		history.ProcessLevel = warningLevel.String()
-		history.Message = "warning"
-		msg := fmt.Sprintf("!cpu check warning! current cpu usage - %.02f", totalUsage)
-		history.SetAlarmResult(cu.slackChatAgency.SendMessage("warning", msg, _uuid))
+		history.Message = "cpu check is warning now, but not weak yet"
+		if cu.status != cpuStatusWarning {
+			cu.setStatus(cpuStatusWarning)
+			msg := fmt.Sprintf("!cpu check warning! current cpu usage - %.02f", totalUsage)
+			history.SetAlarmResult(cu.slackChatAgency.SendMessage("warning", msg, _uuid))
+		}
+	} else {
+		history.ProcessLevel = healthyLevel.String()
+		history.Message = "cpu system is healthy now"
 	}
 
 	return
