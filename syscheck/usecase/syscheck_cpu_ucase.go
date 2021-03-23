@@ -36,6 +36,9 @@ type cpuCheckUsecase struct {
 	// cpuSysAgency is used as agency about cpu system command
 	cpuSysAgency cpuSysAgency
 
+	// dockerAgency is used as agency about docker command
+	dockerAgency dockerAgency
+
 	// status represent current process status of cpu health check
 	status cpuCheckStatus
 
@@ -79,6 +82,7 @@ func NewCPUCheckUsecase(
 	chr domain.CPUCheckHistoryRepository,
 	sca slackChatAgency,
 	csa cpuSysAgency,
+	da dockerAgency,
 ) domain.CPUCheckUseCase {
 	return &cpuCheckUsecase{
 		// initialize field with parameter received from caller
@@ -86,6 +90,7 @@ func NewCPUCheckUsecase(
 		historyRepo:     chr,
 		slackChatAgency: sca,
 		cpuSysAgency:    csa,
+		dockerAgency:    da,
 
 		// initialize field with default value
 		status: cpuStatusHealthy,
