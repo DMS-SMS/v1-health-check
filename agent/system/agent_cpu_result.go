@@ -4,7 +4,11 @@
 
 package system
 
-import "runtime"
+import (
+	"runtime"
+	"sort"
+	"strings"
+)
 
 // calculateContainersCPUUsageResult is result type of CalculateContainersCPUUsage
 type calculateContainersCPUUsageResult struct {
@@ -28,11 +32,35 @@ func (result calculateContainersCPUUsageResult) TotalCPUUsage() (usage float64) 
 	return
 }
 
-// MostConsumerExceptFor return most CPU consumer inform except for container names received from param
+// MostConsumerExceptFor handle logic using mostConsumerExceptFor method
 func (result calculateContainersCPUUsageResult) MostConsumerExceptFor(excepts []string) (id, name string, usage float64) {
 	m := map[string]bool{}
 	for _, except := range excepts {
 		m[except] = true
 	}
 	return result.mostConsumerExceptFor(m)
+}
+
+// mostConsumerExceptFor return most CPU consumer inform except for container names received from param
+func (result calculateContainersCPUUsageResult) mostConsumerExceptFor(excepts map[string]bool) (id, name string, cpuPercent float64) {
+	sort.Slice(result.containers, func(i, j int) bool {
+		return result.containers[i].cpuPercent > result.containers[j].cpuPercent
+	})
+
+	for _, container := range result.containers {
+		sep := strings.Split(strings.TrimPrefix(container.name, "/"), ".")
+		if len(sep) == 0 {
+			continue
+		}
+		if _, ok := excepts[sep[0]]; ok {
+			continue
+		}
+
+		id = container.id
+		name = container.name
+		cpuPercent = container.cpuPercent
+		break
+	}
+
+	return
 }
