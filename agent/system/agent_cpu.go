@@ -26,9 +26,11 @@ type calculateContainersCPUUsageResult struct {
 
 // TotalCPUUsage return total cpu usage in docker containers
 func (cr calculateContainersCPUUsageResult) TotalCPUUsage() (usage float64) {
+	var percent float64 = 0
 	for _, container := range cr.containers {
-		usage += container.cpuUsage
+		percent += container.cpuPercent
 	}
+	usage = float64(runtime.NumCPU()) / 100 * percent
 	return
 }
 
