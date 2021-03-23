@@ -27,3 +27,12 @@ func (result calculateContainersCPUUsageResult) TotalCPUUsage() (usage float64) 
 	usage = float64(runtime.NumCPU()) / 100 * percent
 	return
 }
+
+// MostConsumerExceptFor return most CPU consumer inform except for container names received from param
+func (result calculateContainersCPUUsageResult) MostConsumerExceptFor(excepts []string) (id, name string, usage float64) {
+	m := map[string]bool{}
+	for _, except := range excepts {
+		m[except] = true
+	}
+	return result.mostConsumerExceptFor(m)
+}
