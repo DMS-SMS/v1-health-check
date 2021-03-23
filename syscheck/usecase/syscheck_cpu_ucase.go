@@ -166,7 +166,7 @@ func (cu *cpuCheckUsecase) checkCPU(ctx context.Context) (history *domain.CPUChe
 	if cu.isMaximumUsageLessThan(totalUsage) {
 		cu.setStatus(cpuStatusRecovering)
 		history.ProcessLevel = weakDetectedLevel.String()
-		msg := "!cpu check weak detected! start to provision CPU using docker"
+		msg := fmt.Sprintf("!cpu check weak detected! start to provision CPU (current cpu usage - %.02f)", totalUsage)
 		history.SetAlarmResult(cu.slackChatAgency.SendMessage("pill", msg, _uuid))
 
 		id, name, usage := result.MostConsumerExceptFor(requiredContainers)
