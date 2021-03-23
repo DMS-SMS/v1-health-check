@@ -57,10 +57,10 @@ type cpuSysAgency interface {
 	// CalculateContainersCPUUsage calculate container cpu usage & return result interface implementation
 	CalculateContainersCPUUsage() (result interface{
 		// TotalCPUUsage return total cpu usage in docker containers
-		TotalCPUUsage() float64
+		TotalCPUUsage() (usage float64)
 
 		// MostConsumerExceptFor return container consume the most CPU except container names received from param
-		MostConsumerExceptFor([]string) (id, name string, usage float64)
+		MostConsumerExceptFor(names []string) (id, name string, cpuPercent float64)
 	}, err error)
 }
 
