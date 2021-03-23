@@ -24,6 +24,18 @@ var (
 	errorLevel        = processLevel("ERROR")         // represent that error occurs while checking system status
 )
 
+// requiredContainers contain docker container names which must not stop or kill
+var requiredContainers = []string{
+	"DSM_SMS_api-gateway",
+	"DSM_SMS_service-auth",
+	"DSM_SMS_service-club",
+	"DSM_SMS_service-outing",
+	"DSM_SMS_service-schedule",
+	"DSM_SMS_service-announcement",
+	"DSM_SMS_redis", "DSM_SMS_mysql",
+	"DSM_SMS_mongo", "DSM_SMS_consul",
+}
+
 // systemCheckUsecaseComponent contains required component to syscheck usecase implementation as field
 type systemCheckUsecaseComponentConfig interface {}
 
