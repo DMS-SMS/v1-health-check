@@ -138,6 +138,31 @@ func (cu *cpuCheckUsecase) checkCPU(ctx context.Context) (history *domain.CPUChe
 	totalUsage := result.TotalCPUUsage()
 	history.UsageSize = totalUsage
 
+	switch cu.status {
+	case cpuStatusHealthy:
+		break
+	case cpuStatusWarning:
+		if !cu.isWarningUsageLessThan(totalUsage) {
+			cu.setStatus(cpuStatusHealthy)
+		}
+	case cpuStatusRecovering:
+		history.ProcessLevel = recoveringLevel.String()
+		history.Message = "provisioning CPU is already on process using docker"
+		return
+	case cpuStatusUnhealthy:
+		if !cu.isMaximumUsageLessThan(totalUsage) {
+			cu.setStatus(cpuStatusHealthy)
+			history.ProcessLevel = recoveredLevel.String()
+			history.Message = "cpu check is recovered to be healthy"
+			msg := fmt.Sprintf("!cpu check recovered to health! current usage - %.02f", totalUsage)
+			_, _, _ = cu.slackChatAgency.SendMessage("heart", msg, _uuid)
+		} else {
+			history.ProcessLevel = unhealthyLevel.String()
+			history.Message = "cpu check is unhealthy now"
+		}
+		return
+	}
+
 	if cu.isMaximumUsageLessThan(totalUsage) {
 		cu.setStatus(cpuStatusRecovering)
 		history.ProcessLevel = weakDetectedLevel.String()
