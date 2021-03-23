@@ -16,6 +16,7 @@ import (
 // global variable used in usecase which is type of processLevel
 var (
 	healthyLevel      = processLevel("HEALTHY")       // represent that system status is healthy now
+	warningLevel      = processLevel("WARNING")       // represent that system status is warning now
 	weakDetectedLevel = processLevel("WEAK_DETECTED") // represent that weak of system status is detected
 	recoveringLevel   = processLevel("RECOVERING")    // represent that recovering weak of system status now
 	recoveredLevel    = processLevel("RECOVERED")     // represent that succeed to recover system status
