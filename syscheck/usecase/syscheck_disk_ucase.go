@@ -141,8 +141,8 @@ func (du *diskCheckUsecase) checkDisk(ctx context.Context) (history *domain.Disk
 	if !du.isMinCapacityLessThan(_cap) {
 		du.setStatus(diskStatusRecovering)
 		history.ProcessLevel = weakDetectedLevel.String()
-		msg := "!weak detected in disk check! start to prune docker system"
-		history.SetAlarmResult(du.slackChatAgency.SendMessage("warning", msg, _uuid))
+		msg := "!disk check weak detected! start to prune docker system"
+		history.SetAlarmResult(du.slackChatAgency.SendMessage("pill", msg, _uuid))
 
 		if r, err := du.diskSysAgency.PruneDockerSystem(); err != nil {
 			msg := "!disk check error occurred! failed to prune docker system"
