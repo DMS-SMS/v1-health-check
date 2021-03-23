@@ -6,6 +6,8 @@ package usecase
 
 import (
 	"context"
+	"fmt"
+	"github.com/docker/docker/api/types"
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
 	"sync"
@@ -72,7 +74,7 @@ type cpuSysAgency interface {
 
 // dockerAgency is agency that agent various command about cpu system
 type dockerAgency interface {
-	// RemoveContainer remove container with id & option (auto created as docker swarm)
+	// RemoveContainer remove container with id & option (auto created from docker swarm if exists)
 	RemoveContainer(containerID string, options types.ContainerRemoveOptions) error
 }
 
@@ -133,14 +135,41 @@ func (cu *cpuCheckUsecase) checkCPU(ctx context.Context) (history *domain.CPUChe
 		history.SetError(err)
 		return
 	}
-	usage := result.TotalCPUUsage()
-	history.UsageSize = usage
-	
-	if cu.isWarningUsageLessThan(usage) {
+	totalUsage := result.TotalCPUUsage()
+	history.UsageSize = totalUsage
+
+	if cu.isMaximumUsageLessThan(totalUsage) {
+		cu.setStatus(cpuStatusRecovering)
+		history.ProcessLevel = weakDetectedLevel.String()
+		msg := "!cpu check weak detected! start to provision CPU using docker"
+		history.SetAlarmResult(cu.slackChatAgency.SendMessage("pill", msg, _uuid))
+
+		id, name, usage := result.MostConsumerExceptFor(requiredContainers)
+		history.MostCPUConsumeContainer = name
+		if err := cu.dockerAgency.RemoveContainer(id, types.ContainerRemoveOptions{Force: true}); err != nil {
+			msg := "!cpu check error occurred! failed to remove container"
+			_, _, _ = cu.slackChatAgency.SendMessage("anger", msg, _uuid)
+			err = errors.Wrap(err, "failed to remove container")
+			history.SetError(err)
+		} else {
+			history.FreeSize = usage
+			history.Message = "removed most cpu consumed container as cpu usage is over than maximum"
+		}
+
+		if result, _ = cu.cpuSysAgency.CalculateContainersCPUUsage(); !cu.isMaximumUsageLessThan(result.TotalCPUUsage()) {
+			cu.setStatus(cpuStatusHealthy)
+			msg := fmt.Sprintf("!cpu check is healthy! remain capacity - %.02f removed - %s", result.TotalCPUUsage(), id)
+			_, _, _ = cu.slackChatAgency.SendMessage("heart", msg, _uuid)
+		} else {
+			cu.setStatus(cpuStatusUnhealthy)
+			msg := "!cpu check has deteriorated! please check for yourself"
+			_, _, _ = cu.slackChatAgency.SendMessage("broken_heart", msg, _uuid)
+		}
+	} else if cu.isWarningUsageLessThan(totalUsage) {
 		cu.setStatus(cpuStatusWarning)
 		history.ProcessLevel = warningLevel.String()
 		history.Message = "warning"
-		msg := fmt.Sprintf("!cpu check warning! current cpu usage - %.02f", usage)
+		msg := fmt.Sprintf("!cpu check warning! current cpu usage - %.02f", totalUsage)
 		history.SetAlarmResult(cu.slackChatAgency.SendMessage("warning", msg, _uuid))
 	}
 
@@ -155,4 +184,11 @@ func (cu *cpuCheckUsecase) isWarningUsageLessThan(usage float64) bool {
 // isMaximumUsageLessThan return bool if cpu maximum usage is less than parameter
 func (cu *cpuCheckUsecase) isMaximumUsageLessThan(usage float64) bool {
 	return cu.myCfg.CPUMaximumUsage() < usage
+}
+
+// setStatus set status field value using mutex Lock & Unlock
+func (cu *cpuCheckUsecase) setStatus(status cpuCheckStatus) {
+	cu.mutex.Lock()
+	defer cu.mutex.Unlock()
+	cu.status = status
 }
