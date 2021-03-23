@@ -35,46 +35,47 @@ func (cr calculateContainersCPUUsageResult) TotalCPUUsage() (usage float64) {
 }
 
 // CalculateContainersCPUUsage calculate cpu usage & return calculateContainersCPUUsageResult
-func (sa *sysAgent) CalculateContainersCPUUsage() (usage float64, err error) {
+func (sa *sysAgent) CalculateContainersCPUUsage() (interface {
+	TotalCPUUsage() (usage float64)
+	MostConsumerExceptFor([]string) (id, name string, usage float64)
+}, error) {
 	var (
 		ctx = context.Background()
+		result = calculateContainersCPUUsageResult{}
 	)
 
-	var lists []types.Container
-	if lists, err = sa.dockerCli.ContainerList(ctx, types.ContainerListOptions{}); err != nil {
-		err = errors.Wrap(err, "failed to get container list from docker")
-		return
+	lists, err := sa.dockerCli.ContainerList(ctx, types.ContainerListOptions{})
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to get container list from docker")
 	}
-	sa.containersCPUUsage = make([]struct{
-		id, name string
-		cpuUsage float64
+
+	result.containers = make([]struct {
+		id, name   string
+		cpuPercent float64
 	}, len(lists))
 
 	for i, list := range lists {
 		var stats types.ContainerStats
 		if stats, err = sa.dockerCli.ContainerStats(ctx, list.ID, false); err != nil {
-			err = errors.Wrap(err, "failed to get container stats from docker")
-			return
+			return nil, errors.Wrap(err, "failed to get container stats from docker")
 		}
 
 		v := &types.StatsJSON{}
 		if err = json.NewDecoder(stats.Body).Decode(v); err != nil {
-			err = errors.Wrap(err, "failed to decode stats response body to struct")
-			return
+			return nil, errors.Wrap(err, "failed to decode stats response body to struct")
 		}
 
-		sa.containersCPUUsage[i] = struct {
-			id, name string
-			cpuUsage float64
+		result.containers[i] = struct {
+			id, name   string
+			cpuPercent float64
 		}{
 			id: v.ID, name: v.Name,
-			cpuUsage: getCPUUsagePercentFrom(v),
+			cpuPercent: getCPUUsagePercentFrom(v),
 		}
-		usage += sa.containersCPUUsage[i].cpuUsage
 	}
 
-	usage = float64(runtime.NumCPU()) / 100 * usage
-	return
+	result.cpuNum = runtime.NumCPU()
+	return result, nil
 }
 
 // getCPUUsagePercentFrom get cpu usage as percent from types.StatsJson struct
