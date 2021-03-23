@@ -67,6 +67,12 @@ type cpuSysAgency interface {
 	}, err error)
 }
 
+// dockerAgency is agency that agent various command about cpu system
+type dockerAgency interface {
+	// RemoveContainer remove container with id & option (auto created as docker swarm)
+	RemoveContainer(containerID string, options types.ContainerRemoveOptions) error
+}
+
 // NewCPUCheckUsecase function return cpuCheckUsecase ptr instance after initializing
 func NewCPUCheckUsecase(
 	cfg cpuCheckUsecaseConfig,
