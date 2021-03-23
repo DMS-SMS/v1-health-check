@@ -108,6 +108,12 @@ func (cu *cpuCheckUsecase) CheckCPU(ctx context.Context) error {
 // 3 : 관리자가 직접 확인해야함 (상태 확인 수행 X)
 // 3 -> 0 : 관리자 직접 상태 회복 완료 (상태 회복 알림 발행)
 func (cu *cpuCheckUsecase) checkCPU(ctx context.Context) (history *domain.CPUCheckHistory) {
+	_uuid := uuid.New().String()
+	history = new(domain.CPUCheckHistory)
+	history.FillPrivateComponent()
+	history.UUID = _uuid
+
+	return
 }
 
 // isWarningUsageLessThan return bool if cpu warning usage is less than parameter
