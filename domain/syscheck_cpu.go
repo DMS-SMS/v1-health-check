@@ -18,6 +18,9 @@ type CPUCheckHistory struct {
 
 	// FreeSize specifies freed cpu size while recovering cpu health
 	FreeSize float64
+
+	// MostCPUConsumeContainer specifies the container name which is consumed most CPU
+	MostCPUConsumeContainer string
 }
 
 // CPUCheckHistoryRepository is interface for repository layer used in usecase layer
@@ -55,6 +58,7 @@ func (ch *CPUCheckHistory) DottedMapWithPrefix(prefix string) (m map[string]inte
 	// setting public field value in dotted map
 	m[prefix + "usage_size"] = ch.UsageSize
 	m[prefix + "free_size"] = ch.FreeSize
+	m[prefix + "most_cpu_consume_container"] = ch.MostCPUConsumeContainer
 
 	return
 }
