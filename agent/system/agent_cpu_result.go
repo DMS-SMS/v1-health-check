@@ -5,7 +5,6 @@
 package system
 
 import (
-	"runtime"
 	"sort"
 	"strings"
 )
@@ -18,17 +17,15 @@ type calculateContainersCPUUsageResult struct {
 	// containers is to keep cpu usage each of container get from GetTotalCPUUsage
 	containers []struct {
 		id, name   string
-		cpuPercent float64
+		usage float64
 	}
 }
 
 // TotalCPUUsage return total cpu usage in docker containers
 func (result calculateContainersCPUUsageResult) TotalCPUUsage() (usage float64) {
-	var percent float64 = 0
 	for _, container := range result.containers {
-		percent += container.cpuPercent
+		usage += container.usage
 	}
-	usage = float64(runtime.NumCPU()) / 100 * percent
 	return
 }
 
@@ -42,9 +39,9 @@ func (result calculateContainersCPUUsageResult) MostConsumerExceptFor(excepts []
 }
 
 // mostConsumerExceptFor return most CPU consumer inform except for container names received from param
-func (result calculateContainersCPUUsageResult) mostConsumerExceptFor(excepts map[string]bool) (id, name string, cpuPercent float64) {
+func (result calculateContainersCPUUsageResult) mostConsumerExceptFor(excepts map[string]bool) (id, name string, usage float64) {
 	sort.Slice(result.containers, func(i, j int) bool {
-		return result.containers[i].cpuPercent > result.containers[j].cpuPercent
+		return result.containers[i].usage > result.containers[j].usage
 	})
 
 	for _, container := range result.containers {
@@ -58,7 +55,7 @@ func (result calculateContainersCPUUsageResult) mostConsumerExceptFor(excepts ma
 
 		id = container.id
 		name = container.name
-		cpuPercent = container.cpuPercent
+		usage = container.usage
 		break
 	}
 
