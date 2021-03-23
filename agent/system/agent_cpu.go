@@ -18,7 +18,7 @@ func (sa *sysAgent) CalculateContainersCPUUsage() (interface {
 	MostConsumerExceptFor([]string) (id, name string, usage float64)
 }, error) {
 	var (
-		ctx = context.Background()
+		ctx    = context.Background()
 		result = calculateContainersCPUUsageResult{}
 	)
 
@@ -27,9 +27,10 @@ func (sa *sysAgent) CalculateContainersCPUUsage() (interface {
 		return nil, errors.Wrap(err, "failed to get container list from docker")
 	}
 
+	result.cpuNum = runtime.NumCPU()
 	result.containers = make([]struct {
-		id, name   string
-		cpuPercent float64
+		id, name string
+		usage    float64
 	}, len(lists))
 
 	for i, list := range lists {
@@ -44,15 +45,14 @@ func (sa *sysAgent) CalculateContainersCPUUsage() (interface {
 		}
 
 		result.containers[i] = struct {
-			id, name   string
-			cpuPercent float64
+			id, name string
+			usage    float64
 		}{
 			id: v.ID, name: v.Name,
-			cpuPercent: getCPUUsagePercentFrom(v),
+			usage: float64(result.cpuNum) / 100 * getCPUUsagePercentFrom(v),
 		}
 	}
 
-	result.cpuNum = runtime.NumCPU()
 	return result, nil
 }
 
