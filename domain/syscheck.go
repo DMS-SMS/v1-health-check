@@ -126,6 +126,21 @@ func (sch *systemCheckHistoryComponent) SetAlarmResult(t time.Time, text string,
 // processLevel is string custom type used for representing status check process level
 type processLevel []string
 
+// Set method overwrite processLevel slice to level received from parameter
+func (pl *processLevel) Set(level string) {
+	*pl = processLevel{level}
+}
+
+// Append method append processLevel slice with level received from parameter
+func (pl *processLevel) Append(level string) {
+	*pl = append(*pl, level)
+}
+
+// String method return string which join processLevel slice to string with " | "
+func (pl *processLevel) String() string {
+	return strings.Join(*pl, " | ")
+}
+
 // get information from system environment variable
 var version string
 func init() {
