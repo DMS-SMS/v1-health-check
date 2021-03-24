@@ -14,6 +14,7 @@ require (
 	github.com/google/uuid v1.1.2
 	github.com/gorilla/mux v1.8.0 // indirect
 	github.com/inhies/go-bytesize v0.0.0-20201103132853-d0aed0d254f8
+	github.com/mackerelio/go-osstat v0.1.0
 	github.com/moby/term v0.0.0-20201216013528-df9cb8a40635 // indirect
 	github.com/morikuni/aec v1.0.0 // indirect
 	github.com/opencontainers/go-digest v1.0.0 // indirect
