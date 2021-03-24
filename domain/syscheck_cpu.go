@@ -14,10 +14,10 @@ type CPUCheckHistory struct {
 	systemCheckHistoryComponent
 
 	// UsageSize specifies current cpu usage of runtime system looked in cpu check
-	UsageSize float64
+	UsageCore float64
 
-	// FreeSize specifies freed cpu size while recovering cpu health
-	FreeSize float64
+	// TemporaryFreeCore specifies temporary freed cpu size while recovering cpu health
+	TemporaryFreeCore float64
 
 	// MostCPUConsumeContainer specifies the container name which is consumed most CPU
 	MostCPUConsumeContainer string
@@ -56,8 +56,8 @@ func (ch *CPUCheckHistory) DottedMapWithPrefix(prefix string) (m map[string]inte
 	}
 
 	// setting public field value in dotted map
-	m[prefix + "usage_size"] = ch.UsageSize
-	m[prefix + "free_size"] = ch.FreeSize
+	m[prefix + "usage_core"] = ch.UsageCore
+	m[prefix + "temporary_free_core"] = ch.TemporaryFreeCore
 	m[prefix + "most_cpu_consume_container"] = ch.MostCPUConsumeContainer
 
 	return
