@@ -13,8 +13,11 @@ type CPUCheckHistory struct {
 	// get required component by embedding systemCheckHistoryComponent
 	systemCheckHistoryComponent
 
-	// UsageSize specifies current cpu usage of runtime system looked in cpu check
-	UsageCore float64
+	// TotalUsageCore specifies current total cpu usage of runtime system looked in cpu check
+	TotalUsageCore float64
+
+	// DockerUsageCore specifies current total cpu usage of docker looked in cpu check when weak detected
+	DockerUsageCore float64
 
 	// TemporaryFreeCore specifies temporary freed cpu size while recovering cpu health
 	TemporaryFreeCore float64
@@ -56,7 +59,8 @@ func (ch *CPUCheckHistory) DottedMapWithPrefix(prefix string) (m map[string]inte
 	}
 
 	// setting public field value in dotted map
-	m[prefix + "usage_core"] = ch.UsageCore
+	m[prefix + "total_usage_core"] = ch.TotalUsageCore
+	m[prefix + "docker_usage_core"] = ch.DockerUsageCore
 	m[prefix + "temporary_free_core"] = ch.TemporaryFreeCore
 	m[prefix + "most_cpu_consume_container"] = ch.MostCPUConsumeContainer
 
