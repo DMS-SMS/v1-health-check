@@ -13,6 +13,7 @@ package domain
 import (
 	"log"
 	"os"
+	"strings"
 	"time"
 )
 
@@ -41,7 +42,7 @@ type systemCheckHistoryComponent struct {
 	UUID string
 
 	// ProcessLevel specifies about how level to handle system check process.
-	ProcessLevel string
+	ProcessLevel processLevel
 
 	// Message specifies additional description of result about system check process.
 	Message string
@@ -98,8 +99,8 @@ func (sch *systemCheckHistoryComponent) DottedMapWithPrefix(prefix string) (m ma
 
 	// setting public field value in dotted map
 	m[prefix + "uuid"] = sch.UUID
-	m[prefix + "process_level"] = sch.ProcessLevel
-	m[prefix + "message"] = sch.ProcessLevel
+	m[prefix + "process_level"] = sch.ProcessLevel.String()
+	m[prefix + "message"] = sch.Message
 	if sch.Error == nil {
 		m[prefix + "error"] = nil
 	} else {
