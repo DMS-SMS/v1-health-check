@@ -46,10 +46,3 @@ type slackChatAgency interface {
 	SendMessage(emoji, text, uuid string, opts ...slack.MsgOption) (t time.Time, _text string, err error)
 }
 
-// processLevel is string custom type used for representing status check process level
-type processLevel string
-
-// String method return instance value of processLevel type to string
-func (pl processLevel) String() string {
-	return string(pl)
-}
