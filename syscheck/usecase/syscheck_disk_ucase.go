@@ -110,7 +110,7 @@ func (du *diskCheckUsecase) checkDisk(ctx context.Context) (history *domain.Disk
 
 	_cap, err := du.diskSysAgency.GetRemainDiskCapacity()
 	if err != nil {
-		err = errors.Wrap(err, "failed to get disk capacity")
+		history.ProcessLevel.Set(errorLevel)
 		history.ProcessLevel = errorLevel.String()
 		history.SetError(err)
 		return
@@ -121,18 +121,18 @@ func (du *diskCheckUsecase) checkDisk(ctx context.Context) (history *domain.Disk
 	case diskStatusHealthy:
 		break
 	case diskStatusRecovering:
-		history.ProcessLevel = recoveringLevel.String()
+		history.ProcessLevel.Set(recoveringLevel)
 		history.Message = "pruning docker system is already on process"
 		return
 	case diskStatusUnhealthy:
 		if du.isMinCapacityLessThan(_cap) {
 			du.setStatus(diskStatusHealthy)
-			history.ProcessLevel = recoveredLevel.String()
+			history.ProcessLevel.Set(recoveredLevel)
 			history.Message = "disk check is recovered to be healthy"
 			msg := fmt.Sprintf("!disk check recovered to health! remain capacity - %s", _cap.String())
 			_, _, _ = du.slackChatAgency.SendMessage("heart", msg, _uuid)
 		} else {
-			history.ProcessLevel = unhealthyLevel.String()
+			history.ProcessLevel.Set(unhealthyLevel)
 			history.Message = "disk check is unhealthy now"
 		}
 		return
@@ -140,7 +140,7 @@ func (du *diskCheckUsecase) checkDisk(ctx context.Context) (history *domain.Disk
 
 	if !du.isMinCapacityLessThan(_cap) {
 		du.setStatus(diskStatusRecovering)
-		history.ProcessLevel = weakDetectedLevel.String()
+		history.ProcessLevel.Set(weakDetectedLevel)
 		msg := "!disk check weak detected! start to prune docker system"
 		history.SetAlarmResult(du.slackChatAgency.SendMessage("pill", msg, _uuid))
 
@@ -164,7 +164,7 @@ func (du *diskCheckUsecase) checkDisk(ctx context.Context) (history *domain.Disk
 			_, _, _ = du.slackChatAgency.SendMessage("broken_heart", msg, _uuid)
 		}
 	} else {
-		history.ProcessLevel = healthyLevel.String()
+		history.ProcessLevel.Set(healthyLevel)
 		history.Message = "disk system is healthy now"
 	}
 
