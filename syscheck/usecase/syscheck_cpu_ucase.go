@@ -131,13 +131,13 @@ func (cu *cpuCheckUsecase) checkCPU(ctx context.Context) (history *domain.CPUChe
 	history.FillPrivateComponent()
 	history.UUID = _uuid
 
-	result, err := cu.cpuSysAgency.CalculateContainersCPUUsage()
+	totalUsage, err := cu.cpuSysAgency.GetTotalSystemCPUUsage()
 	if err != nil {
 		history.ProcessLevel.Set(errorLevel)
 		history.SetError(errors.Wrap(err, "failed to get total system cpu usage"))
 		return
 	}
-	totalUsage := result.TotalCPUUsage()
+	history.TotalUsageCore = totalUsage
 
 	switch cu.status {
 	case cpuStatusHealthy:
