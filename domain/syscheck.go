@@ -77,12 +77,7 @@ func (sch *systemCheckHistoryComponent) FillPrivateComponent() {
 	sch.agent = "sms-health-check"
 	sch.domain = "syscheck"
 	sch._type = "None"
-
-	now := time.Now()
-	if now.Location().String() == time.UTC.String() {
-		now = now.Add(time.Hour * 9)
-	}
-	sch.timestamp = now
+	sch.timestamp = time.Now()
 }
 
 // DottedMapWithPrefix convert systemCheckHistoryComponent to dotted map and return that
