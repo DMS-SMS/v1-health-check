@@ -133,7 +133,7 @@ func (cu *cpuCheckUsecase) checkCPU(ctx context.Context) (history *domain.CPUChe
 
 	result, err := cu.cpuSysAgency.CalculateContainersCPUUsage()
 	if err != nil {
-		err = errors.Wrap(err, "failed to calculate container cpu usage")
+		history.ProcessLevel.Set(errorLevel)
 		history.ProcessLevel = errorLevel.String()
 		history.SetError(err)
 		return
@@ -149,18 +149,18 @@ func (cu *cpuCheckUsecase) checkCPU(ctx context.Context) (history *domain.CPUChe
 			cu.setStatus(cpuStatusHealthy)
 		}
 	case cpuStatusRecovering:
-		history.ProcessLevel = recoveringLevel.String()
+		history.ProcessLevel.Set(recoveringLevel)
 		history.Message = "provisioning CPU is already on process using docker"
 		return
 	case cpuStatusUnhealthy:
 		if !cu.isMaximumUsageLessThan(totalUsage) {
 			cu.setStatus(cpuStatusHealthy)
-			history.ProcessLevel = recoveredLevel.String()
+			history.ProcessLevel.Set(recoveredLevel)
 			history.Message = "cpu check is recovered to be healthy"
 			msg := fmt.Sprintf("!cpu check recovered to health! current usage - %.02f", totalUsage)
 			_, _, _ = cu.slackChatAgency.SendMessage("heart", msg, _uuid)
 		} else {
-			history.ProcessLevel = unhealthyLevel.String()
+			history.ProcessLevel.Set(unhealthyLevel)
 			history.Message = "cpu check is unhealthy now"
 		}
 		return
@@ -168,7 +168,7 @@ func (cu *cpuCheckUsecase) checkCPU(ctx context.Context) (history *domain.CPUChe
 
 	if cu.isMaximumUsageLessThan(totalUsage) {
 		cu.setStatus(cpuStatusRecovering)
-		history.ProcessLevel = weakDetectedLevel.String()
+		history.ProcessLevel.Set(weakDetectedLevel)
 		msg := fmt.Sprintf("!cpu check weak detected! start to provision CPU (current cpu usage - %.02f)", totalUsage)
 		history.SetAlarmResult(cu.slackChatAgency.SendMessage("pill", msg, _uuid))
 
@@ -194,7 +194,7 @@ func (cu *cpuCheckUsecase) checkCPU(ctx context.Context) (history *domain.CPUChe
 			_, _, _ = cu.slackChatAgency.SendMessage("broken_heart", msg, _uuid)
 		}
 	} else if cu.isWarningUsageLessThan(totalUsage) {
-		history.ProcessLevel = warningLevel.String()
+		history.ProcessLevel.Set(warningLevel)
 		history.Message = "cpu check is warning now, but not weak yet"
 		if cu.status != cpuStatusWarning {
 			cu.setStatus(cpuStatusWarning)
@@ -202,7 +202,7 @@ func (cu *cpuCheckUsecase) checkCPU(ctx context.Context) (history *domain.CPUChe
 			history.SetAlarmResult(cu.slackChatAgency.SendMessage("warning", msg, _uuid))
 		}
 	} else {
-		history.ProcessLevel = healthyLevel.String()
+		history.ProcessLevel.Set(healthyLevel)
 		history.Message = "cpu system is healthy now"
 	}
 
