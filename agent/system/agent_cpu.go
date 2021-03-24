@@ -8,9 +8,31 @@ import (
 	"context"
 	"encoding/json"
 	"github.com/docker/docker/api/types"
+	"github.com/mackerelio/go-osstat/cpu"
 	"github.com/pkg/errors"
 	"runtime"
+	"time"
 )
+
+// GetTotalSystemCPUUsage return total cpu usage as core count in system
+func (sa *sysAgent) GetTotalSystemCPUUsage() (usage float64, err error) {
+	before, err := cpu.Get()
+	if err != nil {
+		err = errors.Wrap(err, "failed to get before cpu usage")
+		return
+	}
+	time.Sleep(time.Duration(1) * time.Second)
+	after, err := cpu.Get()
+	if err != nil {
+		err = errors.Wrap(err, "failed to get after cpu usage")
+		return
+	}
+
+	total := float64(after.Total - before.Total)
+	percent := float64(after.User-before.User + after.System-before.System) / total * 100
+	usage = float64(runtime.NumCPU()) / 100 * percent
+	return
+}
 
 // CalculateContainersCPUUsage calculate cpu usage & return calculateContainersCPUUsageResult
 func (sa *sysAgent) CalculateContainersCPUUsage() (interface {
