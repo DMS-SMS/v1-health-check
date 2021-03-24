@@ -123,6 +123,9 @@ func (sch *systemCheckHistoryComponent) SetAlarmResult(t time.Time, text string,
 	sch.alarmErr = err
 }
 
+// processLevel is string custom type used for representing status check process level
+type processLevel []string
+
 // get information from system environment variable
 var version string
 func init() {
