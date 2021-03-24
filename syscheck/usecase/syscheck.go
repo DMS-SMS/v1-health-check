@@ -14,14 +14,14 @@ import (
 )
 
 // global variable used in usecase which is type of processLevel
-var (
-	healthyLevel      = processLevel("HEALTHY")       // represent that system status is healthy now
-	warningLevel      = processLevel("WARNING")       // represent that system status is warning now
-	weakDetectedLevel = processLevel("WEAK_DETECTED") // represent that weak of system status is detected
-	recoveringLevel   = processLevel("RECOVERING")    // represent that recovering weak of system status now
-	recoveredLevel    = processLevel("RECOVERED")     // represent that succeed to recover system status
-	unhealthyLevel    = processLevel("UNHEALTHY")     // represent that system status is unhealthy now (not recovered)
-	errorLevel        = processLevel("ERROR")         // represent that error occurs while checking system status
+const (
+	healthyLevel      = "HEALTHY"       // represent that system status is healthy now
+	warningLevel      = "WARNING"       // represent that system status is warning now
+	weakDetectedLevel = "WEAK_DETECTED" // represent that weak of system status is detected
+	recoveringLevel   = "RECOVERING"    // represent that recovering weak of system status now
+	recoveredLevel    = "RECOVERED"     // represent that succeed to recover system status
+	unhealthyLevel    = "UNHEALTHY"     // represent that system status is unhealthy now (not recovered)
+	errorLevel        = "ERROR"         // represent that error occurs while checking system status
 )
 
 // requiredContainers contain docker container names which must not stop or kill
