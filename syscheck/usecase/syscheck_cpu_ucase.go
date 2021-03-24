@@ -136,7 +136,7 @@ func (cu *cpuCheckUsecase) checkCPU(ctx context.Context) (history *domain.CPUChe
 		return
 	}
 	totalUsage := result.TotalCPUUsage()
-	history.UsageSize = totalUsage
+	history.UsageCore = totalUsage
 
 	switch cu.status {
 	case cpuStatusHealthy:
@@ -177,7 +177,7 @@ func (cu *cpuCheckUsecase) checkCPU(ctx context.Context) (history *domain.CPUChe
 			err = errors.Wrap(err, "failed to remove container")
 			history.SetError(err)
 		} else {
-			history.FreeSize = usage
+			history.TemporaryFreeCore = usage
 			history.Message = "removed most cpu consumed container as cpu usage is over than maximum"
 		}
 
