@@ -17,3 +17,7 @@ domain:
       cpuWarningUsage: 1.0
       cpuMaximumUsage: 1.5
       cpuMinimumUsageToRemove: 0.5
+    memorycheck:
+      memoryWarningUsage: "6GB"
+      memoryMaximumUsage: "7GB"
+      memoryMinimumUsageToRemove: "1GB"
