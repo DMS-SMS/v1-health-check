@@ -4,17 +4,22 @@
 
 package domain
 
+import "github.com/inhies/go-bytesize"
+
 // MemCheckHistory model is used for record memory health check history and result
-type MemCheckHistory struct {
+type MemoryCheckHistory struct {
 	// get required component by embedding systemCheckHistoryComponent
 	systemCheckHistoryComponent
 
-	// UsageSize specifies current cpu usage of runtime system looked in cpu check
-	//UsageSize bytesize.ByteSize
-	//
-	//// FreeSize specifies freed cpu size while recovering cpu health
-	//FreeSize float64
-	//
-	//// MostCPUConsumeContainer specifies the container name which is consumed most CPU
-	//MostCPUConsumeContainer string
+	// TotalUsageMemory specifies current memory usage of runtime system looked in memory check
+	TotalUsageMemory bytesize.ByteSize
+
+	// DockerUsageMemory specifies current total memory usage of docker looked in memory check when weak detected
+	DockerUsageMemory float64
+
+	// TemporaryFreeMemory specifies temporary freed memory size while recovering memory health
+	TemporaryFreeMemory float64
+
+	// MostMemoryConsumeContainer specifies the container name which is consumed most memory
+	MostMemoryConsumeContainer string
 }
