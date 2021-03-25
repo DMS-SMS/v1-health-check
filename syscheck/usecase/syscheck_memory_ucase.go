@@ -5,7 +5,9 @@
 package usecase
 
 import (
+	"context"
 	"github.com/inhies/go-bytesize"
+	"github.com/pkg/errors"
 	"sync"
 
 	"github.com/DMS-SMS/v1-health-check/domain"
@@ -94,4 +96,16 @@ func NewMemoryCheckUsecase(
 		status: memoryStatusHealthy,
 		mutex:  sync.Mutex{},
 	}
+}
+
+// CheckMemory check memory health with CheckMemory method & store check history in repository
+// Implement CheckMemory method of domain.MemoryCheckUseCase interface
+func (mu *memoryCheckUsecase) CheckMemory(ctx context.Context) error {
+	history := mu.checkMemory(ctx)
+
+	if b, err := mu.historyRepo.Store(history); err != nil {
+		return errors.Wrapf(err, "failed to store memory check history, response: %s", string(b))
+	}
+
+	return nil
 }
