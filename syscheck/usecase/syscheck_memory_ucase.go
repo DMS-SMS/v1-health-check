@@ -109,3 +109,17 @@ func (mu *memoryCheckUsecase) CheckMemory(ctx context.Context) error {
 
 	return nil
 }
+
+// method with below logic about handling health check process according to current memory check status
+// 0 : 정상적으로 인지된 상태 (상태 확인 수행)
+// 0 -> 1 : 메모리 사용량이 Warning 수치보다 높아짐 (경고 상태 알림 발행)
+// 1 -> 0 : 메모리 사용량 정상 수치로 복귀 (경고 상태 해제 알림 발행)
+// (0 or 1) -> 2 : 메모리 기준 프로비저닝 실행 (상태 회복중 상테 알림 발행)
+// 2 : 메모리 프로비저닝 실행중 (상태 확인 수행 X)
+// 2 -> 0 : 메모리 프로비저닝으로 인해 상태 회복 완료 (상태 회복 성공 알림 발행)
+// 2 -> 3 : 메모리 프로비저닝을 해도 상태 회복 X (상태 회복 불가능 상태 알림 발행)
+// 3 : 관리자가 직접 확인해야함 (상태 확인 수행 X)
+// 3 -> 0 : 관리자 직접 상태 회복 완료 (상태 회복 알림 발행)
+func (mu *memoryCheckUsecase) checkMemory(ctx context.Context) (history *domain.MemoryCheckHistory) {
+	return
+}
