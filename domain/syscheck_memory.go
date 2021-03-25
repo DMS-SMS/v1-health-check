@@ -23,3 +23,14 @@ type MemoryCheckHistory struct {
 	// MostMemoryConsumeContainer specifies the container name which is consumed most memory
 	MostMemoryConsumeContainer string
 }
+
+// MemoryCheckHistoryRepository is interface for repository layer used in usecase layer
+// Repository is implemented with elasticsearch in v.1.0.0
+type MemoryCheckHistoryRepository interface {
+	// get required component by embedding systemCheckHistoryRepositoryComponent
+	systemCheckHistoryRepositoryComponent
+
+	// Store method save MemoryCheckHistory model in repository
+	// b in return represents bytes of response body(map[string]interface{})
+	Store(*MemoryCheckHistory) (b []byte, err error)
+}
