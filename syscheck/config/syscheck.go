@@ -54,8 +54,9 @@ const (
 
 	defaultDiskMinCapacity = bytesize.GB * 2 // default const byte size for diskMinCapacity
 
-	defaultCPUWarningUsage = float64(1.0) // default const float64 for cpuWarningUsage
-	defaultCPUMaximumUsage = float64(1.5) // default const float64 for cpuMaximumUsage
+	defaultCPUWarningUsage         = float64(1.0) // default const float64 for cpuWarningUsage
+	defaultCPUMaximumUsage         = float64(1.5) // default const float64 for cpuMaximumUsage
+	defaultCPUMinimumUsageToRemove = float64(0.5) // default const float64 for cpuMinimumUsageToRemove
 )
 
 // implement IndexName method of esRepositoryComponentConfig interface
@@ -133,6 +134,18 @@ func (sc *syscheckConfig) CPUMaximumUsage() float64 {
 		sc.cpuMaximumUsage = _float64(viper.GetFloat64(key))
 	}
 	return *sc.cpuMaximumUsage
+}
+
+// CPUMinimumUsageToRemove method returns float64 represent cpu minimum usage to remove
+func (sc *syscheckConfig) CPUMinimumUsageToRemove() float64 {
+	var key = "domain.syscheck.cpucheck.cpuMinimumUsageToRemove"
+	if sc.cpuMinimumUsageToRemove == nil {
+		if _, ok := viper.Get(key).(float64); !ok {
+			viper.Set(key, defaultCPUMinimumUsageToRemove)
+		}
+		sc.cpuMinimumUsageToRemove = _float64(viper.GetFloat64(key))
+	}
+	return *sc.cpuMinimumUsageToRemove
 }
 
 // init function initialize App global variable
