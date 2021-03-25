@@ -41,6 +41,9 @@ type syscheckConfig struct {
 
 	// cpuMaximumUsage represent cpu maximum usage and is standard to decide to if cpu is healthy.
 	cpuMaximumUsage *float64
+
+	// cpuMinimumUsageToRemove represent minimum cpu usage to decide whether remove container or not
+	cpuMinimumUsageToRemove *float64
 }
 
 // default const value about syscheckConfig field
