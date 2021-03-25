@@ -4,7 +4,10 @@
 
 package domain
 
-import "github.com/inhies/go-bytesize"
+import (
+	"context"
+	"github.com/inhies/go-bytesize"
+)
 
 // MemCheckHistory model is used for record memory health check history and result
 type MemoryCheckHistory struct {
@@ -33,4 +36,10 @@ type MemoryCheckHistoryRepository interface {
 	// Store method save MemoryCheckHistory model in repository
 	// b in return represents bytes of response body(map[string]interface{})
 	Store(*MemoryCheckHistory) (b []byte, err error)
+}
+
+// MemoryCheckUseCase is interface used as business process handler about memory check
+type MemoryCheckUseCase interface {
+	// CheckMemory method check memory usage status and store memory check history using repository
+	CheckMemory(ctx context.Context) error
 }
