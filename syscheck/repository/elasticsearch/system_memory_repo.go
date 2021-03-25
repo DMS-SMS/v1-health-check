@@ -17,3 +17,9 @@ type esMemoryCheckHistoryRepository struct {
 	// bodyWriter is implementation of reqBodyWriter interface to write []byte for request body
 	bodyWriter reqBodyWriter
 }
+
+// esMemoryCheckHistoryRepoConfig is the config for memory check history repository using elasticsearch
+type esMemoryCheckHistoryRepoConfig interface {
+	// get common method from embedding esRepositoryComponentConfig
+	esRepositoryComponentConfig
+}
