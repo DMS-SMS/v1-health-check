@@ -69,6 +69,10 @@ const (
 	defaultCPUWarningUsage         = float64(1.0) // default const float64 for cpuWarningUsage
 	defaultCPUMaximumUsage         = float64(1.5) // default const float64 for cpuMaximumUsage
 	defaultCPUMinimumUsageToRemove = float64(0.5) // default const float64 for cpuMinimumUsageToRemove
+
+	defaultMemoryWarningUsage         = bytesize.GB * 6 // default const float64 for memoryWarningUsage
+	defaultMemoryMaximumUsage         = bytesize.GB * 7 // default const float64 for memoryMaximumUsage
+	defaultMemoryMinimumUsageToRemove = bytesize.GB * 1 // default const float64 for memoryMinimumUsageToRemove
 )
 
 // implement IndexName method of esRepositoryComponentConfig interface
