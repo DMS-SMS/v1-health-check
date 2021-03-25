@@ -43,3 +43,27 @@ type MemoryCheckUseCase interface {
 	// CheckMemory method check memory usage status and store memory check history using repository
 	CheckMemory(ctx context.Context) error
 }
+
+// FillPrivateComponent overriding FillPrivateComponent method of systemCheckHistoryComponent
+func (mc *MemoryCheckHistory) FillPrivateComponent() {
+	mc.systemCheckHistoryComponent.FillPrivateComponent()
+	mc._type = "MemoryCheck"
+}
+
+// DottedMapWithPrefix convert CPUCheckHistory to dotted map and return using MapWithPrefixKey of upper struct
+// all key value of Map start with prefix received from parameter
+func (mc *MemoryCheckHistory) DottedMapWithPrefix(prefix string) (m map[string]interface{}) {
+	m = mc.systemCheckHistoryComponent.DottedMapWithPrefix(prefix)
+
+	if prefix != "" {
+		prefix += "."
+	}
+
+	// setting public field value in dotted map
+	m[prefix + "total_usage_memory"] = mc.TotalUsageMemory
+	m[prefix + "docker_usage_memory"] = mc.DockerUsageMemory
+	m[prefix + "temporary_free_memory"] = mc.TemporaryFreeMemory
+	m[prefix + "most_memory_consume_container"] = mc.MostMemoryConsumeContainer
+
+	return
+}
