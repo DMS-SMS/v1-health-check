@@ -73,3 +73,25 @@ type memorySysAgency interface {
 		MostConsumerExceptFor(names []string) (id, name string, size bytesize.ByteSize)
 	}, err error)
 }
+
+// NewMemoryCheckUsecase function return memoryCheckUsecase ptr instance after initializing
+func NewMemoryCheckUsecase(
+	cfg memoryCheckUsecaseConfig,
+	mhr domain.MemoryCheckHistoryRepository,
+	sca slackChatAgency,
+	msa memorySysAgency,
+	da dockerAgency,
+) domain.MemoryCheckUseCase {
+	return &memoryCheckUsecase{
+		// initialize field with parameter received from caller
+		myCfg:           cfg,
+		historyRepo:     mhr,
+		slackChatAgency: sca,
+		memorySysAgency: msa,
+		dockerAgency:    da,
+
+		// initialize field with default value
+		status: memoryStatusHealthy,
+		mutex:  sync.Mutex{},
+	}
+}
