@@ -96,3 +96,35 @@ func (emr *esMemoryCheckHistoryRepository) createIndex() error {
 
 	return errors.Wrap(err, fmt.Sprintf("failed to call IndicesCreate, resp: %+v", resp))
 }
+
+// Implement Store method of MemoryCheckHistoryRepository interface
+func (emr *esMemoryCheckHistoryRepository) Store(history *domain.MemoryCheckHistory) (b []byte, err error) {
+	body, _ := json.Marshal(history.DottedMapWithPrefix(""))
+	if _, err = emr.bodyWriter.Write(body); err != nil {
+		err = errors.Wrap(err, "failed to write map to body writer")
+		return
+	}
+
+	buf := &bytes.Buffer{}
+	if _, err = emr.bodyWriter.WriteTo(buf); err != nil {
+		err = errors.Wrap(err, "failed to body writer WriteTo method")
+		return
+	}
+
+	resp, err := (esapi.IndexRequest{
+		Index:        emr.myCfg.IndexName(),
+		Body:         bytes.NewReader(buf.Bytes()),
+		Timeout:      time.Second * 5,
+	}).Do(context.Background(), emr.esCli)
+
+	if err != nil || resp.IsError() {
+		// 단순 err인지 status code상 오류인지 확인
+		err = errors.Wrap(err, fmt.Sprintf("failed to call IndexRequest, resp: %+v", resp))
+		return
+	}
+
+	result := map[string]interface{}{}
+	_ = json.NewDecoder(resp.Body).Decode(&result)
+	b, _ = json.Marshal(result)
+	return
+}
