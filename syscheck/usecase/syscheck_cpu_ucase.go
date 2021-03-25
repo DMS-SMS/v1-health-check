@@ -186,6 +186,15 @@ func (cu *cpuCheckUsecase) checkCPU(ctx context.Context) (history *domain.CPUChe
 
 		id, name, usage := result.MostConsumerExceptFor(requiredContainers)
 		history.MostCPUConsumeContainer = name
+
+		if usage < cu.myCfg.CPUMinimumUsageToRemove() {
+			cu.setStatus(cpuStatusUnhealthy)
+			msg := "!cpu check error occurred! cpu usage is too small to remove, please check for yourself"
+			_, _, _ = cu.slackChatAgency.SendMessage("anger", msg, _uuid)
+			history.SetError(errors.New("cpu usage is too small to remove"))
+			return
+		}
+
 		if err := cu.dockerAgency.RemoveContainer(id, types.ContainerRemoveOptions{Force: true}); err != nil {
 			cu.setStatus(cpuStatusUnhealthy)
 			history.ProcessLevel.Append(errorLevel)
