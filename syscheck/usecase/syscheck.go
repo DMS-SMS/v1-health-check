@@ -9,6 +9,7 @@
 package usecase
 
 import (
+	"github.com/docker/docker/api/types"
 	"github.com/slack-go/slack"
 	"time"
 )
@@ -46,3 +47,8 @@ type slackChatAgency interface {
 	SendMessage(emoji, text, uuid string, opts ...slack.MsgOption) (t time.Time, _text string, err error)
 }
 
+// dockerAgency is agency that agent various command about cpu system
+type dockerAgency interface {
+	// RemoveContainer remove container with id & option (auto created from docker swarm if exists)
+	RemoveContainer(containerID string, options types.ContainerRemoveOptions) error
+}
