@@ -58,6 +58,9 @@ type cpuCheckUsecaseConfig interface {
 
 	// CPUMaximumUsage method returns float64 represent cpu maximum usage
 	CPUMaximumUsage() float64
+
+	// CPUMinimumUsageToRemove method returns float64 represent cpu minimum usage to remove
+	CPUMinimumUsageToRemove() float64
 }
 
 // cpuSysAgency is agency that agent various command about cpu system
