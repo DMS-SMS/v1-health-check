@@ -164,6 +164,57 @@ func (sc *syscheckConfig) CPUMinimumUsageToRemove() float64 {
 	return *sc.cpuMinimumUsageToRemove
 }
 
+// implement MemoryWarningUsage method of memoryCheckUsecaseConfig interface
+func (sc *syscheckConfig) MemoryWarningUsage() bytesize.ByteSize {
+	var key = "domain.syscheck.memorycheck.memoryWarningUsage"
+	if sc.memoryWarningUsage != nil {
+		return *sc.memoryWarningUsage
+	}
+
+	size, err := bytesize.Parse(viper.GetString(key))
+	if err != nil {
+		viper.Set(key, defaultMemoryWarningUsage.String())
+		size = defaultMemoryWarningUsage
+	}
+
+	sc.memoryWarningUsage = &size
+	return *sc.memoryWarningUsage
+}
+
+// implement MemoryMaximumUsage method of memoryCheckUsecaseConfig interface
+func (sc *syscheckConfig) MemoryMaximumUsage() bytesize.ByteSize {
+	var key = "domain.syscheck.memorycheck.memoryMaximumUsage"
+	if sc.memoryMaximumUsage != nil {
+		return *sc.memoryMaximumUsage
+	}
+
+	size, err := bytesize.Parse(viper.GetString(key))
+	if err != nil {
+		viper.Set(key, defaultMemoryMaximumUsage.String())
+		size = defaultMemoryMaximumUsage
+	}
+
+	sc.memoryMaximumUsage = &size
+	return *sc.memoryMaximumUsage
+}
+
+// implement MemoryMinimumUsageToRemove method of memoryCheckUsecaseConfig interface
+func (sc *syscheckConfig) MemoryMinimumUsageToRemove() bytesize.ByteSize {
+	var key = "domain.syscheck.memorycheck.memoryMinimumUsageToRemove"
+	if sc.memoryMinimumUsageToRemove != nil {
+		return *sc.memoryMinimumUsageToRemove
+	}
+
+	size, err := bytesize.Parse(viper.GetString(key))
+	if err != nil {
+		viper.Set(key, defaultMemoryMinimumUsageToRemove.String())
+		size = defaultMemoryMinimumUsageToRemove
+	}
+
+	sc.memoryMinimumUsageToRemove = &size
+	return *sc.memoryMinimumUsageToRemove
+}
+
 // init function initialize App global variable
 func init() {
 	App = &syscheckConfig{}
