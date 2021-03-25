@@ -5,6 +5,7 @@
 package usecase
 
 import (
+	"github.com/inhies/go-bytesize"
 	"sync"
 
 	"github.com/DMS-SMS/v1-health-check/domain"
@@ -30,8 +31,8 @@ type memoryCheckUsecase struct {
 	// slackChat is used for agent slack API about chatting
 	slackChatAgency slackChatAgency
 
-	//// memorySysAgency is used as agency about memory system command
-	//memorySysAgency memorySysAgency
+	// memorySysAgency is used as agency about memory system command
+	memorySysAgency memorySysAgency
 
 	// dockerAgency is used as agency about docker command
 	dockerAgency dockerAgency
@@ -56,4 +57,19 @@ type memoryCheckUsecaseConfig interface {
 
 	// MemoryMinimumUsageToRemove method returns float64 represent memory minimum usage to remove
 	MemoryMinimumUsageToRemove() float64
+}
+
+// memorySysAgency is agency that agent various command about memory system
+type memorySysAgency interface {
+	// GetTotalSystemMemoryUsage return total memory usage as bytesize in system
+	GetTotalSystemMemoryUsage() (size bytesize.ByteSize, err error)
+
+	// CalculateContainersMemoryUsage calculate container memory usage & return result interface implementation
+	CalculateContainersMemoryUsage() (result interface {
+		// TotalMemoryUsage return total memory usage in docker containers
+		TotalMemoryUsage() (size bytesize.ByteSize)
+
+		// MostConsumerExceptFor return container consume the most memory except container names received from param
+		MostConsumerExceptFor(names []string) (id, name string, size bytesize.ByteSize)
+	}, err error)
 }
