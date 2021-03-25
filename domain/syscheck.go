@@ -124,6 +124,12 @@ func (sch *systemCheckHistoryComponent) SetAlarmResult(t time.Time, text string,
 	sch.alarmErr = err
 }
 
+// SetError method set Message & Error field with err get from param
+func (sch *systemCheckHistoryComponent) SetError(err error) {
+	sch.Message = err.Error()
+	sch.Error = err
+}
+
 // processLevel is string custom type used for representing status check process level
 type processLevel []string
 
