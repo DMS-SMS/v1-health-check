@@ -21,8 +21,8 @@ const (
 
 // memoryCheckUsecase implement MemoryCheckUsecase interface in domain and used in delivery layer
 type memoryCheckUsecase struct {
-	//// myCfg is used for getting memory check usecase config
-	//myCfg memoryCheckUsecaseConfig
+	// myCfg is used for getting memory check usecase config
+	myCfg memoryCheckUsecaseConfig
 
 	// historyRepo is used for store memory check history and injected from outside
 	historyRepo domain.MemoryCheckHistoryRepository
@@ -41,4 +41,19 @@ type memoryCheckUsecase struct {
 
 	// mutex help to prevent race condition when set status field value
 	mutex sync.Mutex
+}
+
+// memoryCheckUsecaseConfig is the config getter interface for memory check usecase
+type memoryCheckUsecaseConfig interface {
+	// get common config method from embedding systemCheckUsecaseComponentConfig
+	systemCheckUsecaseComponentConfig
+
+	// MemoryWarningUsage method returns float64 represent memory warning usage
+	MemoryWarningUsage() float64
+
+	// MemoryMaximumUsage method returns float64 represent memory maximum usage
+	MemoryMaximumUsage() float64
+
+	// MemoryMinimumUsageToRemove method returns float64 represent memory minimum usage to remove
+	MemoryMinimumUsageToRemove() float64
 }
