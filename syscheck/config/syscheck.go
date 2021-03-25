@@ -44,6 +44,18 @@ type syscheckConfig struct {
 
 	// cpuMinimumUsageToRemove represent minimum cpu usage to decide whether remove container or not
 	cpuMinimumUsageToRemove *float64
+
+	// ---
+
+	// fields using in memory health check (implement memoryCheckUsecaseConfig)
+	// memoryWarningUsage represent warning memory usage.
+	memoryWarningUsage *bytesize.ByteSize
+
+	// memoryMaximumUsage represent memory maximum usage and is standard to decide to if memory is healthy.
+	memoryMaximumUsage *bytesize.ByteSize
+
+	// memoryMinimumUsageToRemove represent minimum memory usage to decide whether remove container or not
+	memoryMinimumUsageToRemove *bytesize.ByteSize
 }
 
 // default const value about syscheckConfig field
