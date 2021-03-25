@@ -51,14 +51,14 @@ type memoryCheckUsecaseConfig interface {
 	// get common config method from embedding systemCheckUsecaseComponentConfig
 	systemCheckUsecaseComponentConfig
 
-	// MemoryWarningUsage method returns float64 represent memory warning usage
-	MemoryWarningUsage() float64
+	// MemoryWarningUsage method returns bytesize.ByteSize represent memory warning usage
+	MemoryWarningUsage() bytesize.ByteSize
 
-	// MemoryMaximumUsage method returns float64 represent memory maximum usage
-	MemoryMaximumUsage() float64
+	// MemoryMaximumUsage method returns bytesize.ByteSize represent memory maximum usage
+	MemoryMaximumUsage() bytesize.ByteSize
 
-	// MemoryMinimumUsageToRemove method returns float64 represent memory minimum usage to remove
-	MemoryMinimumUsageToRemove() float64
+	// MemoryMinimumUsageToRemove method returns bytesize.ByteSize represent memory minimum usage to remove
+	MemoryMinimumUsageToRemove() bytesize.ByteSize
 }
 
 // memorySysAgency is agency that agent various command about memory system
