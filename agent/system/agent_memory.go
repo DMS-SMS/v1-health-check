@@ -70,7 +70,7 @@ func (sa *sysAgent) CalculateContainersMemoryUsage() (interface {
 		}
 	}
 
-	return nil, nil
+	return result, nil
 }
 
 // getMemoryUsageSizeFrom return memory cpu usage as bytesize.Bytesize type from types.StatsJson struct
