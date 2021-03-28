@@ -44,7 +44,7 @@ func (sa *sysAgent) CalculateContainersCPUUsage() (interface {
 		result = calculateContainersCPUUsageResult{}
 	)
 
-	lists, err := sa.dockerCli.ContainerList(ctx, types.ContainerListOptions{})
+	containers, err := sa.dockerCli.ContainerList(ctx, types.ContainerListOptions{})
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to get container list from docker")
 	}
@@ -53,11 +53,11 @@ func (sa *sysAgent) CalculateContainersCPUUsage() (interface {
 	result.containers = make([]struct {
 		id, name string
 		usage    float64
-	}, len(lists))
+	}, len(containers))
 
-	for i, list := range lists {
+	for i, container := range containers {
 		var stats types.ContainerStats
-		if stats, err = sa.dockerCli.ContainerStats(ctx, list.ID, false); err != nil {
+		if stats, err = sa.dockerCli.ContainerStats(ctx, container.ID, false); err != nil {
 			return nil, errors.Wrap(err, "failed to get container stats from docker")
 		}
 
@@ -91,5 +91,3 @@ func getCPUUsagePercentFrom(v *types.StatsJSON) (per float64) {
 
 	return
 }
-
-//func is
