@@ -64,15 +64,15 @@ type memoryCheckUsecaseConfig interface {
 // memorySysAgency is agency that agent various command about memory system
 type memorySysAgency interface {
 	// GetTotalSystemMemoryUsage return total memory usage as bytesize in system
-	GetTotalSystemMemoryUsage() (size bytesize.ByteSize, err error)
+	GetTotalSystemMemoryUsage() (usage bytesize.ByteSize, err error)
 
 	// CalculateContainersMemoryUsage calculate container memory usage & return result interface implementation
 	CalculateContainersMemoryUsage() (result interface {
 		// TotalMemoryUsage return total memory usage in docker containers
-		TotalMemoryUsage() (size bytesize.ByteSize)
+		TotalMemoryUsage() (usage bytesize.ByteSize)
 
 		// MostConsumerExceptFor return container consume the most memory except container names received from param
-		MostConsumerExceptFor(names []string) (id, name string, size bytesize.ByteSize)
+		MostConsumerExceptFor(names []string) (id, name string, usage bytesize.ByteSize)
 	}, err error)
 }
 
