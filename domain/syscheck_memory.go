@@ -18,10 +18,10 @@ type MemoryCheckHistory struct {
 	TotalUsageMemory bytesize.ByteSize
 
 	// DockerUsageMemory specifies current total memory usage of docker looked in memory check when weak detected
-	DockerUsageMemory float64
+	DockerUsageMemory bytesize.ByteSize
 
 	// TemporaryFreeMemory specifies temporary freed memory size while recovering memory health
-	TemporaryFreeMemory float64
+	TemporaryFreeMemory bytesize.ByteSize
 
 	// MostMemoryConsumeContainer specifies the container name which is consumed most memory
 	MostMemoryConsumeContainer string
@@ -60,9 +60,9 @@ func (mc *MemoryCheckHistory) DottedMapWithPrefix(prefix string) (m map[string]i
 	}
 
 	// setting public field value in dotted map
-	m[prefix + "total_usage_memory"] = mc.TotalUsageMemory
-	m[prefix + "docker_usage_memory"] = mc.DockerUsageMemory
-	m[prefix + "temporary_free_memory"] = mc.TemporaryFreeMemory
+	m[prefix + "total_usage_memory"] = mc.TotalUsageMemory.String()
+	m[prefix + "docker_usage_memory"] = mc.DockerUsageMemory.String()
+	m[prefix + "temporary_free_memory"] = mc.TemporaryFreeMemory.String()
 	m[prefix + "most_memory_consume_container"] = mc.MostMemoryConsumeContainer
 
 	return
