@@ -20,7 +20,7 @@ type calculateContainersMemoryUsageResult struct {
 }
 
 // TotalCPUUsage return total memory usage in docker containers
-func (result calculateContainersMemoryUsageResult) TotalCPUUsage() (usage bytesize.ByteSize) {
+func (result calculateContainersMemoryUsageResult) TotalMemoryUsage() (usage bytesize.ByteSize) {
 	for _, container := range result.containers {
 		usage += container.usage
 	}
