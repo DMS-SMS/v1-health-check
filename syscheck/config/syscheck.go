@@ -10,6 +10,7 @@ package config
 import (
 	"github.com/inhies/go-bytesize"
 	"github.com/spf13/viper"
+	"time"
 )
 
 // App is the application config about syscheck domain
@@ -56,6 +57,18 @@ type syscheckConfig struct {
 
 	// memoryMinimumUsageToRemove represent minimum memory usage to decide whether remove container or not
 	memoryMinimumUsageToRemove *bytesize.ByteSize
+
+	// --
+
+	// fields using in main function to inject delivery layer (not implement any interface)
+	// diskCheckChannelPingCycle represent disk check delivery ping cycle
+	diskCheckDeliveryPingCycle *time.Duration
+
+	// cpuCheckDeliveryPingCycle represent cpu check delivery ping cycle
+	cpuCheckDeliveryPingCycle *time.Duration
+
+	// memoryCheckDeliveryPingCycle represent memory check delivery ping cycle
+	memoryCheckDeliveryPingCycle *time.Duration
 }
 
 // default const value about syscheckConfig field
