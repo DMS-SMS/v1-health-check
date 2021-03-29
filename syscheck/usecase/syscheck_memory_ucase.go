@@ -128,13 +128,14 @@ func (mu *memoryCheckUsecase) checkMemory(ctx context.Context) (history *domain.
 	history.FillPrivateComponent()
 	history.UUID = _uuid
 
-	totalUsage, err := mu.memorySysAgency.GetTotalSystemMemoryUsage()
+	_totalUsage, err := mu.memorySysAgency.GetTotalSystemMemoryUsage()
 	if err != nil {
 		history.ProcessLevel.Set(errorLevel)
 		history.SetError(errors.Wrap(err, "failed to get total system memory usage"))
 		return
 	}
-	history.TotalUsageMemory = totalUsage
+	history.TotalUsageMemory = _totalUsage
+	var totalUsage = bytesizeComparator{_totalUsage}
 
 	return
 }
