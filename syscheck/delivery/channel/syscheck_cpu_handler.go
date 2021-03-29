@@ -10,6 +10,7 @@ package channel
 import (
 	"context"
 	"log"
+	"time"
 
 	"github.com/DMS-SMS/v1-health-check/domain"
 )
@@ -18,6 +19,15 @@ import (
 type cpuCheckHandler struct {
 	// CUsecase is usecase layer interface which is injected from package outside (maybe, in main)
 	CUsecase domain.CPUCheckUseCase
+}
+
+// NewDiskCheckHandler define diskCheckHandler ptr instance & register handling channel msg to usecase
+func NewCPUCheckHandler(c <-chan time.Time, cu domain.CPUCheckUseCase) {
+	handler := &cpuCheckHandler{
+		CUsecase: cu,
+	}
+
+	handler.startListening(c)
 }
 
 // CheckCPU method set context & call usecase CheckCPU method, handle error
