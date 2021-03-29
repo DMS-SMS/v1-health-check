@@ -16,3 +16,13 @@ type diskCheckHandler struct {
 	// DUsecase is usecase layer interface which is injected from package outside (maybe, in main)
 	DUsecase domain.DiskCheckUseCase
 }
+
+// CheckDisk method set context & call usecase CheckDisk method, handle error
+func (dh *diskCheckHandler) CheckDisk(t time.Time) {
+	ctx := context.Background()
+	ctx = context.WithValue(ctx, "time", t)
+
+	if err := dh.DUsecase.CheckDisk(ctx); err != nil {
+		log.Printf("error occurs in CheckDisk, err: %v", err)
+	}
+}
