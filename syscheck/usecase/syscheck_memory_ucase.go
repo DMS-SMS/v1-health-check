@@ -138,3 +138,10 @@ func (mu *memoryCheckUsecase) checkMemory(ctx context.Context) (history *domain.
 
 	return
 }
+
+// setStatus set status field value using mutex Lock & Unlock
+func (mu *memoryCheckUsecase) setStatus(status memoryCheckStatus) {
+	mu.mutex.Lock()
+	defer mu.mutex.Unlock()
+	mu.status = status
+}
