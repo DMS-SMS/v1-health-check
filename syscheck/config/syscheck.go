@@ -86,6 +86,10 @@ const (
 	defaultMemoryWarningUsage         = bytesize.GB * 6 // default const float64 for memoryWarningUsage
 	defaultMemoryMaximumUsage         = bytesize.GB * 7 // default const float64 for memoryMaximumUsage
 	defaultMemoryMinimumUsageToRemove = bytesize.GB * 1 // default const float64 for memoryMinimumUsageToRemove
+
+	defaultDiskCheckDeliveryPingCycle   = time.Minute * 5 // default const Duration for diskCheckDeliveryPingCycle
+	defaultCPUCheckDeliveryPingCycle    = time.Minute * 5 // default const Duration for diskCheckDeliveryPingCycle
+	defaultMemoryCheckDeliveryPingCycle = time.Minute * 5 // default const Duration for diskCheckDeliveryPingCycle
 )
 
 // implement IndexName method of esRepositoryComponentConfig interface
