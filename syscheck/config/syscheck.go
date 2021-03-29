@@ -232,6 +232,57 @@ func (sc *syscheckConfig) MemoryMinimumUsageToRemove() bytesize.ByteSize {
 	return *sc.memoryMinimumUsageToRemove
 }
 
+// not implement any interface, just using in main function for delivery layer injection
+func (sc *syscheckConfig) DiskCheckDeliveryPingCycle() time.Duration {
+	var key = "domain.syscheck.delivery.channel.pingCycle.diskcheck"
+	if sc.diskCheckDeliveryPingCycle != nil {
+		return *sc.diskCheckDeliveryPingCycle
+	}
+
+	d, err := time.ParseDuration(viper.GetString(key))
+	if err != nil {
+		viper.Set(key, defaultDiskCheckDeliveryPingCycle.String())
+		d = defaultDiskCheckDeliveryPingCycle
+	}
+
+	sc.diskCheckDeliveryPingCycle = &d
+	return *sc.diskCheckDeliveryPingCycle
+}
+
+// not implement any interface, just using in main function for delivery layer injection
+func (sc *syscheckConfig) CPUCheckDeliveryPingCycle() time.Duration {
+	var key = "domain.syscheck.delivery.channel.pingCycle.cpucheck"
+	if sc.cpuCheckDeliveryPingCycle != nil {
+		return *sc.cpuCheckDeliveryPingCycle
+	}
+
+	d, err := time.ParseDuration(viper.GetString(key))
+	if err != nil {
+		viper.Set(key, defaultCPUCheckDeliveryPingCycle.String())
+		d = defaultCPUCheckDeliveryPingCycle
+	}
+
+	sc.cpuCheckDeliveryPingCycle = &d
+	return *sc.cpuCheckDeliveryPingCycle
+}
+
+// not implement any interface, just using in main function for delivery layer injection
+func (sc *syscheckConfig) MemoryCheckDeliveryPingCycle() time.Duration {
+	var key = "domain.syscheck.delivery.channel.pingCycle.memorycheck"
+	if sc.memoryCheckDeliveryPingCycle != nil {
+		return *sc.memoryCheckDeliveryPingCycle
+	}
+
+	d, err := time.ParseDuration(viper.GetString(key))
+	if err != nil {
+		viper.Set(key, defaultMemoryCheckDeliveryPingCycle.String())
+		d = defaultMemoryCheckDeliveryPingCycle
+	}
+
+	sc.memoryCheckDeliveryPingCycle = &d
+	return *sc.memoryCheckDeliveryPingCycle
+}
+
 // init function initialize App global variable
 func init() {
 	App = &syscheckConfig{}
