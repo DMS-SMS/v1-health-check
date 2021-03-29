@@ -15,8 +15,8 @@ type sysAgent struct {
 	dockerCli *client.Client
 }
 
-// New return new instance of sysAgent pointer type initialized with parameter
-func New(dc *client.Client) *sysAgent {
+// NewAgent return new instance of sysAgent pointer type initialized with parameter
+func NewAgent(dc *client.Client) *sysAgent {
 	return &sysAgent{
 		dockerCli: dc,
 	}

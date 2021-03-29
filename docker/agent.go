@@ -14,8 +14,8 @@ type dockerAgent struct {
 	dkrCli *client.Client
 }
 
-// New return new instance of dockerAgent pointer type initialized with parameter
-func New(dc *client.Client) *dockerAgent {
+// NewAgent return new instance of dockerAgent pointer type initialized with parameter
+func NewAgent(dc *client.Client) *dockerAgent {
 	return &dockerAgent{
 		dkrCli: dc,
 	}

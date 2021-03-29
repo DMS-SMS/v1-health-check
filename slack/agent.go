@@ -18,10 +18,10 @@ type slackAgent struct {
 	chatChannel string
 }
 
-// New return new initialized instance of slackAgent pointer type with slack client & chat channel
-func New(cli *slack.Client, cnl string) *slackAgent {
+// NewAgent return new initialized instance of slackAgent pointer type with slack client & chat channel
+func NewAgent(token, cnl string) *slackAgent {
 	return &slackAgent{
-		slkCli:      cli,
+		slkCli:      slack.New(token),
 		chatChannel: cnl,
 	}
 }
