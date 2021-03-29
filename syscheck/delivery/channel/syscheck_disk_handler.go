@@ -26,3 +26,13 @@ func (dh *diskCheckHandler) CheckDisk(t time.Time) {
 		log.Printf("error occurs in CheckDisk, err: %v", err)
 	}
 }
+
+// startListening method start listening msg from golang channel & stream msg to another method
+func (dh *diskCheckHandler) startListening(c <-chan time.Time) {
+	for {
+		select {
+		case t := <-c:
+			go dh.CheckDisk(t)
+		}
+	}
+}
