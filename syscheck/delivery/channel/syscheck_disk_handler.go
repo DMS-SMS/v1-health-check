@@ -6,3 +6,13 @@
 // publishing msg to golang channel which is received from outside is not occurred in this package
 
 package channel
+
+import (
+	"github.com/DMS-SMS/v1-health-check/domain"
+)
+
+// diskCheckHandler is delivered data handler about disk check using usecase layer
+type diskCheckHandler struct {
+	// DUsecase is usecase layer interface which is injected from package outside (maybe, in main)
+	DUsecase domain.DiskCheckUseCase
+}
