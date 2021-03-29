@@ -8,6 +8,8 @@
 package channel
 
 import (
+	"context"
+	"log"
 
 	"github.com/DMS-SMS/v1-health-check/domain"
 )
@@ -16,4 +18,24 @@ import (
 type cpuCheckHandler struct {
 	// CUsecase is usecase layer interface which is injected from package outside (maybe, in main)
 	CUsecase domain.CPUCheckUseCase
+}
+
+// CheckCPU method set context & call usecase CheckCPU method, handle error
+func (ch *cpuCheckHandler) CheckCPU(t time.Time) {
+	ctx := context.Background()
+	ctx = context.WithValue(ctx, "time", t)
+
+	if err := ch.CUsecase.CheckCPU(ctx); err != nil {
+		log.Printf("error occurs in CheckCPU, err: %v", err)
+	}
+}
+
+// startListening method start listening msg from golang channel & stream msg to another method
+func (ch *cpuCheckHandler) startListening(c <-chan time.Time) {
+	for {
+		select {
+		case t := <-c:
+			go ch.CheckCPU(t)
+		}
+	}
 }
