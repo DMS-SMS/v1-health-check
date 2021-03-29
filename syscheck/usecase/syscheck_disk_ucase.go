@@ -115,7 +115,7 @@ func (du *diskCheckUsecase) checkDisk(ctx context.Context) (history *domain.Disk
 		return
 	}
 	history.RemainingCap = _remainCap
-	var remainCap = bytesizeComparator{_remainCap}
+	var remainCap = bytesizeComparator{V: _remainCap}
 
 	switch du.status {
 	case diskStatusHealthy:
@@ -165,7 +165,7 @@ func (du *diskCheckUsecase) checkDisk(ctx context.Context) (history *domain.Disk
 			history.SetError(errors.Wrap(err, "failed to again get remain disk capacity"))
 			return
 		}
-		var againRemainCap = bytesizeComparator{_againRemainCap}
+		var againRemainCap = bytesizeComparator{V: _againRemainCap}
 
 		if againRemainCap.isMoreThan(du.myCfg.DiskMinCapacity()) {
 			du.setStatus(diskStatusHealthy)
