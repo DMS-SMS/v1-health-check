@@ -6,21 +6,20 @@ package main
 import (
 	"github.com/docker/docker/client"
 	"github.com/elastic/go-elasticsearch/v7"
-	"github.com/slack-go/slack"
 	"github.com/spf13/viper"
 	"log"
 	"runtime"
 	"time"
 
-	dockeragent "github.com/DMS-SMS/v1-health-check/agent/docker"
-	slackagent "github.com/DMS-SMS/v1-health-check/agent/slack"
-	sysagent "github.com/DMS-SMS/v1-health-check/agent/system"
 	"github.com/DMS-SMS/v1-health-check/app/config"
+	"github.com/DMS-SMS/v1-health-check/docker"
 	"github.com/DMS-SMS/v1-health-check/json"
+	"github.com/DMS-SMS/v1-health-check/slack"
 	_syscheckConfig "github.com/DMS-SMS/v1-health-check/syscheck/config"
 	_syscheckChannelDelivery "github.com/DMS-SMS/v1-health-check/syscheck/delivery/channel"
 	_syscheckRepo "github.com/DMS-SMS/v1-health-check/syscheck/repository/elasticsearch"
 	_syscheckUcase "github.com/DMS-SMS/v1-health-check/syscheck/usecase"
+	"github.com/DMS-SMS/v1-health-check/system"
 )
 
 func init() {
@@ -48,9 +47,10 @@ func main() {
 		client.WithTimeout(config.App.DockerCliTimeout()),
 	)
 
-	_slk := slackagent.New(slack.New(config.App.SlackAPIToken()), config.App.SlackChatChannel())
-	_sys := sysagent.New(dkrCli)
-	_dkr := dockeragent.New(dkrCli)
+	// add docker, system, slack agent
+	_dkr := docker.NewAgent(dkrCli)
+	_sys := system.NewAgent(dkrCli)
+	_slk := slack.NewAgent(config.App.SlackAPIToken(), config.App.SlackChatChannel())
 
 	// syscheck domain repository
 	sdr := _syscheckRepo.NewESDiskCheckHistoryRepository(_syscheckConfig.App, esCli, json.MapWriter())
