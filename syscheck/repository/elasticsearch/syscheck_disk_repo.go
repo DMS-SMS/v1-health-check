@@ -117,9 +117,11 @@ func (edr *esDiskCheckHistoryRepository) Store(history *domain.DiskCheckHistory)
 		Timeout:      time.Second * 5,
 	}).Do(context.Background(), edr.esCli)
 
-	if err != nil || resp.IsError() {
-		// 단순 err인지 status code상 오류인지 확인
+	if err != nil {
 		err = errors.Wrap(err, fmt.Sprintf("failed to call IndexRequest, resp: %+v", resp))
+		return
+	} else if resp.IsError() {
+		err = errors.Errorf("IndexRequest return error code, resp: %+v", resp)
 		return
 	}
 
