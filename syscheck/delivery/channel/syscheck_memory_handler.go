@@ -17,6 +17,14 @@ type memoryCheckHandler struct {
 	MUsecase domain.MemoryCheckUseCase
 }
 
+// NewDiskCheckHandler define memoryCheckHandler ptr instance & register handling channel msg to usecase
+func NewMemoryCheckHandler(c <-chan time.Time, mu domain.MemoryCheckUseCase) {
+	handler := &memoryCheckHandler{
+		MUsecase: mu,
+	}
+
+	handler.startListening(c)
+}
 
 // CheckMemory method set context & call usecase CheckMemory method, handle error
 func (mh *memoryCheckHandler) CheckMemory(t time.Time) {
