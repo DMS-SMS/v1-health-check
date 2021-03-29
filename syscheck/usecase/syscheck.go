@@ -54,18 +54,14 @@ type dockerAgency interface {
 	RemoveContainer(containerID string, options types.ContainerRemoveOptions) error
 }
 
-// bytesizeComparator is bytesize.ByteSize wrapping type which is used for compare another bytesize.ByteSize
-type bytesizeComparator struct {
-	// contain value & various method of ByteSize by embedding bytesize.ByteSize
-	bytesize.ByteSize
-}
+// bytesizeComparator is struct type having bytesize.ByteSize type field which is used for compare with another bytesize.ByteSize
+type bytesizeComparator struct { V bytesize.ByteSize }
 
 // isMoreThan return boolean if size of instance which call this method is more than parameter's size
-func (main bytesizeComparator) isMoreThan(target bytesize.ByteSize) bool {
-	return main.ByteSize > target
-}
+func (comparator bytesizeComparator) isMoreThan(target bytesize.ByteSize) bool { return comparator.V > target }
 
 // isMoreThan return boolean if size of instance which call this method is less than parameter's size
-func (main bytesizeComparator) isLessThan(target bytesize.ByteSize) bool {
-	return main.ByteSize < target
-}
+func (comparator bytesizeComparator) isLessThan(target bytesize.ByteSize) bool { return comparator.V < target }
+
+// String calling & return return value of String method in V(type of bytesize.Bytesize) field
+func (comparator bytesizeComparator) String() string { return comparator.V.String() }
