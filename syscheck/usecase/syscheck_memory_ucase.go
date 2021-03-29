@@ -136,7 +136,7 @@ func (mu *memoryCheckUsecase) checkMemory(ctx context.Context) (history *domain.
 		return
 	}
 	history.TotalUsageMemory = _totalUsage
-	var totalUsage = bytesizeComparator{_totalUsage}
+	var totalUsage = bytesizeComparator{V: _totalUsage}
 
 	switch mu.status {
 	case memoryStatusHealthy:
@@ -182,7 +182,7 @@ func (mu *memoryCheckUsecase) checkMemory(ctx context.Context) (history *domain.
 
 		id, name, _usage := result.MostConsumerExceptFor(requiredContainers)
 		history.MostMemoryConsumeContainer = name
-		usage := bytesizeComparator{_usage}
+		usage := bytesizeComparator{V: _usage}
 
 		if usage.isLessThan(mu.myCfg.MemoryMinimumUsageToRemove()) {
 			mu.setStatus(memoryStatusUnhealthy)
@@ -200,7 +200,7 @@ func (mu *memoryCheckUsecase) checkMemory(ctx context.Context) (history *domain.
 			history.SetError(errors.Wrap(err, "failed to remove container"))
 			return
 		} else {
-			history.TemporaryFreeMemory = usage.ByteSize
+			history.TemporaryFreeMemory = usage.V
 			history.Message = "removed most memory consumed container as memory usage is over than maximum"
 		}
 
@@ -213,7 +213,7 @@ func (mu *memoryCheckUsecase) checkMemory(ctx context.Context) (history *domain.
 			history.SetError(errors.Wrap(err, "failed to again calculate containers memory usage"))
 			return
 		}
-		var againTotalUsage = bytesizeComparator{_againTotalUsage}
+		var againTotalUsage = bytesizeComparator{V: _againTotalUsage}
 
 		if againTotalUsage.isLessThan(mu.myCfg.MemoryMaximumUsage()) {
 			mu.setStatus(memoryStatusHealthy)
