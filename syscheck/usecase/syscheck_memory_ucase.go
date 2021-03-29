@@ -137,6 +137,31 @@ func (mu *memoryCheckUsecase) checkMemory(ctx context.Context) (history *domain.
 	history.TotalUsageMemory = _totalUsage
 	var totalUsage = bytesizeComparator{_totalUsage}
 
+	switch mu.status {
+	case memoryStatusHealthy:
+		break
+	case memoryStatusWarning:
+		if totalUsage.isLessThan(mu.myCfg.MemoryWarningUsage()) {
+			mu.setStatus(memoryStatusHealthy)
+		}
+	case memoryStatusRecovering:
+		history.ProcessLevel.Set(recoveringLevel)
+		history.Message = "provisioning memory is already on process using docker"
+		return
+	case memoryStatusUnhealthy:
+		if totalUsage.isLessThan(mu.myCfg.MemoryMaximumUsage()) {
+			mu.setStatus(memoryStatusHealthy)
+			history.ProcessLevel.Set(recoveredLevel)
+			history.Message = "memory check is recovered to be healthy"
+			msg := fmt.Sprintf("!memory check recovered to health! current memory usage - %s", totalUsage.String())
+			_, _, _ = mu.slackChatAgency.SendMessage("heart", msg, _uuid)
+		} else {
+			history.ProcessLevel.Set(unhealthyLevel)
+			history.Message = "memory check is unhealthy now"
+		}
+		return
+	}
+
 	return
 }
 
