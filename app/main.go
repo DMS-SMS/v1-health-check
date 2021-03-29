@@ -63,9 +63,9 @@ func main() {
 	smu := _syscheckUcase.NewMemoryCheckUsecase(_syscheckConfig.App, smr, _slk, _sys, _dkr)
 
 	// syscheck domain delivery
-	_syscheckChannelDelivery.NewDiskCheckHandler(time.Tick(time.Minute * 5), sdu)
-	_syscheckChannelDelivery.NewCPUCheckHandler(time.Tick(time.Minute * 5), scu)
-	_syscheckChannelDelivery.NewMemoryCheckHandler(time.Tick(time.Minute * 5), smu)
+	_syscheckChannelDelivery.NewDiskCheckHandler(time.Tick(_syscheckConfig.App.DiskCheckDeliveryPingCycle()), sdu)
+	_syscheckChannelDelivery.NewCPUCheckHandler(time.Tick(_syscheckConfig.App.CPUCheckDeliveryPingCycle()), scu)
+	_syscheckChannelDelivery.NewMemoryCheckHandler(time.Tick(_syscheckConfig.App.MemoryCheckDeliveryPingCycle()), smu)
 
 	runtime.Goexit()
 }
