@@ -4,6 +4,8 @@
 package main
 
 import (
+	"github.com/docker/docker/client"
+	"github.com/elastic/go-elasticsearch/v7"
 	"github.com/spf13/viper"
 	"log"
 
@@ -23,4 +25,14 @@ func init() {
 }
 
 func main() {
+	esCli, err := elasticsearch.NewClient(elasticsearch.Config{
+		Addresses: []string{config.App.ESAddress()},
+	})
+	if err != nil {
+		log.Fatal(err)
 }
+
+	dkrCli, err := client.NewClientWithOpts(
+		client.WithVersion(config.App.DockerCliVer()),
+		client.WithTimeout(config.App.DockerCliTimeout()),
+	)
