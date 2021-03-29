@@ -7,6 +7,7 @@ package usecase
 import (
 	"context"
 	"fmt"
+	"github.com/docker/docker/api/types"
 	"github.com/google/uuid"
 	"github.com/inhies/go-bytesize"
 	"github.com/pkg/errors"
@@ -153,13 +154,87 @@ func (mu *memoryCheckUsecase) checkMemory(ctx context.Context) (history *domain.
 			mu.setStatus(memoryStatusHealthy)
 			history.ProcessLevel.Set(recoveredLevel)
 			history.Message = "memory check is recovered to be healthy"
-			msg := fmt.Sprintf("!memory check recovered to health! current memory usage - %s", totalUsage.String())
+			msg := fmt.Sprintf("!memory check recovered to health! current memory usage - %s", totalUsage)
 			_, _, _ = mu.slackChatAgency.SendMessage("heart", msg, _uuid)
 		} else {
 			history.ProcessLevel.Set(unhealthyLevel)
 			history.Message = "memory check is unhealthy now"
 		}
 		return
+	}
+
+	if totalUsage.isMoreThan(mu.myCfg.MemoryMaximumUsage()) {
+		mu.setStatus(memoryStatusRecovering)
+		history.ProcessLevel.Set(weakDetectedLevel)
+		msg := fmt.Sprintf("!memory check weak detected! start to provision memory (current memory usage - %s)", totalUsage)
+		history.SetAlarmResult(mu.slackChatAgency.SendMessage("pill", msg, _uuid))
+
+		result, err := mu.memorySysAgency.CalculateContainersMemoryUsage()
+		if err != nil {
+			mu.setStatus(memoryStatusUnhealthy)
+			history.ProcessLevel.Append(errorLevel)
+			msg := "!memory check error occurred! failed to calculate container memory, please check for yourself"
+			_, _, _ = mu.slackChatAgency.SendMessage("anger", msg, _uuid)
+			history.SetError(errors.Wrap(err, "failed to calculate containers memory usage"))
+			return
+		}
+		history.DockerUsageMemory = result.TotalMemoryUsage()
+
+		id, name, _usage := result.MostConsumerExceptFor(requiredContainers)
+		history.MostMemoryConsumeContainer = name
+		usage := bytesizeComparator{_usage}
+
+		if usage.isLessThan(mu.myCfg.MemoryMinimumUsageToRemove()) {
+			mu.setStatus(memoryStatusUnhealthy)
+			msg := "!memory check error occurred! memory usage is too small to remove, please check for yourself"
+			_, _, _ = mu.slackChatAgency.SendMessage("anger", msg, _uuid)
+			history.SetError(errors.New("memory usage is too small to remove"))
+			return
+		}
+
+		if err := mu.dockerAgency.RemoveContainer(id, types.ContainerRemoveOptions{Force: true}); err != nil {
+			mu.setStatus(memoryStatusUnhealthy)
+			history.ProcessLevel.Append(errorLevel)
+			msg := "!memory check error occurred! failed to remove container, please check for yourself"
+			_, _, _ = mu.slackChatAgency.SendMessage("anger", msg, _uuid)
+			history.SetError(errors.Wrap(err, "failed to remove container"))
+			return
+		} else {
+			history.TemporaryFreeMemory = usage.ByteSize
+			history.Message = "removed most memory consumed container as memory usage is over than maximum"
+		}
+
+		_againTotalUsage, err := mu.memorySysAgency.GetTotalSystemMemoryUsage()
+		if err != nil {
+			mu.setStatus(memoryStatusUnhealthy)
+			history.ProcessLevel.Append(errorLevel)
+			msg := "!memory check error occurred! failed to again calculate container memory, please check for yourself"
+			_, _, _ = mu.slackChatAgency.SendMessage("broken_heart", msg, _uuid)
+			history.SetError(errors.Wrap(err, "failed to again calculate containers memory usage"))
+			return
+		}
+		var againTotalUsage = bytesizeComparator{_againTotalUsage}
+
+		if againTotalUsage.isLessThan(mu.myCfg.MemoryMaximumUsage()) {
+			mu.setStatus(memoryStatusHealthy)
+			msg := fmt.Sprintf("!memory check is healthy! current memory usage - %s", againTotalUsage)
+			_, _, _ = mu.slackChatAgency.SendMessage("heart", msg, _uuid)
+		} else {
+			mu.setStatus(memoryStatusUnhealthy)
+			msg := "!memory check has deteriorated! please check for yourself"
+			_, _, _ = mu.slackChatAgency.SendMessage("broken_heart", msg, _uuid)
+		}
+	} else if totalUsage.isMoreThan(mu.myCfg.MemoryWarningUsage()) {
+		history.ProcessLevel.Set(warningLevel)
+		history.Message = "memory check is warning now, but not weak yet"
+		if mu.status != memoryStatusWarning {
+			mu.setStatus(memoryStatusWarning)
+			msg := fmt.Sprintf("!memory check warning! current memory usage - %s", totalUsage)
+			history.SetAlarmResult(mu.slackChatAgency.SendMessage("warning", msg, _uuid))
+		}
+	} else {
+		history.ProcessLevel.Set(healthyLevel)
+		history.Message = "memory system is healthy now"
 	}
 
 	return
