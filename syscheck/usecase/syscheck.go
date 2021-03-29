@@ -10,6 +10,7 @@ package usecase
 
 import (
 	"github.com/docker/docker/api/types"
+	"github.com/inhies/go-bytesize"
 	"github.com/slack-go/slack"
 	"time"
 )
@@ -55,3 +56,13 @@ type dockerAgency interface {
 
 // bytesizeComparator is bytesize.ByteSize wrapping type which is used for compare another bytesize.ByteSize
 type bytesizeComparator bytesize.ByteSize
+
+// isMoreThan return boolean if size of instance which call this method is more than parameter's size
+func (main bytesizeComparator) isMoreThan(target bytesize.ByteSize) bool {
+	return bytesize.ByteSize(main) > target
+}
+
+// isMoreThan return boolean if size of instance which call this method is less than parameter's size
+func (main bytesizeComparator) isLessThan(target bytesize.ByteSize) bool {
+	return bytesize.ByteSize(main) < target
+}
