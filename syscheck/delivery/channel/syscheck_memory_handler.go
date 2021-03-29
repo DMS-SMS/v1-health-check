@@ -23,7 +23,7 @@ func NewMemoryCheckHandler(c <-chan time.Time, mu domain.MemoryCheckUseCase) {
 		MUsecase: mu,
 	}
 
-	handler.startListening(c)
+	go handler.startListening(c)
 }
 
 // CheckMemory method set context & call usecase CheckMemory method, handle error

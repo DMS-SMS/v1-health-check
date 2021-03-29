@@ -23,7 +23,7 @@ func NewDiskCheckHandler(c <-chan time.Time, du domain.DiskCheckUseCase) {
 		DUsecase: du,
 	}
 
-	handler.startListening(c)
+	go handler.startListening(c)
 }
 
 // CheckDisk method set context & call usecase CheckDisk method, handle error

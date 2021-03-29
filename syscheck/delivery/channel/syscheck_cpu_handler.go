@@ -27,7 +27,7 @@ func NewCPUCheckHandler(c <-chan time.Time, cu domain.CPUCheckUseCase) {
 		CUsecase: cu,
 	}
 
-	handler.startListening(c)
+	go handler.startListening(c)
 }
 
 // CheckCPU method set context & call usecase CheckCPU method, handle error
