@@ -8,6 +8,10 @@
 package channel
 
 import (
+	"context"
+	"log"
+	"time"
+
 	"github.com/DMS-SMS/v1-health-check/domain"
 )
 
@@ -15,6 +19,15 @@ import (
 type diskCheckHandler struct {
 	// DUsecase is usecase layer interface which is injected from package outside (maybe, in main)
 	DUsecase domain.DiskCheckUseCase
+}
+
+// NewDiskCheckHandler define diskCheckHandler ptr instance & register handling channel msg to usecase
+func NewDiskCheckHandler(c <-chan time.Time, du domain.DiskCheckUseCase) {
+	handler := &diskCheckHandler{
+		DUsecase: du,
+	}
+
+	handler.startListening(c)
 }
 
 // CheckDisk method set context & call usecase CheckDisk method, handle error
