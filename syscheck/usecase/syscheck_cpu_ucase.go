@@ -128,19 +128,20 @@ func (cu *cpuCheckUsecase) checkCPU(ctx context.Context) (history *domain.CPUChe
 	history.FillPrivateComponent()
 	history.UUID = _uuid
 
-	totalUsage, err := cu.cpuSysAgency.GetTotalSystemCPUUsage()
+	_totalUsage, err := cu.cpuSysAgency.GetTotalSystemCPUUsage()
 	if err != nil {
 		history.ProcessLevel.Set(errorLevel)
 		history.SetError(errors.Wrap(err, "failed to get total system cpu usage"))
 		return
 	}
-	history.TotalUsageCore = totalUsage
+	history.TotalUsageCore = _totalUsage
+	var totalUsage = float64Comparator{V: _totalUsage}
 
 	switch cu.status {
 	case cpuStatusHealthy:
 		break
 	case cpuStatusWarning:
-		if !cu.isWarningUsageLessThan(totalUsage) {
+		if totalUsage.isLessThan(cu.myCfg.CPUWarningUsage()) {
 			cu.setStatus(cpuStatusHealthy)
 		}
 	case cpuStatusRecovering:
@@ -148,11 +149,11 @@ func (cu *cpuCheckUsecase) checkCPU(ctx context.Context) (history *domain.CPUChe
 		history.Message = "provisioning CPU is already on process using docker"
 		return
 	case cpuStatusUnhealthy:
-		if !cu.isMaximumUsageLessThan(totalUsage) {
+		if totalUsage.isLessThan(cu.myCfg.CPUMaximumUsage()) {
 			cu.setStatus(cpuStatusHealthy)
 			history.ProcessLevel.Set(recoveredLevel)
 			history.Message = "cpu check is recovered to be healthy"
-			msg := fmt.Sprintf("!cpu check recovered to health! current cpu usage - %.02f", totalUsage)
+			msg := fmt.Sprintf("!cpu check recovered to health! current cpu usage - %.02f", totalUsage.V)
 			_, _, _ = cu.slackChatAgency.SendMessage("heart", msg, _uuid)
 		} else {
 			history.ProcessLevel.Set(unhealthyLevel)
@@ -161,10 +162,10 @@ func (cu *cpuCheckUsecase) checkCPU(ctx context.Context) (history *domain.CPUChe
 		return
 	}
 
-	if cu.isMaximumUsageLessThan(totalUsage) {
+	if totalUsage.isMoreThan(cu.myCfg.CPUMaximumUsage()) {
 		cu.setStatus(cpuStatusRecovering)
 		history.ProcessLevel.Set(weakDetectedLevel)
-		msg := fmt.Sprintf("!cpu check weak detected! start to provision CPU (current cpu usage - %.02f)", totalUsage)
+		msg := fmt.Sprintf("!cpu check weak detected! start to provision CPU (current cpu usage - %.02f)", totalUsage.V)
 		history.SetAlarmResult(cu.slackChatAgency.SendMessage("pill", msg, _uuid))
 
 		result, err := cu.cpuSysAgency.CalculateContainersCPUUsage()
@@ -178,10 +179,11 @@ func (cu *cpuCheckUsecase) checkCPU(ctx context.Context) (history *domain.CPUChe
 		}
 		history.DockerUsageCore = result.TotalCPUUsage()
 
-		id, name, usage := result.MostConsumerExceptFor(requiredContainers)
+		id, name, _usage := result.MostConsumerExceptFor(requiredContainers)
 		history.MostCPUConsumeContainer = name
+		var usage = float64Comparator{V: _usage}
 
-		if usage < cu.myCfg.CPUMinimumUsageToRemove() {
+		if usage.isLessThan(cu.myCfg.CPUMinimumUsageToRemove()) {
 			cu.setStatus(cpuStatusUnhealthy)
 			msg := "!cpu check error occurred! cpu usage is too small to remove, please check for yourself"
 			_, _, _ = cu.slackChatAgency.SendMessage("anger", msg, _uuid)
@@ -197,32 +199,36 @@ func (cu *cpuCheckUsecase) checkCPU(ctx context.Context) (history *domain.CPUChe
 			history.SetError(errors.Wrap(err, "failed to remove container"))
 			return
 		} else {
-			history.TemporaryFreeCore = usage
+			history.TemporaryFreeCore = usage.V
 			history.Message = "removed most cpu consumed container as cpu usage is over than maximum"
 		}
 
-		if result, err = cu.cpuSysAgency.CalculateContainersCPUUsage(); err != nil {
+		_againTotalUsage, err := cu.cpuSysAgency.GetTotalSystemCPUUsage()
+		if err != nil {
 			cu.setStatus(cpuStatusUnhealthy)
 			history.ProcessLevel.Append(errorLevel)
 			msg := "!cpu check error occurred! failed to again calculate container cpu, please check for yourself"
 			_, _, _ = cu.slackChatAgency.SendMessage("broken_heart", msg, _uuid)
 			history.SetError(errors.Wrap(err, "failed to again calculate containers cpu usage"))
 			return
-		} else if !cu.isMaximumUsageLessThan(result.TotalCPUUsage()) {
+		}
+		var againTotalUsage = float64Comparator{V: _againTotalUsage}
+
+		if againTotalUsage.isLessThan(cu.myCfg.CPUMaximumUsage()) {
 			cu.setStatus(cpuStatusHealthy)
-			msg := fmt.Sprintf("!cpu check is healthy! current cpu usage - %.02f", result.TotalCPUUsage())
+			msg := fmt.Sprintf("!cpu check is healthy! current cpu usage - %.02f", againTotalUsage.V)
 			_, _, _ = cu.slackChatAgency.SendMessage("heart", msg, _uuid)
 		} else {
 			cu.setStatus(cpuStatusUnhealthy)
 			msg := "!cpu check has deteriorated! please check for yourself"
 			_, _, _ = cu.slackChatAgency.SendMessage("broken_heart", msg, _uuid)
 		}
-	} else if cu.isWarningUsageLessThan(totalUsage) {
+	} else if totalUsage.isMoreThan(cu.myCfg.CPUWarningUsage()) {
 		history.ProcessLevel.Set(warningLevel)
 		history.Message = "cpu check is warning now, but not weak yet"
 		if cu.status != cpuStatusWarning {
 			cu.setStatus(cpuStatusWarning)
-			msg := fmt.Sprintf("!cpu check warning! current cpu usage - %.02f", totalUsage)
+			msg := fmt.Sprintf("!cpu check warning! current cpu usage - %.02f", totalUsage.V)
 			history.SetAlarmResult(cu.slackChatAgency.SendMessage("warning", msg, _uuid))
 		}
 	} else {
@@ -231,16 +237,6 @@ func (cu *cpuCheckUsecase) checkCPU(ctx context.Context) (history *domain.CPUChe
 	}
 
 	return
-}
-
-// isWarningUsageLessThan return bool if cpu warning usage is less than parameter
-func (cu *cpuCheckUsecase) isWarningUsageLessThan(usage float64) bool {
-	return cu.myCfg.CPUWarningUsage() < usage
-}
-
-// isMaximumUsageLessThan return bool if cpu maximum usage is less than parameter
-func (cu *cpuCheckUsecase) isMaximumUsageLessThan(usage float64) bool {
-	return cu.myCfg.CPUMaximumUsage() < usage
 }
 
 // setStatus set status field value using mutex Lock & Unlock
