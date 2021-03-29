@@ -108,13 +108,14 @@ func (du *diskCheckUsecase) checkDisk(ctx context.Context) (history *domain.Disk
 	history.FillPrivateComponent()
 	history.UUID = _uuid
 
-	_cap, err := du.diskSysAgency.GetRemainDiskCapacity()
+	_remainCap, err := du.diskSysAgency.GetRemainDiskCapacity()
 	if err != nil {
 		history.ProcessLevel.Set(errorLevel)
 		history.SetError(errors.Wrap(err, "failed to get disk capacity"))
 		return
 	}
-	history.RemainingCap = _cap
+	history.RemainingCap = _remainCap
+	var remainCap = bytesizeComparator{_remainCap}
 
 	switch du.status {
 	case diskStatusHealthy:
@@ -124,11 +125,11 @@ func (du *diskCheckUsecase) checkDisk(ctx context.Context) (history *domain.Disk
 		history.Message = "pruning docker system is already on process"
 		return
 	case diskStatusUnhealthy:
-		if du.isMinCapacityLessThan(_cap) {
+		if remainCap.isMoreThan(du.myCfg.DiskMinCapacity()) {
 			du.setStatus(diskStatusHealthy)
 			history.ProcessLevel.Set(recoveredLevel)
 			history.Message = "disk check is recovered to be healthy"
-			msg := fmt.Sprintf("!disk check recovered to health! remain capacity - %s", _cap.String())
+			msg := fmt.Sprintf("!disk check recovered to health! remain capacity - %s", remainCap)
 			_, _, _ = du.slackChatAgency.SendMessage("heart", msg, _uuid)
 		} else {
 			history.ProcessLevel.Set(unhealthyLevel)
@@ -137,7 +138,7 @@ func (du *diskCheckUsecase) checkDisk(ctx context.Context) (history *domain.Disk
 		return
 	}
 
-	if !du.isMinCapacityLessThan(_cap) {
+	if remainCap.isLessThan(du.myCfg.DiskMinCapacity()) {
 		du.setStatus(diskStatusRecovering)
 		history.ProcessLevel.Set(weakDetectedLevel)
 		msg := "!disk check weak detected! start to prune docker system"
@@ -155,16 +156,20 @@ func (du *diskCheckUsecase) checkDisk(ctx context.Context) (history *domain.Disk
 			history.Message = "pruned docker system as current disk capacity is less than the minimum"
 		}
 
-		if _cap, err = du.diskSysAgency.GetRemainDiskCapacity(); err != nil {
+		_againRemainCap, err := du.diskSysAgency.GetRemainDiskCapacity()
+		if err != nil {
 			du.setStatus(diskStatusUnhealthy)
 			history.ProcessLevel.Append(errorLevel)
 			msg := "!disk check error occurred! failed to again get disk capacity, please check for yourself"
 			_, _, _ = du.slackChatAgency.SendMessage("broken_heart", msg, _uuid)
 			history.SetError(errors.Wrap(err, "failed to again get remain disk capacity"))
 			return
-		} else if du.isMinCapacityLessThan(_cap) {
+		}
+		var againRemainCap = bytesizeComparator{_againRemainCap}
+
+		if againRemainCap.isMoreThan(du.myCfg.DiskMinCapacity()) {
 			du.setStatus(diskStatusHealthy)
-			msg := fmt.Sprintf("!disk check is healthy by pruning! remain capacity - %s", _cap.String())
+			msg := fmt.Sprintf("!disk check is healthy by pruning! remain capacity - %s", againRemainCap)
 			_, _, _ = du.slackChatAgency.SendMessage("heart", msg, _uuid)
 		} else {
 			du.setStatus(diskStatusUnhealthy)
@@ -177,11 +182,6 @@ func (du *diskCheckUsecase) checkDisk(ctx context.Context) (history *domain.Disk
 	}
 
 	return
-}
-
-// isMinCapacityLessThan return bool if disk min capacity is less than parameter
-func (du *diskCheckUsecase) isMinCapacityLessThan(_cap bytesize.ByteSize) bool {
-	return du.myCfg.DiskMinCapacity() < _cap
 }
 
 // setStatus set status field value using mutex Lock & Unlock
