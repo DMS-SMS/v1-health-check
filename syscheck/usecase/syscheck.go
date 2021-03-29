@@ -62,10 +62,10 @@ type bytesizeComparator struct {
 
 // isMoreThan return boolean if size of instance which call this method is more than parameter's size
 func (main bytesizeComparator) isMoreThan(target bytesize.ByteSize) bool {
-	return bytesize.ByteSize(main) > target
+	return main.ByteSize > target
 }
 
 // isMoreThan return boolean if size of instance which call this method is less than parameter's size
 func (main bytesizeComparator) isLessThan(target bytesize.ByteSize) bool {
-	return bytesize.ByteSize(main) < target
+	return main.ByteSize < target
 }
