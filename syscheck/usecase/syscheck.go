@@ -55,7 +55,10 @@ type dockerAgency interface {
 }
 
 // bytesizeComparator is bytesize.ByteSize wrapping type which is used for compare another bytesize.ByteSize
-type bytesizeComparator bytesize.ByteSize
+type bytesizeComparator struct {
+	// contain value & various method of ByteSize by embedding bytesize.ByteSize
+	bytesize.ByteSize
+}
 
 // isMoreThan return boolean if size of instance which call this method is more than parameter's size
 func (main bytesizeComparator) isMoreThan(target bytesize.ByteSize) bool {
