@@ -52,3 +52,6 @@ type dockerAgency interface {
 	// RemoveContainer remove container with id & option (auto created from docker swarm if exists)
 	RemoveContainer(containerID string, options types.ContainerRemoveOptions) error
 }
+
+// bytesizeComparator is bytesize.ByteSize wrapping type which is used for compare another bytesize.ByteSize
+type bytesizeComparator bytesize.ByteSize
