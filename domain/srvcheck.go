@@ -108,6 +108,20 @@ func (sch *serviceCheckHistoryComponent) DottedMapWithPrefix(prefix string) (m m
 	return
 }
 
+// SetAlarmResult set field value about alarm result with parameter
+func (sch *serviceCheckHistoryComponent) SetAlarmResult(t time.Time, text string, err error) {
+	sch.alerted = true
+	sch.alarmTime = t
+	sch.alarmText = text
+	sch.alarmErr = err
+}
+
+// SetError method set Message & Error field with err get from param
+func (sch *serviceCheckHistoryComponent) SetError(err error) {
+	sch.Message = err.Error()
+	sch.Error = err
+}
+
 // srvcheckProcessLevel is string custom type used for representing service check process level
 type srvcheckProcessLevel []string
 
