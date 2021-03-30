@@ -4,6 +4,8 @@
 
 package domain
 
+import "context"
+
 // ElasticsearchCheckHistory model is used for record elasticsearch check history and result
 type ElasticsearchCheckHistory struct {
 	// get required component by embedding serviceCheckHistoryComponent
@@ -31,4 +33,10 @@ type ElasticsearchCheckHistoryRepository interface {
 	// Store method save ElasticsearchCheckHistory model in repository
 	// b in return represents bytes of response body(map[string]interface{})
 	Store(*ElasticsearchCheckHistory) (b []byte, err error)
+}
+
+// ElasticsearchCheckUseCase is interface used as business process handler about elasticsearch check
+type ElasticsearchCheckUseCase interface {
+	// CheckElasticsearch method check elasticsearch status and store check history using repository
+	CheckElasticsearch(ctx context.Context) error
 }
