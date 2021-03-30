@@ -73,6 +73,41 @@ func (sch *serviceCheckHistoryComponent) FillPrivateComponent() {
 	sch.timestamp = time.Now()
 }
 
+// DottedMapWithPrefix convert serviceCheckHistoryComponent to dotted map and return that
+// all key value of Map start with prefix received from parameter
+func (sch *serviceCheckHistoryComponent) DottedMapWithPrefix(prefix string) (m map[string]interface{}) {
+	if prefix != "" {
+		prefix += "."
+	}
+
+	m = map[string]interface{}{}
+
+	// setting private field value in dotted map
+	m[prefix + "version"] = sch.version
+	m[prefix + "agent"] = sch.agent
+	m[prefix + "@timestamp"] = sch.timestamp
+	m[prefix + "domain"] = sch.domain
+	m[prefix + "type"] = sch._type
+
+	// setting public field value in dotted map
+	m[prefix + "uuid"] = sch.UUID
+	m[prefix + "process_level"] = sch.ProcessLevel.String()
+	m[prefix + "message"] = sch.Message
+	if sch.Error == nil {
+		m[prefix + "error"] = nil
+	} else {
+		m[prefix + "error"] = sch.Error.Error()
+	}
+
+	// setting alarm result field value in dotted map
+	m[prefix + "alerted"] = sch.alerted
+	m[prefix + "alarm_text"] = sch.alarmText
+	m[prefix + "alarm_time"] = sch.alarmTime
+	m[prefix + "alarm_error"] = sch.alarmErr
+
+	return
+}
+
 // srvcheckProcessLevel is string custom type used for representing service check process level
 type srvcheckProcessLevel []string
 
