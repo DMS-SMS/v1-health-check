@@ -64,6 +64,15 @@ type serviceCheckHistoryComponent struct {
 	alarmErr error
 }
 
+// FillComponent fill field of systemCheckHistoryComponent if is empty
+func (sch *serviceCheckHistoryComponent) FillPrivateComponent() {
+	sch.version = version
+	sch.agent = "sms-health-check"
+	sch.domain = "srvcheck"
+	sch._type = "None"
+	sch.timestamp = time.Now()
+}
+
 // srvcheckProcessLevel is string custom type used for representing service check process level
 type srvcheckProcessLevel []string
 
