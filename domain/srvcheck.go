@@ -29,4 +29,21 @@ type serviceCheckHistoryComponent struct {
 
 	// _type specifies detail service type in service check domain (Ex, elasticsearch, swarm, consul, etc ...)
 	_type string
+
+// srvcheckProcessLevel is string custom type used for representing service check process level
+type srvcheckProcessLevel []string
+
+// Set method overwrite srvcheckProcessLevel slice to level received from parameter
+func (pl *srvcheckProcessLevel) Set(level string) {
+	*pl = srvcheckProcessLevel{level}
+}
+
+// Append method append srvcheckProcessLevel slice with level received from parameter
+func (pl *srvcheckProcessLevel) Append(level string) {
+	*pl = append(*pl, level)
+}
+
+// String method return string which join srvcheckProcessLevel slice to string with " | "
+func (pl *srvcheckProcessLevel) String() string {
+	return strings.Join(*pl, " | ")
 }
