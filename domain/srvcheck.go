@@ -10,7 +10,10 @@
 
 package domain
 
-import "time"
+import (
+	"strings"
+	"time"
+)
 
 // serviceCheckHistoryComponent is basic model using by embedded in every model struct about service check history
 type serviceCheckHistoryComponent struct {
@@ -29,6 +32,22 @@ type serviceCheckHistoryComponent struct {
 
 	// _type specifies detail service type in service check domain (Ex, elasticsearch, swarm, consul, etc ...)
 	_type string
+
+	// ---
+
+	// public field in below, these fields don't have fixed value so set in another package from custom user
+	// UUID specifies Universally unique identifier in each of service check process
+	UUID string
+
+	// ProcessLevel specifies about how level to handle service check process.
+	ProcessLevel srvcheckProcessLevel
+
+	// Message specifies additional description of result about service check process.
+	Message string
+
+	// Error specifies error message if health check's been handled abnormally.
+	Error error
+}
 
 // srvcheckProcessLevel is string custom type used for representing service check process level
 type srvcheckProcessLevel []string
