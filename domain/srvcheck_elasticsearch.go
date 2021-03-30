@@ -11,17 +11,17 @@ type ElasticsearchCheckHistory struct {
 	// get required component by embedding serviceCheckHistoryComponent
 	serviceCheckHistoryComponent
 
-	// activePrimaryShards specifies active primary shards number get from elasticsearch agent
-	activePrimaryShards int
+	// ActivePrimaryShards specifies active primary shards number get from elasticsearch agent
+	ActivePrimaryShards int
 
-	// activeShards specifies total active shards number get from elasticsearch agent
-	activeShards int
+	// ActiveShards specifies total active shards number get from elasticsearch agent
+	ActiveShards int
 
-	// unassignedShards specifies unassigned shards number get from elasticsearch agent
-	unassignedShards int
+	// UnassignedShards specifies unassigned shards number get from elasticsearch agent
+	UnassignedShards int
 
-	// activeShardsPercent specifies active shards percent get from elasticsearch agent
-	activeShardsPercent int
+	// ActiveShardsPercent specifies active shards percent get from elasticsearch agent
+	ActiveShardsPercent int
 }
 
 // ElasticsearchCheckHistoryRepository is interface for repository layer used in usecase layer
@@ -57,10 +57,10 @@ func (eh *ElasticsearchCheckHistory) DottedMapWithPrefix(prefix string) (m map[s
 	}
 
 	// setting public field value in dotted map
-	m[prefix + "active_primary_shards"] = eh.activePrimaryShards
-	m[prefix + "active_shard"] = eh.activeShards
-	m[prefix + "unassigned_shards"] = eh.unassignedShards
-	m[prefix + "active_shards_percent"] = eh.activeShardsPercent
+	m[prefix + "active_primary_shards"] = eh.ActivePrimaryShards
+	m[prefix + "active_shard"] = eh.ActiveShards
+	m[prefix + "unassigned_shards"] = eh.UnassignedShards
+	m[prefix + "active_shards_percent"] = eh.ActiveShardsPercent
 
 	return
 }
