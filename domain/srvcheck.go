@@ -47,6 +47,21 @@ type serviceCheckHistoryComponent struct {
 
 	// Error specifies error message if health check's been handled abnormally.
 	Error error
+
+	// ---
+
+	// field in below is about alarm result and is private so call SetAlarmResult method to set this field value
+	// Alerted specifies if alert result or status in while handling service check process.
+	alerted bool
+
+	// alarmText specifies alarm text sent in service check process.
+	alarmText string
+
+	// alarmTime specifies time when this service check sent alarm.
+	alarmTime time.Time
+
+	// alarmErr specifies Error occurred when sending alarm.
+	alarmErr error
 }
 
 // srvcheckProcessLevel is string custom type used for representing service check process level
