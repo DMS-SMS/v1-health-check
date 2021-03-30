@@ -64,7 +64,13 @@ type serviceCheckHistoryComponent struct {
 	alarmErr error
 }
 
-// FillComponent fill field of systemCheckHistoryComponent if is empty
+// serviceCheckHistoryRepositoryComponent is basic interface using by embedded in every repository about service check history
+type serviceCheckHistoryRepositoryComponent interface {
+	// Migrate method build environment for storage in stores such as Mysql or Elasticsearch, etc.
+	Migrate() error
+}
+
+// FillComponent fill field of serviceCheckHistoryComponent if is empty
 func (sch *serviceCheckHistoryComponent) FillPrivateComponent() {
 	sch.version = version
 	sch.agent = "sms-health-check"
