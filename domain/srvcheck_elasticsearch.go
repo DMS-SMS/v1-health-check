@@ -1,5 +1,23 @@
 // Create file in v.1.0.0
-// syscheck_elasticsearch.go is file that declare model struct & repo interface about elasticsearch check in srvcheck domain.
+// srvcheck_elasticsearch.go is file that declare model struct & repo interface about elasticsearch check in srvcheck domain.
 // also, additional method of model struct is declared in this file, too.
 
 package domain
+
+// ElasticsearchCheckHistory model is used for record elasticsearch check history and result
+type ElasticsearchCheckHistory struct {
+	// get required component by embedding serviceCheckHistoryComponent
+	serviceCheckHistoryComponent
+
+	// activePrimaryShards specifies active primary shards number get from elasticsearch agent
+	activePrimaryShards int
+
+	// activeShards specifies total active shards number get from elasticsearch agent
+	activeShards int
+
+	// unassignedShards specifies unassigned shards number get from elasticsearch agent
+	unassignedShards int
+
+	// activeShardsPercent specifies active shards percent get from elasticsearch agent
+	activeShardsPercent int
+}
