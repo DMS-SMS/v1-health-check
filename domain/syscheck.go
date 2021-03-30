@@ -41,7 +41,7 @@ type systemCheckHistoryComponent struct {
 	UUID string
 
 	// ProcessLevel specifies about how level to handle system check process.
-	ProcessLevel processLevel
+	ProcessLevel syscheckProcessLevel
 
 	// Message specifies additional description of result about system check process.
 	Message string
@@ -129,21 +129,21 @@ func (sch *systemCheckHistoryComponent) SetError(err error) {
 	sch.Error = err
 }
 
-// processLevel is string custom type used for representing status check process level
-type processLevel []string
+// syscheckProcessLevel is string custom type used for representing system check process level
+type syscheckProcessLevel []string
 
 // Set method overwrite processLevel slice to level received from parameter
-func (pl *processLevel) Set(level string) {
-	*pl = processLevel{level}
+func (pl *syscheckProcessLevel) Set(level string) {
+	*pl = syscheckProcessLevel{level}
 }
 
 // Append method append processLevel slice with level received from parameter
-func (pl *processLevel) Append(level string) {
+func (pl *syscheckProcessLevel) Append(level string) {
 	*pl = append(*pl, level)
 }
 
 // String method return string which join processLevel slice to string with " | "
-func (pl *processLevel) String() string {
+func (pl *syscheckProcessLevel) String() string {
 	return strings.Join(*pl, " | ")
 }
 
