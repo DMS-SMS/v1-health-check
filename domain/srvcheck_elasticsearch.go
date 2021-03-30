@@ -40,3 +40,27 @@ type ElasticsearchCheckUseCase interface {
 	// CheckElasticsearch method check elasticsearch status and store check history using repository
 	CheckElasticsearch(ctx context.Context) error
 }
+
+// FillPrivateComponent overriding FillPrivateComponent method of serviceCheckHistoryComponent
+func (eh *ElasticsearchCheckHistory) FillPrivateComponent() {
+	eh.serviceCheckHistoryComponent.FillPrivateComponent()
+	eh._type = "ElasticsearchCheck"
+}
+
+// DottedMapWithPrefix convert ElasticsearchCheckHistory to dotted map and return using MapWithPrefixKey of upper struct
+// all key value of Map start with prefix received from parameter
+func (eh *ElasticsearchCheckHistory) DottedMapWithPrefix(prefix string) (m map[string]interface{}) {
+	m = eh.serviceCheckHistoryComponent.DottedMapWithPrefix(prefix)
+
+	if prefix != "" {
+		prefix += "."
+	}
+
+	// setting public field value in dotted map
+	m[prefix + "active_primary_shards"] = eh.activePrimaryShards
+	m[prefix + "active_shard"] = eh.activeShards
+	m[prefix + "unassigned_shards"] = eh.unassignedShards
+	m[prefix + "active_shards_percent"] = eh.activeShardsPercent
+
+	return
+}
