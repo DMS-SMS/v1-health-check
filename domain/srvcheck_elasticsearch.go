@@ -21,3 +21,14 @@ type ElasticsearchCheckHistory struct {
 	// activeShardsPercent specifies active shards percent get from elasticsearch agent
 	activeShardsPercent int
 }
+
+// ElasticsearchCheckHistoryRepository is interface for repository layer used in usecase layer
+// Repository is implemented with elasticsearch in v.1.0.0
+type ElasticsearchCheckHistoryRepository interface {
+	// get required component by embedding serviceCheckHistoryRepositoryComponent
+	serviceCheckHistoryRepositoryComponent
+
+	// Store method save ElasticsearchCheckHistory model in repository
+	// b in return represents bytes of response body(map[string]interface{})
+	Store(*ElasticsearchCheckHistory) (b []byte, err error)
+}
