@@ -24,6 +24,9 @@ const (
 	errorLevel        = "ERROR"         // represent that error occurs while checking service status
 )
 
+// serviceCheckUsecaseComponentConfig contains required component to service usecase implementation as field
+type serviceCheckUsecaseComponentConfig interface {}
+
 // slackChatAgency is interface that agent the slack api about chatting
 // you can see implementation in slack package
 type slackChatAgency interface {
