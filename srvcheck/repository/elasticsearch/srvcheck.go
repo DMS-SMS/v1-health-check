@@ -7,6 +7,8 @@
 
 package elasticsearch
 
+import "io"
+
 // esRepositoryComponentConfig is interface contains method to return config value that elasticsearch repository should have
 // It can be externally set as Config object that implements that interface.
 type esRepositoryComponentConfig interface {
@@ -18,4 +20,10 @@ type esRepositoryComponentConfig interface {
 
 	// IndexReplicaNum method returns the number of index replica in elasticsearch about srvcheck
 	IndexReplicaNum() int
+}
+
+// reqBodyWriter is private interface to use as writing []byte for request body
+type reqBodyWriter interface {
+	io.Writer
+	io.WriterTo
 }
