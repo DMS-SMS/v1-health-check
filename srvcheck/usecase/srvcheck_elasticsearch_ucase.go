@@ -7,6 +7,7 @@ package usecase
 import (
 	"github.com/DMS-SMS/v1-health-check/domain"
 	"sync"
+	"time"
 )
 
 // elasticsearchCheckStatus is type to int constant represent current elasticsearch check process status
@@ -34,4 +35,19 @@ type elasticsearchCheckUsecase struct {
 
 	// mutex help to prevent race condition when set status field value
 	mutex sync.Mutex
+}
+
+// elasticsearchCheckUsecaseConfig is the config getter interface for elasticsearch check usecase
+type elasticsearchCheckUsecaseConfig interface {
+	// get common config method from embedding serviceCheckUsecaseComponentConfig
+	serviceCheckUsecaseComponentConfig
+
+	// MaximumShardsNumber method returns int represent maximum shards number
+	MaximumShardsNumber() int
+
+	// JaegerIndexRegexp method returns string represent jaeger index regexp
+	JaegerIndexRegexp() string
+
+	// JaegerIndexLifeCycle method returns duration represent jaeger index life cycle
+	JaegerIndexLifeCycle() time.Duration
 }
