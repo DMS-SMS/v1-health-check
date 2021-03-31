@@ -4,7 +4,12 @@
 
 package elasticsearch
 
-import "github.com/elastic/go-elasticsearch/v7"
+import (
+	"github.com/DMS-SMS/v1-health-check/domain"
+	"github.com/elastic/go-elasticsearch/v7"
+	"github.com/pkg/errors"
+	"log"
+)
 
 // esElasticsearchCheckHistoryRepository is to handle ElasticsearchCheckHistoryRepository model using elasticsearch as data store
 type esElasticsearchCheckHistoryRepository struct {
@@ -22,4 +27,23 @@ type esElasticsearchCheckHistoryRepository struct {
 type esElasticsearchCheckHistoryRepoConfig interface {
 	// get common method from embedding esRepositoryComponentConfig
 	esRepositoryComponentConfig
+}
+
+// NewESElasticsearchCheckHistoryRepository return new object that implement ElasticsearchCheckHistoryRepository interface
+func NewESElasticsearchCheckHistoryRepository(
+	cfg esElasticsearchCheckHistoryRepoConfig,
+	cli *elasticsearch.Client,
+	w reqBodyWriter,
+) domain.ElasticsearchCheckHistoryRepository {
+	repo := &esElasticsearchCheckHistoryRepository{
+		myCfg:         cfg,
+		esCli:         cli,
+		reqBodyWriter: w,
+	}
+
+	if err := repo.Migrate(); err != nil {
+		log.Fatal(errors.Wrap(err, "could not migrate repository").Error())
+	}
+
+	return repo
 }
