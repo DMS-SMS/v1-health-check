@@ -8,6 +8,11 @@
 
 package usecase
 
+import (
+	"github.com/slack-go/slack"
+	"time"
+)
+
 // global variable used in usecase to represent process level
 const (
 	healthyLevel      = "HEALTHY"       // represent that service status is healthy now
@@ -18,3 +23,10 @@ const (
 	unhealthyLevel    = "UNHEALTHY"     // represent that service status is unhealthy now (not recovered)
 	errorLevel        = "ERROR"         // represent that error occurs while checking service status
 )
+
+// slackChatAgency is interface that agent the slack api about chatting
+// you can see implementation in slack package
+type slackChatAgency interface {
+	// SendMessage send message with text & emoji using slack API and return send time & text & error
+	SendMessage(emoji, text, uuid string, opts ...slack.MsgOption) (t time.Time, _text string, err error)
+}
