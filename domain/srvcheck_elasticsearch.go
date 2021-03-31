@@ -4,7 +4,10 @@
 
 package domain
 
-import "context"
+import (
+	"context"
+	"strings"
+)
 
 // ElasticsearchCheckHistory model is used for record elasticsearch check history and result
 type ElasticsearchCheckHistory struct {
@@ -22,6 +25,12 @@ type ElasticsearchCheckHistory struct {
 
 	// ActiveShardsPercent specifies active shards percent get from elasticsearch agent
 	ActiveShardsPercent int
+
+	// IfJaegerIndexRemoved specifies if jaeger index is removed
+	IfJaegerIndexRemoved bool
+
+	// RemovedJaegerIndices specifies removed jaeger indices list
+	RemovedJaegerIndices []string
 }
 
 // ElasticsearchCheckHistoryRepository is interface for repository layer used in usecase layer
@@ -58,9 +67,11 @@ func (eh *ElasticsearchCheckHistory) DottedMapWithPrefix(prefix string) (m map[s
 
 	// setting public field value in dotted map
 	m[prefix + "active_primary_shards"] = eh.ActivePrimaryShards
-	m[prefix + "active_shard"] = eh.ActiveShards
+	m[prefix + "active_shards"] = eh.ActiveShards
 	m[prefix + "unassigned_shards"] = eh.UnassignedShards
 	m[prefix + "active_shards_percent"] = eh.ActiveShardsPercent
+	m[prefix + "if_jaeger_index_removed"] = eh.IfJaegerIndexRemoved
+	m[prefix + "removed_jaeger_indices"] = strings.Join(eh.RemovedJaegerIndices, " | ")
 
 	return
 }
