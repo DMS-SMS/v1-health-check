@@ -75,3 +75,23 @@ type elasticsearchAgency interface {
 	// DeleteIndices method delete indices in list received from parameter
 	DeleteIndices(indices []string) (err error)
 }
+
+// NewElasticsearchCheckUsecase function return elasticsearchCheckUseCase ptr instance after initializing
+func NewElasticsearchCheckUsecase(
+	cfg elasticsearchCheckUsecaseConfig,
+	chr domain.ElasticsearchCheckHistoryRepository,
+	sca slackChatAgency,
+	ea elasticsearchAgency,
+) domain.ElasticsearchCheckUseCase {
+	return &elasticsearchCheckUsecase{
+		// initialize field with parameter received from caller
+		myCfg:               cfg,
+		historyRepo:         chr,
+		slackChatAgency:     sca,
+		elasticsearchAgency: ea,
+
+		// initialize field with default value
+		status: elasticsearchStatusHealthy,
+		mutex:  sync.Mutex{},
+	}
+}
