@@ -46,9 +46,6 @@ type elasticsearchCheckUsecaseConfig interface {
 	// get common config method from embedding serviceCheckUsecaseComponentConfig
 	serviceCheckUsecaseComponentConfig
 
-	// TargetIndices method returns string represent target indices separated with dot
-	TargetIndices() []string
-
 	// MaximumShardsNumber method returns int represent maximum shards number
 	MaximumShardsNumber() int
 
