@@ -23,6 +23,12 @@ type srvcheckConfig struct {
 	indexReplicaNum *int
 }
 
+const (
+	defaultIndexName       = "sms-service-check" // default const string for indexName
+	defaultIndexShardNum   = 2                   // default const int for indexShardNum
+	defaultIndexReplicaNum = 0                   // default const int for indexReplicaNum
+)
+
 // init function initialize App global variable
 func init() {
 	App = &srvcheckConfig{}
