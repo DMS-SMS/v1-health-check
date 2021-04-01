@@ -7,7 +7,10 @@
 
 package config
 
-import "github.com/spf13/viper"
+import (
+	"github.com/spf13/viper"
+	"time"
+)
 
 // App is the application config about srvcheck domain
 var App *srvcheckConfig
@@ -23,6 +26,21 @@ type srvcheckConfig struct {
 
 	// indexReplicaNum represent replica number of elasticsearch index to replace index when node become unable
 	indexReplicaNum *int
+
+	// ---
+
+	// fields using in elasticsearch health checking (implement elasticsearchCheckUsecaseConfig)
+	// targetIndices represent indices separated with dot which are target of elasticsearch health check
+	targetIndices *string
+
+	// maximumShardsNumber represent maximum shards number of elasticsearch target cluster
+	maximumShardsNumber *int
+
+	// jaegerIndexRegexp represent jaeger index regular expression to deliver to elasticsearch agency
+	jaegerIndexRegexp *string
+
+	// jaegerIndexMinLifeCycle represent minimum life cycle of jaeger index in elasticsearch
+	jaegerIndexMinLifeCycle *time.Duration
 }
 
 const (
