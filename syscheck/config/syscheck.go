@@ -94,7 +94,7 @@ const (
 
 // implement IndexName method of esRepositoryComponentConfig interface
 func (sc *syscheckConfig) IndexName() string {
-	var key = "domain.syscheck.repository.elasticsearch.index.name"
+	var key = "syscheck.repository.elasticsearch.index.name"
 	if sc.indexName == nil {
 		if _, ok := viper.Get(key).(string); !ok {
 			viper.Set(key, defaultIndexName)
@@ -106,7 +106,7 @@ func (sc *syscheckConfig) IndexName() string {
 
 // implement IndexShardNum method of esRepositoryComponentConfig interface
 func (sc *syscheckConfig) IndexShardNum() int {
-	var key = "domain.syscheck.repository.elasticsearch.index.shardNum"
+	var key = "syscheck.repository.elasticsearch.index.shardNum"
 	if sc.indexShardNum == nil {
 		if _, ok := viper.Get(key).(int); !ok {
 			viper.Set(key, defaultIndexShardNum)
@@ -118,7 +118,7 @@ func (sc *syscheckConfig) IndexShardNum() int {
 
 // implement IndexReplicaNum method of esRepositoryComponentConfig interface
 func (sc *syscheckConfig) IndexReplicaNum() int {
-	var key = "domain.syscheck.repository.elasticsearch.index.replicaNum"
+	var key = "syscheck.repository.elasticsearch.index.replicaNum"
 	if sc.indexReplicaNum == nil {
 		if _, ok := viper.Get(key).(int); !ok {
 			viper.Set(key, defaultIndexReplicaNum)
@@ -130,7 +130,7 @@ func (sc *syscheckConfig) IndexReplicaNum() int {
 
 // implement DiskMinCapacity method of diskCheckUsecaseConfig interface
 func (sc *syscheckConfig) DiskMinCapacity() bytesize.ByteSize {
-	var key = "domain.syscheck.diskcheck.minCapacity"
+	var key = "syscheck.diskcheck.minCapacity"
 	if sc.diskMinCapacity != nil {
 		return *sc.diskMinCapacity
 	}
@@ -147,7 +147,7 @@ func (sc *syscheckConfig) DiskMinCapacity() bytesize.ByteSize {
 
 // implement CPUWarningUsage method of cpuCheckUsecaseConfig interface
 func (sc *syscheckConfig) CPUWarningUsage() float64 {
-	var key = "domain.syscheck.cpucheck.cpuWarningUsage"
+	var key = "syscheck.cpucheck.cpuWarningUsage"
 	if sc.cpuWarningUsage == nil {
 		if _, ok := viper.Get(key).(float64); !ok {
 			viper.Set(key, defaultCPUWarningUsage)
@@ -159,7 +159,7 @@ func (sc *syscheckConfig) CPUWarningUsage() float64 {
 
 // implement CPUMaximumUsage method of cpuCheckUsecaseConfig interface
 func (sc *syscheckConfig) CPUMaximumUsage() float64 {
-	var key = "domain.syscheck.cpucheck.cpuMaximumUsage"
+	var key = "syscheck.cpucheck.cpuMaximumUsage"
 	if sc.cpuMaximumUsage == nil {
 		if _, ok := viper.Get(key).(float64); !ok {
 			viper.Set(key, defaultCPUMaximumUsage)
@@ -171,7 +171,7 @@ func (sc *syscheckConfig) CPUMaximumUsage() float64 {
 
 // CPUMinimumUsageToRemove method returns float64 represent cpu minimum usage to remove
 func (sc *syscheckConfig) CPUMinimumUsageToRemove() float64 {
-	var key = "domain.syscheck.cpucheck.cpuMinimumUsageToRemove"
+	var key = "syscheck.cpucheck.cpuMinimumUsageToRemove"
 	if sc.cpuMinimumUsageToRemove == nil {
 		if _, ok := viper.Get(key).(float64); !ok {
 			viper.Set(key, defaultCPUMinimumUsageToRemove)
@@ -183,7 +183,7 @@ func (sc *syscheckConfig) CPUMinimumUsageToRemove() float64 {
 
 // implement MemoryWarningUsage method of memoryCheckUsecaseConfig interface
 func (sc *syscheckConfig) MemoryWarningUsage() bytesize.ByteSize {
-	var key = "domain.syscheck.memorycheck.memoryWarningUsage"
+	var key = "syscheck.memorycheck.memoryWarningUsage"
 	if sc.memoryWarningUsage != nil {
 		return *sc.memoryWarningUsage
 	}
@@ -200,7 +200,7 @@ func (sc *syscheckConfig) MemoryWarningUsage() bytesize.ByteSize {
 
 // implement MemoryMaximumUsage method of memoryCheckUsecaseConfig interface
 func (sc *syscheckConfig) MemoryMaximumUsage() bytesize.ByteSize {
-	var key = "domain.syscheck.memorycheck.memoryMaximumUsage"
+	var key = "syscheck.memorycheck.memoryMaximumUsage"
 	if sc.memoryMaximumUsage != nil {
 		return *sc.memoryMaximumUsage
 	}
@@ -217,7 +217,7 @@ func (sc *syscheckConfig) MemoryMaximumUsage() bytesize.ByteSize {
 
 // implement MemoryMinimumUsageToRemove method of memoryCheckUsecaseConfig interface
 func (sc *syscheckConfig) MemoryMinimumUsageToRemove() bytesize.ByteSize {
-	var key = "domain.syscheck.memorycheck.memoryMinimumUsageToRemove"
+	var key = "syscheck.memorycheck.memoryMinimumUsageToRemove"
 	if sc.memoryMinimumUsageToRemove != nil {
 		return *sc.memoryMinimumUsageToRemove
 	}
@@ -234,7 +234,7 @@ func (sc *syscheckConfig) MemoryMinimumUsageToRemove() bytesize.ByteSize {
 
 // not implement any interface, just using in main function for delivery layer injection
 func (sc *syscheckConfig) DiskCheckDeliveryPingCycle() time.Duration {
-	var key = "domain.syscheck.delivery.channel.pingCycle.diskcheck"
+	var key = "syscheck.delivery.channel.pingCycle.diskcheck"
 	if sc.diskCheckDeliveryPingCycle != nil {
 		return *sc.diskCheckDeliveryPingCycle
 	}
@@ -251,7 +251,7 @@ func (sc *syscheckConfig) DiskCheckDeliveryPingCycle() time.Duration {
 
 // not implement any interface, just using in main function for delivery layer injection
 func (sc *syscheckConfig) CPUCheckDeliveryPingCycle() time.Duration {
-	var key = "domain.syscheck.delivery.channel.pingCycle.cpucheck"
+	var key = "syscheck.delivery.channel.pingCycle.cpucheck"
 	if sc.cpuCheckDeliveryPingCycle != nil {
 		return *sc.cpuCheckDeliveryPingCycle
 	}
@@ -268,7 +268,7 @@ func (sc *syscheckConfig) CPUCheckDeliveryPingCycle() time.Duration {
 
 // not implement any interface, just using in main function for delivery layer injection
 func (sc *syscheckConfig) MemoryCheckDeliveryPingCycle() time.Duration {
-	var key = "domain.syscheck.delivery.channel.pingCycle.memorycheck"
+	var key = "syscheck.delivery.channel.pingCycle.memorycheck"
 	if sc.memoryCheckDeliveryPingCycle != nil {
 		return *sc.memoryCheckDeliveryPingCycle
 	}
