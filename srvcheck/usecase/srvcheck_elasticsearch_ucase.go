@@ -67,7 +67,7 @@ type elasticsearchAgency interface {
 	}, err error)
 
 	// GetIndicesWithRegexp return indices list with regexp pattern
-	GetIndicesWithRegexp(pattern string) (indices []string, err error)
+	GetIndicesWithPatterns(patterns []string) (indices []string, err error)
 
 	// DeleteIndices method delete indices in list received from parameter
 	DeleteIndices(indices []string) (err error)
