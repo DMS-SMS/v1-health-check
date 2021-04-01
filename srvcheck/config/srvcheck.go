@@ -7,7 +7,15 @@
 
 package config
 
+// App is the application config about srvcheck domain
+var App *srvcheckConfig
+
 // srvcheckConfig having config value and implement various interface about Config by declaring method
 type srvcheckConfig struct {
 
+}
+
+// init function initialize App global variable
+func init() {
+	App = &srvcheckConfig{}
 }
