@@ -15,7 +15,6 @@ import (
 type elasticsearchCheckStatus int
 const (
 	elasticsearchStatusHealthy    elasticsearchCheckStatus = iota // represent elasticsearch check status is healthy
-	elasticsearchStatusWarning                                    // represent elasticsearch check status is warning now
 	elasticsearchStatusRecovering                                 // represent it's recovering elasticsearch status now
 	elasticsearchStatusUnhealthy                                  // represent elasticsearch check status is unhealthy
 )
