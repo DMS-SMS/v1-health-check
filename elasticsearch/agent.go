@@ -6,3 +6,20 @@
 // Also if exist, custom type or variable used in common in each of method will declared in this file.
 
 package elasticsearch
+
+import (
+	"github.com/elastic/go-elasticsearch/v7"
+)
+
+// slackAgent agent various elasticsearch API(get or delete cluster, indices, etc ...) as implementation
+type elasticsearchAgent struct {
+	// esCli is elasticsearch client connection injected from the outside package
+	esCli *elasticsearch.Client
+}
+
+// NewAgent return new initialized instance of elasticsearchAgent pointer type with elasticsearch client
+func NewAgent(ec *elasticsearch.Client) *elasticsearchAgent {
+	return &elasticsearchAgent{
+		esCli: ec,
+	}
+}
