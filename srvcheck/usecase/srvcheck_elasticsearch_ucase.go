@@ -5,6 +5,8 @@
 package usecase
 
 import (
+	"context"
+	"github.com/pkg/errors"
 	"sync"
 	"time"
 
@@ -95,6 +97,12 @@ func NewElasticsearchCheckUsecase(
 // CheckElasticsearch check elasticsearch health with checkElasticsearch method & store check history in repository
 // Implement CheckElasticsearch method of ElasticsearchCheckUseCase interface
 func (ecu *elasticsearchCheckUsecase) CheckElasticsearch(ctx context.Context) (err error) {
+	history := ecu.checkElasticsearch(ctx)
+
+	if b, err := ecu.historyRepo.Store(history); err != nil {
+		return errors.Wrapf(err, "failed to store elasticsearch check history, response: %s", string(b))
+	}
+
 	return
 }
 
