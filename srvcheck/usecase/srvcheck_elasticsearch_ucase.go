@@ -98,3 +98,15 @@ func NewElasticsearchCheckUsecase(
 func (ecu *elasticsearchCheckUsecase) CheckElasticsearch(ctx context.Context) (err error) {
 	return
 }
+
+// method processed with below logic about elasticsearch health check according to current check status
+// 0 : 정상적으로 인지된 상태 (상태 확인 수행)
+// 0 -> 1 : Jaeger Index 삭제 실행 (Jaeger Index 삭제 알림 발행)
+// 1 : Jaeger Index 삭제중 (상태 확인 수행 X)
+// 1 -> 0 : Jaeger Index 삭제로 인해 상태 회복 완료 (상태 회복 알림 발행)
+// 1 -> 2 : Jaeger Index 삭제를 해도 상태 회복 X (상태 회복 불가능 상태 알림 발행)
+// 2 : 관리자가 직접 확인해야함 (상태 확인 수행 X)
+// 2 -> 0 : 관리자 직접 상태 회복 완료 (상태 회복 알림 발행)
+func (ecu *elasticsearchCheckUsecase) checkElasticsearch(ctx context.Context) (history *domain.ElasticsearchCheckHistory) {
+	return
+}
