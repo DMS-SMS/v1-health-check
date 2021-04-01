@@ -24,13 +24,13 @@ type ElasticsearchCheckHistory struct {
 	UnassignedShards int
 
 	// ActiveShardsPercent specifies active shards percent get from elasticsearch agent
-	ActiveShardsPercent int
+	ActiveShardsPercent float64
 
-	// IfJaegerIndexRemoved specifies if jaeger index is removed
-	IfJaegerIndexRemoved bool
+	// IfJaegerIndexDeleted specifies if jaeger index is deleted
+	IfJaegerIndexDeleted bool
 
-	// RemovedJaegerIndices specifies removed jaeger indices list
-	RemovedJaegerIndices []string
+	// DeletedJaegerIndices specifies deleted jaeger indices list
+	DeletedJaegerIndices []string
 }
 
 // ElasticsearchCheckHistoryRepository is interface for repository layer used in usecase layer
@@ -70,8 +70,8 @@ func (eh *ElasticsearchCheckHistory) DottedMapWithPrefix(prefix string) (m map[s
 	m[prefix + "active_shards"] = eh.ActiveShards
 	m[prefix + "unassigned_shards"] = eh.UnassignedShards
 	m[prefix + "active_shards_percent"] = eh.ActiveShardsPercent
-	m[prefix + "if_jaeger_index_removed"] = eh.IfJaegerIndexRemoved
-	m[prefix + "removed_jaeger_indices"] = strings.Join(eh.RemovedJaegerIndices, " | ")
+	m[prefix + "if_jaeger_index_deleted"] = eh.IfJaegerIndexDeleted
+	m[prefix + "deleted_jaeger_indices"] = strings.Join(eh.DeletedJaegerIndices, " | ")
 
 	return
 }
