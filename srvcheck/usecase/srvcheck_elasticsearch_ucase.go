@@ -42,6 +42,9 @@ type elasticsearchCheckUsecaseConfig interface {
 	// get common config method from embedding serviceCheckUsecaseComponentConfig
 	serviceCheckUsecaseComponentConfig
 
+	// TargetClusterName method returns string represent target cluster name
+	TargetClusterName() string
+
 	// MaximumShardsNumber method returns int represent maximum shards number
 	MaximumShardsNumber() int
 
