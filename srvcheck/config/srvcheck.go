@@ -6,3 +6,8 @@
 // Also, App implement various config interface each of package in srvcheck domain by declaring method
 
 package config
+
+// srvcheckConfig having config value and implement various interface about Config by declaring method
+type srvcheckConfig struct {
+
+}
