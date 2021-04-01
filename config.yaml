@@ -26,3 +26,11 @@ syscheck:
         diskcheck: "5m"
         cpucheck: "5m"
         memorycheck: "5m"
+
+srvcheck:
+  repository:
+    elasticsearch:
+      index:
+        name: "sms-service-check"
+        shardNum: 2
+        replicaNum: 0
