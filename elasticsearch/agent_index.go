@@ -50,3 +50,23 @@ func (ea *elasticsearchAgent) GetIndicesWithPatterns(patterns []string) (indices
 
 	return
 }
+
+// DeleteIndices method delete indices in list received from parameter
+func (ea *elasticsearchAgent) DeleteIndices(indices []string) (err error) {
+	var (
+		ctx = context.Background()
+	)
+
+	resp, err := (esapi.IndicesDeleteRequest{
+		Index:         indices,
+		MasterTimeout: time.Second * 5,
+		Timeout:       time.Second * 5,
+	}).Do(ctx, ea.esCli)
+
+	if err != nil {
+		err = errors.Wrap(err, fmt.Sprintf("failed to call CatIndicesRequest, resp: %+v", resp))
+	} else if resp.IsError() {
+		err = errors.Errorf("CatIndicesRequest return error code, resp: %+v", resp)
+	}
+	return
+}
