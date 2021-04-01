@@ -47,6 +47,11 @@ const (
 	defaultIndexName       = "sms-service-check" // default const string for indexName
 	defaultIndexShardNum   = 2                   // default const int for indexShardNum
 	defaultIndexReplicaNum = 0                   // default const int for indexReplicaNum
+
+	defaultTargetIndices           = "_all"          // default const string for TargetIndices
+	defaultMaximumShardsNumber     = 900             // default const int for MaximumShardsNumber
+	defaultJaegerIndexMinLifeCycle = time.Hour * 720 // default const duration for JaegerIndexMinLifeCycle
+	defaultJaegerIndexRegexp       = "^jaeger-(span|service)-\\d{4}-\\d{2}-\\d{2}$" // default const string for JaegerIndexRegexp
 )
 
 // implement IndexName method of esRepositoryComponentConfig interface
