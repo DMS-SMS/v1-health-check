@@ -7,6 +7,8 @@
 
 package config
 
+import "github.com/spf13/viper"
+
 // App is the application config about srvcheck domain
 var App *srvcheckConfig
 
@@ -29,7 +31,47 @@ const (
 	defaultIndexReplicaNum = 0                   // default const int for indexReplicaNum
 )
 
+// implement IndexName method of esRepositoryComponentConfig interface
+func (sc *srvcheckConfig) IndexName() string {
+	var key = "srvcheck.repository.elasticsearch.index.name"
+	if sc.indexName == nil {
+		if _, ok := viper.Get(key).(string); !ok {
+			viper.Set(key, defaultIndexName)
+		}
+		sc.indexName = _string(viper.GetString(key))
+	}
+	return *sc.indexName
+}
+
+// implement IndexShardNum method of esRepositoryComponentConfig interface
+func (sc *srvcheckConfig) IndexShardNum() int {
+	var key = "srvcheck.repository.elasticsearch.index.shardNum"
+	if sc.indexShardNum == nil {
+		if _, ok := viper.Get(key).(int); !ok {
+			viper.Set(key, defaultIndexShardNum)
+		}
+		sc.indexShardNum = _int(viper.GetInt(key))
+	}
+	return *sc.indexShardNum
+}
+
+// implement IndexReplicaNum method of esRepositoryComponentConfig interface
+func (sc *srvcheckConfig) IndexReplicaNum() int {
+	var key = "srvcheck.repository.elasticsearch.index.replicaNum"
+	if sc.indexReplicaNum == nil {
+		if _, ok := viper.Get(key).(int); !ok {
+			viper.Set(key, defaultIndexReplicaNum)
+		}
+		sc.indexReplicaNum = _int(viper.GetInt(key))
+	}
+	return *sc.indexReplicaNum
+}
+
 // init function initialize App global variable
 func init() {
 	App = &srvcheckConfig{}
 }
+
+// function returns pointer variable generated from parameter
+func _string(s string) *string { return &s }
+func _int(i int) *int {return &i}
