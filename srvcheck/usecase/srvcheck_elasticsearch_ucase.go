@@ -49,8 +49,8 @@ type elasticsearchCheckUsecaseConfig interface {
 	// MaximumShardsNumber method returns int represent maximum shards number
 	MaximumShardsNumber() int
 
-	// JaegerIndexRegexp method returns string represent jaeger index regexp
-	JaegerIndexRegexp() string
+	// JaegerIndexPattern method returns string represent jaeger index pattern
+	JaegerIndexPattern() string
 
 	// JaegerIndexLifeCycle method returns duration represent jaeger index life cycle
 	JaegerIndexMinLifeCycle() time.Duration
