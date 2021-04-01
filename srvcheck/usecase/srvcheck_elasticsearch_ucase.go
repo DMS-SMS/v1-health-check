@@ -59,7 +59,7 @@ type elasticsearchCheckUsecaseConfig interface {
 // elasticsearchAgency is interface that agent elasticsearch with HTTP API
 type elasticsearchAgency interface {
 	// GetClusterHealth return interface have various get method about cluster health inform
-	GetClusterHealth(target string) (result interface{
+	GetClusterHealth() (result interface{
 		ActivePrimaryShards() int     // get active primary shards number in cluster health result
 		ActiveShards() int            // get active shards number in cluster health result
 		UnassignedShards() int        // get unassigned shards number in cluster health result
