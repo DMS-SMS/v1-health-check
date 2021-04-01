@@ -31,7 +31,7 @@ srvcheck:
   elasticsearch:
     targetIndices: "_all"
     maximumShardsNumber: 900
-    jaegerIndexRegexp: "^jaeger-(span|service)-\\d{4}-\\d{2}-\\d{2}$"
+    jaegerIndexPattern: "jaeger-*"
     jaegerIndexMinLifeCycle: "720h"
   repository:
     elasticsearch:
