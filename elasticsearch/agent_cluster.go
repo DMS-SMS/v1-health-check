@@ -14,7 +14,7 @@ import (
 )
 
 // GetClusterHealth return interface have various get method about cluster health inform
-func (ea *elasticsearchAgent) GetClusterHealth(target []string) (interface{
+func (ea *elasticsearchAgent) GetClusterHealth() (interface{
 	ActivePrimaryShards() int     // get active primary shards number in cluster health result
 	ActiveShards() int            // get active shards number in cluster health result
 	UnassignedShards() int        // get unassigned shards number in cluster health result
@@ -25,7 +25,7 @@ func (ea *elasticsearchAgent) GetClusterHealth(target []string) (interface{
 	)
 
 	resp, err := (esapi.ClusterHealthRequest{
-		Index:         target,
+		Index:         []string{"_all"},
 		MasterTimeout: time.Second * 5,
 		Timeout:       time.Second * 5,
 	}).Do(ctx, ea.esCli)
