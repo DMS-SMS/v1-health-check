@@ -3,31 +3,26 @@ app:
   CONFIG_FILE:        # set value in environment variable
   SLACK_CHAT_CHANNEL: # set value in environment variable
 
-domain:
-  syscheck:
-    repository:
-      elasticsearch:
-        index:
-          name: "sms-system-check"
-          shardNum: 2
-          replicaNum: 0
-
-    delivery:
-      channel:
-        pingCycle:
-          diskcheck: "5m"
-          cpucheck: "5m"
-          memorycheck: "5m"
-
-    diskcheck:
-      minCapacity: "2GB"
-
-    cpucheck:
-      cpuWarningUsage: 1.0
-      cpuMaximumUsage: 1.5
-      cpuMinimumUsageToRemove: 0.5
-
-    memorycheck:
-      memoryWarningUsage: "6GB"
-      memoryMaximumUsage: "7GB"
-      memoryMinimumUsageToRemove: "1GB"
+syscheck:
+  diskcheck:
+    minCapacity: "2GB"
+  cpucheck:
+    cpuWarningUsage: 1.0
+    cpuMaximumUsage: 1.5
+    cpuMinimumUsageToRemove: 0.5
+  memorycheck:
+    memoryWarningUsage: "6GB"
+    memoryMaximumUsage: "7GB"
+    memoryMinimumUsageToRemove: "1GB"
+  repository:
+    elasticsearch:
+      index:
+        name: "sms-system-check"
+        shardNum: 2
+        replicaNum: 0
+  delivery:
+    channel:
+      pingCycle:
+        diskcheck: "5m"
+        cpucheck: "5m"
+        memorycheck: "5m"
