@@ -28,6 +28,11 @@ syscheck:
         memorycheck: "5m"
 
 srvcheck:
+  elasticsearch:
+    targetIndices: "_all"
+    maximumShardsNumber: 900
+    jaegerIndexRegexp: "^jaeger-(span|service)-\\d{4}-\\d{2}-\\d{2}$"
+    jaegerIndexMinLifeCycle: "720h"
   repository:
     elasticsearch:
       index:
