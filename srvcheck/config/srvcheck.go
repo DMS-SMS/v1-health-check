@@ -90,6 +90,59 @@ func (sc *srvcheckConfig) IndexReplicaNum() int {
 	return *sc.indexReplicaNum
 }
 
+// implement TargetIndices method of elasticsearchCheckUsecaseConfig interface
+func (sc *srvcheckConfig) TargetIndices() string {
+	var key = "srvcheck.elasticsearch.targetIndices"
+	if sc.targetIndices == nil {
+		if _, ok := viper.Get(key).(string); !ok {
+			viper.Set(key, defaultTargetIndices)
+		}
+		sc.targetIndices = _string(viper.GetString(key))
+	}
+	return *sc.targetIndices
+}
+
+// implement MaximumShardsNumber method of elasticsearchCheckUsecaseConfig interface
+func (sc *srvcheckConfig) MaximumShardsNumber() int {
+	var key = "srvcheck.elasticsearch.maximumShardsNumber"
+	if sc.maximumShardsNumber == nil {
+		if _, ok := viper.Get(key).(int); !ok {
+			viper.Set(key, defaultMaximumShardsNumber)
+		}
+		sc.maximumShardsNumber = _int(viper.GetInt(key))
+	}
+	return *sc.maximumShardsNumber
+}
+
+// implement JaegerIndexMinLifeCycle method of elasticsearchCheckUsecaseConfig interface
+func (sc *srvcheckConfig) JaegerIndexMinLifeCycle() time.Duration {
+	var key = "srvcheck.elasticsearch.jaegerIndexMinLifeCycle"
+	if sc.jaegerIndexMinLifeCycle != nil {
+		return *sc.jaegerIndexMinLifeCycle
+	}
+
+	d, err := time.ParseDuration(viper.GetString(key))
+	if err != nil {
+		viper.Set(key, defaultJaegerIndexMinLifeCycle.String())
+		d = defaultJaegerIndexMinLifeCycle
+	}
+
+	sc.jaegerIndexMinLifeCycle = &d
+	return *sc.jaegerIndexMinLifeCycle
+}
+
+// implement JaegerIndexRegexp method of elasticsearchCheckUsecaseConfig interface
+func (sc *srvcheckConfig) JaegerIndexRegexp() string {
+	var key = "srvcheck.elasticsearch.jaegerIndexRegexp"
+	if sc.jaegerIndexRegexp == nil {
+		if _, ok := viper.Get(key).(string); !ok {
+			viper.Set(key, defaultJaegerIndexRegexp)
+		}
+		sc.jaegerIndexRegexp = _string(viper.GetString(key))
+	}
+	return *sc.jaegerIndexRegexp
+}
+
 // init function initialize App global variable
 func init() {
 	App = &srvcheckConfig{}
