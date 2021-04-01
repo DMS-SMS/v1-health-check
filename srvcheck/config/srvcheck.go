@@ -9,6 +9,7 @@ package config
 
 import (
 	"github.com/spf13/viper"
+	"strings"
 	"time"
 )
 
@@ -31,7 +32,7 @@ type srvcheckConfig struct {
 
 	// fields using in elasticsearch health checking (implement elasticsearchCheckUsecaseConfig)
 	// targetIndices represent indices separated with dot which are target of elasticsearch health check
-	targetIndices *string
+	targetIndices *[]string
 
 	// maximumShardsNumber represent maximum shards number of elasticsearch target cluster
 	maximumShardsNumber *int
@@ -91,13 +92,14 @@ func (sc *srvcheckConfig) IndexReplicaNum() int {
 }
 
 // implement TargetIndices method of elasticsearchCheckUsecaseConfig interface
-func (sc *srvcheckConfig) TargetIndices() string {
+func (sc *srvcheckConfig) TargetIndices() []string {
 	var key = "srvcheck.elasticsearch.targetIndices"
 	if sc.targetIndices == nil {
 		if _, ok := viper.Get(key).(string); !ok {
 			viper.Set(key, defaultTargetIndices)
 		}
-		sc.targetIndices = _string(viper.GetString(key))
+		sep := strings.Split(viper.GetString(key), ",")
+		sc.targetIndices = &sep
 	}
 	return *sc.targetIndices
 }
