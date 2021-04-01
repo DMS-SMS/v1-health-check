@@ -92,3 +92,9 @@ func NewElasticsearchCheckUsecase(
 		mutex:  sync.Mutex{},
 	}
 }
+
+// CheckElasticsearch check elasticsearch health with checkElasticsearch method & store check history in repository
+// Implement CheckElasticsearch method of ElasticsearchCheckUseCase interface
+func (ecu *elasticsearchCheckUsecase) CheckElasticsearch(ctx context.Context) (err error) {
+	return
+}
