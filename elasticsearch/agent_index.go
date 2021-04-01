@@ -22,6 +22,7 @@ func (ea *elasticsearchAgent) GetIndicesWithPatterns(patterns []string) (indices
 	resp, err := (esapi.CatIndicesRequest{
 		Index:         patterns,
 		Format:        "JSON",
+		S:             []string{"index"},
 		MasterTimeout: time.Second * 5,
 	}).Do(ctx, ea.esCli)
 
