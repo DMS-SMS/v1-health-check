@@ -33,8 +33,8 @@ type srvcheckConfig struct {
 	// maximumShardsNumber represent maximum shards number of elasticsearch target cluster
 	maximumShardsNumber *int
 
-	// jaegerIndexRegexp represent jaeger index regular expression to deliver to elasticsearch agency
-	jaegerIndexRegexp *string
+	// jaegerIndexPattern represent jaeger index pattern to deliver to elasticsearch agency
+	jaegerIndexPattern *string
 
 	// jaegerIndexMinLifeCycle represent minimum life cycle of jaeger index in elasticsearch
 	jaegerIndexMinLifeCycle *time.Duration
@@ -47,7 +47,7 @@ const (
 
 	defaultMaximumShardsNumber     = 900             // default const int for MaximumShardsNumber
 	defaultJaegerIndexMinLifeCycle = time.Hour * 720 // default const duration for JaegerIndexMinLifeCycle
-	defaultJaegerIndexRegexp       = "^jaeger-(span|service)-\\d{4}-\\d{2}-\\d{2}$" // default const string for JaegerIndexRegexp
+	defaultJaegerIndexPattern      = "jaeger-*"      // default const string for JaegerIndexRegexp
 )
 
 // implement IndexName method of esRepositoryComponentConfig interface
@@ -115,16 +115,16 @@ func (sc *srvcheckConfig) JaegerIndexMinLifeCycle() time.Duration {
 	return *sc.jaegerIndexMinLifeCycle
 }
 
-// implement JaegerIndexRegexp method of elasticsearchCheckUsecaseConfig interface
-func (sc *srvcheckConfig) JaegerIndexRegexp() string {
-	var key = "srvcheck.elasticsearch.jaegerIndexRegexp"
-	if sc.jaegerIndexRegexp == nil {
+// implement JaegerIndexPattern method of elasticsearchCheckUsecaseConfig interface
+func (sc *srvcheckConfig) JaegerIndexPattern() string {
+	var key = "srvcheck.elasticsearch.jaegerIndexPattern"
+	if sc.jaegerIndexPattern == nil {
 		if _, ok := viper.Get(key).(string); !ok {
-			viper.Set(key, defaultJaegerIndexRegexp)
+			viper.Set(key, defaultJaegerIndexPattern)
 		}
-		sc.jaegerIndexRegexp = _string(viper.GetString(key))
+		sc.jaegerIndexPattern = _string(viper.GetString(key))
 	}
-	return *sc.jaegerIndexRegexp
+	return *sc.jaegerIndexPattern
 }
 
 // init function initialize App global variable
