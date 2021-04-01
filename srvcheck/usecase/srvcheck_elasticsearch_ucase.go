@@ -5,9 +5,10 @@
 package usecase
 
 import (
-	"github.com/DMS-SMS/v1-health-check/domain"
 	"sync"
 	"time"
+
+	"github.com/DMS-SMS/v1-health-check/domain"
 )
 
 // elasticsearchCheckStatus is type to int constant represent current elasticsearch check process status
@@ -29,6 +30,9 @@ type elasticsearchCheckUsecase struct {
 
 	// slackChat is used for agent slack API about chatting
 	slackChatAgency slackChatAgency
+
+	// elasticsearchAgency is used as agency about elasticsearch API
+	elasticsearchAgency elasticsearchAgency
 
 	// status represent current process status of elasticsearch health check
 	status elasticsearchCheckStatus
