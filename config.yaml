@@ -39,3 +39,7 @@ srvcheck:
         name: "sms-service-check"
         shardNum: 2
         replicaNum: 0
+  delivery:
+    channel:
+      pingCycle:
+        elasticsearchCheck: "1h" # default -> 12h
