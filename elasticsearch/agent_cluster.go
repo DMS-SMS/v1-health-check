@@ -16,11 +16,11 @@ import (
 
 // GetClusterHealth return interface have various get method about cluster health inform
 func (ea *elasticsearchAgent) GetClusterHealth() (interface {
-	ActivePrimaryShards() int                  // get active primary shards number in cluster health result
-	ActiveShards() int                         // get active shards number in cluster health result
-	UnassignedShards() int                     // get unassigned shards number in cluster health result
-	ActiveShardsPercent() float64              // get active shards percent in cluster health result
-	WriteTo(*domain.ElasticsearchCheckHistory) // write value in result to elasticsearch check history
+	ActivePrimaryShards() int                       // get active primary shards number in cluster health result
+	ActiveShards() int                              // get active shards number in cluster health result
+	UnassignedShards() int                          // get unassigned shards number in cluster health result
+	ActiveShardsPercent() float64                   // get active shards percent in cluster health result
+	WriteValueTo(*domain.ElasticsearchCheckHistory) // write value in result to elasticsearch check history
 }, error) {
 	var (
 		ctx = context.Background()
@@ -43,32 +43,32 @@ func (ea *elasticsearchAgent) GetClusterHealth() (interface {
 		return nil, errors.Wrap(err, "failed to decode resp body to map")
 	}
 
-	result := getClusterHealthResult{}
+	var cluster cluster
 	if v, ok := m["active_primary_shards"].(float64); ok {
-		result.activePrimaryShards = v
+		cluster.activePrimaryShards = v
 	} else {
 		return nil, errors.New("float64 active_primary_shards is not in resp map")
 	}
 
 	if v, ok := m["active_shards"].(float64); ok {
-		result.activeShards = v
+		cluster.activeShards = v
 	} else {
 		return nil, errors.New("float64 active_shards is not in resp map")
 	}
 
 	if v, ok := m["unassigned_shards"].(float64); ok {
-		result.unassignedShards = v
+		cluster.unassignedShards = v
 	} else {
 		return nil, errors.New("float64 unassigned_shards is not in resp map")
 	}
 
 	if v, ok := m["active_shards_percent_as_number"].(float64); ok {
-		result.activeShardsPercent = v
+		cluster.activeShardsPercent = v
 	} else {
 		return nil, errors.New("float64 active_shards_percent_as_number is not in resp map")
 	}
 
-	return result, nil
+	return cluster, nil
 }
 
 // cluster is struct having & handling inform about cluster, and implementation of GetClusterHealth return type interface
