@@ -4,8 +4,16 @@
 
 package domain
 
+import "github.com/inhies/go-bytesize"
+
 // SwarmpitCheckHistory model is used for record swarmpit check history and result
 type SwarmpitCheckHistory struct {
 	// get required component by embedding serviceCheckHistoryComponent
 	serviceCheckHistoryComponent
+
+	// SwarmpitAppMemoryUsage specifies memory usage of swarmpit app container
+	SwarmpitAppMemoryUsage bytesize.ByteSize
+
+	// IfSwarmpitAppRestarted specifies if swarmpit container was restarted
+	IfSwarmpitAppRestarted bool
 }
