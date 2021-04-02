@@ -71,3 +71,9 @@ func (ea *elasticsearchAgent) DeleteIndices(indices []string) (err error) {
 	}
 	return
 }
+
+// indices is struct having & handling indices inform, and implementation of GetIndicesWithPatterns return type interface
+type indices []struct {
+	name    string    // specifies index name
+	created time.Time // specifies index created time
+}
