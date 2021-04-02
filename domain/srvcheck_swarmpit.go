@@ -17,3 +17,14 @@ type SwarmpitCheckHistory struct {
 	// IfSwarmpitAppRestarted specifies if swarmpit container was restarted
 	IfSwarmpitAppRestarted bool
 }
+
+// SwarmpitCheckHistoryRepository is interface for repository layer used in usecase layer
+// Repository is implemented with elasticsearch in v.1.0.0
+type SwarmpitCheckHistoryRepository interface {
+	// get required component by embedding serviceCheckHistoryRepositoryComponent
+	serviceCheckHistoryRepositoryComponent
+
+	// Store method save SwarmpitCheckHistory model in repository
+	// b in return represents bytes of response body(map[string]interface{})
+	Store(*SwarmpitCheckHistory) (b []byte, err error)
+}
