@@ -5,7 +5,7 @@ package main
 
 import (
 	"github.com/docker/docker/client"
-	"github.com/elastic/go-elasticsearch/v7"
+	es "github.com/elastic/go-elasticsearch/v7"
 	"github.com/spf13/viper"
 	"log"
 	"runtime"
@@ -13,8 +13,13 @@ import (
 
 	"github.com/DMS-SMS/v1-health-check/app/config"
 	"github.com/DMS-SMS/v1-health-check/docker"
+	"github.com/DMS-SMS/v1-health-check/elasticsearch"
 	"github.com/DMS-SMS/v1-health-check/json"
 	"github.com/DMS-SMS/v1-health-check/slack"
+	_srvcheckConfig "github.com/DMS-SMS/v1-health-check/srvcheck/config"
+	_srvcheckChannelDelivery "github.com/DMS-SMS/v1-health-check/srvcheck/delivery/channel"
+	_srvcheckRepo "github.com/DMS-SMS/v1-health-check/srvcheck/repository/elasticsearch"
+	_srvcheckUcase "github.com/DMS-SMS/v1-health-check/srvcheck/usecase"
 	_syscheckConfig "github.com/DMS-SMS/v1-health-check/syscheck/config"
 	_syscheckChannelDelivery "github.com/DMS-SMS/v1-health-check/syscheck/delivery/channel"
 	_syscheckRepo "github.com/DMS-SMS/v1-health-check/syscheck/repository/elasticsearch"
@@ -68,6 +73,18 @@ func main() {
 	_syscheckChannelDelivery.NewDiskCheckHandler(time.Tick(_syscheckConfig.App.DiskCheckDeliveryPingCycle()), sdu)
 	_syscheckChannelDelivery.NewCPUCheckHandler(time.Tick(_syscheckConfig.App.CPUCheckDeliveryPingCycle()), scu)
 	_syscheckChannelDelivery.NewMemoryCheckHandler(time.Tick(_syscheckConfig.App.MemoryCheckDeliveryPingCycle()), smu)
+
+	// ---
+
+	// srvcheck domain repository
+	// the reason separate Repository, Usecase interface in same domain -> 서로 간의 연관성 X, 더욱 더 확실한 분리를 위해
+	ser := _srvcheckRepo.NewESElasticsearchCheckHistoryRepository(_srvcheckConfig.App, esCli, json.MapWriter())
+
+	// srvcheck domain usecase
+	seu := _srvcheckUcase.NewElasticsearchCheckUsecase(_srvcheckConfig.App, ser, _slk, _esa)
+
+	// srvcheck domain delivery
+	_srvcheckChannelDelivery.NewElasticsearchCheckHandler(time.Tick(_srvcheckConfig.App.ESCheckDeliveryPingCycle()), seu)
 
 	runtime.Goexit()
 }
