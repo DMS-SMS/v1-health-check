@@ -132,3 +132,10 @@ func (ecu *elasticsearchCheckUsecase) checkElasticsearch(ctx context.Context) (h
 	result.WriteTo(history)
 	return
 }
+
+// setStatus set status field value using mutex Lock & Unlock
+func (ecu *elasticsearchCheckUsecase) setStatus(status elasticsearchCheckStatus) {
+	ecu.mutex.Lock()
+	defer ecu.mutex.Unlock()
+	ecu.status = status
+}
