@@ -26,22 +26,22 @@ func NewDiskCheckHandler(c <-chan time.Time, du domain.DiskCheckUseCase) {
 	go handler.startListening(c)
 }
 
-// CheckDisk method set context & call usecase CheckDisk method, handle error
-func (dh *diskCheckHandler) CheckDisk(t time.Time) {
-	ctx := context.Background()
-	ctx = context.WithValue(ctx, "time", t)
-
-	if err := dh.DUsecase.CheckDisk(ctx); err != nil {
-		log.Printf("error occurs in CheckDisk, err: %v", err)
-	}
-}
-
 // startListening method start listening msg from golang channel & stream msg to another method
 func (dh *diskCheckHandler) startListening(c <-chan time.Time) {
 	for {
 		select {
 		case t := <-c:
-			go dh.CheckDisk(t)
+			go dh.checkDisk(t)
 		}
+	}
+}
+
+// checkDisk method set context & call usecase CheckDisk method, handle error
+func (dh *diskCheckHandler) checkDisk(t time.Time) {
+	ctx := context.Background()
+	ctx = context.WithValue(ctx, "time", t)
+
+	if err := dh.DUsecase.CheckDisk(ctx); err != nil {
+		log.Printf("error occurs in CheckDisk, err: %v", err)
 	}
 }
