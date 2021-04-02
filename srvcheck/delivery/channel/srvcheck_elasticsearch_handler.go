@@ -21,6 +21,15 @@ type elasticsearchCheckHandler struct {
 	EUsecase domain.ElasticsearchCheckUseCase
 }
 
+// NewElasticsearchCheckHandler define elasticsearchCheckHandler ptr instance & register handling channel msg to usecase
+func NewElasticsearchCheckHandler(c <-chan time.Time, eu domain.ElasticsearchCheckUseCase) {
+	handler := &elasticsearchCheckHandler{
+		EUsecase: eu,
+	}
+
+	go handler.startListening(c)
+}
+
 // startListening method start listening msg from golang channel & stream msg to another method
 func (eh *elasticsearchCheckHandler) startListening(c <-chan time.Time) {
 	for {
