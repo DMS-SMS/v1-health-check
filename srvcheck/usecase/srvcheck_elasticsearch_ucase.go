@@ -123,14 +123,14 @@ func (ecu *elasticsearchCheckUsecase) checkElasticsearch(ctx context.Context) (h
 	history.FillPrivateComponent()
 	history.UUID = _uuid
 
-	result, err := ecu.elasticsearchAgency.GetClusterHealth()
+	cluster, err := ecu.elasticsearchAgency.GetClusterHealth()
 	if err != nil {
 		history.ProcessLevel.Set(errorLevel)
 		history.SetError(errors.Wrap(err, "failed to get cluster health"))
 		return
 	}
-	result.WriteTo(history)
-	var totalShards = intComparator{V: result.ActiveShards() + result.UnassignedShards()}
+	cluster.WriteValueTo(history)
+	var totalShards = intComparator{V: cluster.ActiveShards() + cluster.UnassignedShards()}
 
 	switch ecu.status {
 	case elasticsearchStatusHealthy:
