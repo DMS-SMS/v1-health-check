@@ -77,3 +77,25 @@ type indices []struct {
 	name    string    // specifies index name
 	created time.Time // specifies index created time
 }
+
+// SetMinLifeCycle set minimum life cycle of index & reset value of receiver variable
+func (idxes *indices) SetMinLifeCycle(cycle time.Duration) {
+	life := time.Now().Add(-cycle)
+
+	var filtered indices
+	for _, index := range *idxes {
+		if index.created.Before(life) {
+			filtered = append(filtered, index)
+		}
+	}
+	*idxes = filtered
+}
+
+// IndexNames return index name list of indices
+func (idxes indices) IndexNames() (names []string) {
+	names = make([]string, len(idxes))
+	for i, index := range idxes {
+		names[i] = index.name
+	}
+	return
+}
