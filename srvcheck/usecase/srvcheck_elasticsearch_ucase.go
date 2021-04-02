@@ -62,12 +62,12 @@ type elasticsearchCheckUsecaseConfig interface {
 // elasticsearchAgency is interface that agent elasticsearch with HTTP API
 type elasticsearchAgency interface {
 	// GetClusterHealth return interface have various get method about cluster health inform
-	GetClusterHealth() (result interface {
-		ActivePrimaryShards() int                  // get active primary shards number in cluster health result
-		ActiveShards() int                         // get active shards number in cluster health result
-		UnassignedShards() int                     // get unassigned shards number in cluster health result
-		ActiveShardsPercent() float64              // get active shards percent in cluster health result
-		WriteTo(*domain.ElasticsearchCheckHistory) // write value in result to elasticsearch check history
+	GetClusterHealth() (cluster interface {
+		ActivePrimaryShards() int                       // get active primary shards number of cluster
+		ActiveShards() int                              // get active shards number of cluster
+		UnassignedShards() int                          // get unassigned shards number of cluster
+		ActiveShardsPercent() float64                   // get active shards percent of cluster
+		WriteValueTo(*domain.ElasticsearchCheckHistory) // write value of cluster to elasticsearch check history
 	}, err error)
 
 	// GetIndicesWithRegexp return indices list with regexp pattern
