@@ -37,3 +37,25 @@ type SwarmpitCheckUseCase interface {
 	// CheckSwarmpit method check swarmpit status and store check history using repository
 	CheckSwarmpit(ctx context.Context) error
 }
+
+// FillPrivateComponent overriding FillPrivateComponent method of serviceCheckHistoryComponent
+func (sh *SwarmpitCheckHistory) FillPrivateComponent() {
+	sh.serviceCheckHistoryComponent.FillPrivateComponent()
+	sh._type = "SwarmpitCheck"
+}
+
+// DottedMapWithPrefix convert SwarmpitCheckHistory to dotted map and return using MapWithPrefixKey of upper struct
+// all key value of Map start with prefix received from parameter
+func (sh *SwarmpitCheckHistory) DottedMapWithPrefix(prefix string) (m map[string]interface{}) {
+	m = sh.serviceCheckHistoryComponent.DottedMapWithPrefix(prefix)
+
+	if prefix != "" {
+		prefix += "."
+	}
+
+	// setting public field value in dotted map
+	m[prefix + "swarmpit_app_memory_usage"] = sh.SwarmpitAppMemoryUsage
+	m[prefix + "if_swarmpit_app_restarted"] = sh.IfSwarmpitAppRestarted
+
+	return
+}
