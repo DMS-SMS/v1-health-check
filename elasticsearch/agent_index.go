@@ -14,7 +14,10 @@ import (
 )
 
 // GetIndicesWithRegexp return indices list with regexp pattern
-func (ea *elasticsearchAgent) GetIndicesWithPatterns(patterns []string) (indices []string, err error) {
+func (ea *elasticsearchAgent) GetIndicesWithPatterns(patterns []string) (interface {
+	SetMinLifeCycle(cycle time.Duration) // set min life cycle of index of indices
+	IndexNames() []string                // get index name list of indices
+}, error) {
 	var (
 		ctx = context.Background()
 	)
@@ -29,29 +32,35 @@ func (ea *elasticsearchAgent) GetIndicesWithPatterns(patterns []string) (indices
 	}).Do(ctx, ea.esCli)
 
 	if err != nil {
-		err = errors.Wrap(err, fmt.Sprintf("failed to call CatIndicesRequest, resp: %+v", resp))
-		return
+		return nil, errors.Wrap(err, fmt.Sprintf("failed to call CatIndicesRequest, resp: %+v", resp))
 	} else if resp.IsError() {
-		err = errors.Errorf("CatIndicesRequest return error code, resp: %+v", resp)
-		return
+		return nil, errors.Errorf("CatIndicesRequest return error code, resp: %+v", resp)
 	}
 
 	var ms []map[string]interface{}
 	if err = json.NewDecoder(resp.Body).Decode(&ms); err != nil {
-		err = errors.Wrap(err, "failed to decode resp body to map slice")
-		return
+		return nil, errors.Wrap(err, "failed to decode resp body to map slice")
 	}
 
+	indices := make(indices, len(ms))
+	var idx = 0
 	for _, m := range ms {
 		if v, ok := m["index"].(string); ok {
-			indices = append(indices, v)
+			indices[idx].name = v
 		} else {
-			err = errors.Wrap(err, "string index is not in resp map")
-			return
+			return nil, errors.Wrap(err, "string index key is not in resp map")
 		}
+
+		if v, ok := m["creation.date.string"].(string); ok {
+			t, _ := time.Parse(time.RFC3339, v)
+			indices[idx].created = t
+		} else {
+			return nil, errors.Wrap(err, "string creation.date.string key is not in resp map")
+		}
+		idx++
 	}
 
-	return
+	return &indices, nil
 }
 
 // DeleteIndices method delete indices in list received from parameter
