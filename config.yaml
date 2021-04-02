@@ -30,7 +30,7 @@ syscheck:
 srvcheck:
   elasticsearch:
     targetIndices: "_all"
-    maximumShardsNumber: 900
+    maximumShardsNumber: 700
     jaegerIndexPattern: "jaeger-*"
     jaegerIndexMinLifeCycle: "720h"
   repository:
@@ -42,4 +42,4 @@ srvcheck:
   delivery:
     channel:
       pingCycle:
-        elasticsearchCheck: "1h" # default -> 12h
+        elasticsearchCheck: "1m" # default -> 12h
