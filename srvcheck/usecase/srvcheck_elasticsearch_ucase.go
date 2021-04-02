@@ -6,6 +6,8 @@ package usecase
 
 import (
 	"context"
+	"fmt"
+	"github.com/google/uuid"
 	"github.com/pkg/errors"
 	"sync"
 	"time"
@@ -116,5 +118,17 @@ func (ecu *elasticsearchCheckUsecase) CheckElasticsearch(ctx context.Context) (e
 // 2 : 관리자가 직접 확인해야함 (상태 확인 수행 X)
 // 2 -> 0 : 관리자 직접 상태 회복 완료 (상태 회복 알림 발행)
 func (ecu *elasticsearchCheckUsecase) checkElasticsearch(ctx context.Context) (history *domain.ElasticsearchCheckHistory) {
+	_uuid := uuid.New().String()
+	history = new(domain.ElasticsearchCheckHistory)
+	history.FillPrivateComponent()
+	history.UUID = _uuid
+
+	result, err := ecu.elasticsearchAgency.GetClusterHealth()
+	if err != nil {
+		history.ProcessLevel.Set(errorLevel)
+		history.SetError(errors.Wrap(err, "failed to get cluster health"))
+		return
+	}
+	result.WriteTo(history)
 	return
 }
