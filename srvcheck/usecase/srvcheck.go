@@ -33,3 +33,12 @@ type slackChatAgency interface {
 	// SendMessage send message with text & emoji using slack API and return send time & text & error
 	SendMessage(emoji, text, uuid string, opts ...slack.MsgOption) (t time.Time, _text string, err error)
 }
+
+// intComparator is struct type having int type field which is used for compare with another int
+type intComparator struct { V int }
+
+// isMoreThan return boolean if value of instance which call this method is more than parameter's size
+func (comparator intComparator) isMoreThan(target int) bool { return comparator.V > target }
+
+// isMoreThan return boolean if value of instance which call this method is less than parameter's size
+func (comparator intComparator) isLessThan(target int) bool { return comparator.V < target }
