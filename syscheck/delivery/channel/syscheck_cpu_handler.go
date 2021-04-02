@@ -30,22 +30,22 @@ func NewCPUCheckHandler(c <-chan time.Time, cu domain.CPUCheckUseCase) {
 	go handler.startListening(c)
 }
 
-// CheckCPU method set context & call usecase CheckCPU method, handle error
-func (ch *cpuCheckHandler) CheckCPU(t time.Time) {
-	ctx := context.Background()
-	ctx = context.WithValue(ctx, "time", t)
-
-	if err := ch.CUsecase.CheckCPU(ctx); err != nil {
-		log.Printf("error occurs in CheckCPU, err: %v", err)
-	}
-}
-
 // startListening method start listening msg from golang channel & stream msg to another method
 func (ch *cpuCheckHandler) startListening(c <-chan time.Time) {
 	for {
 		select {
 		case t := <-c:
-			go ch.CheckCPU(t)
+			go ch.checkCPU(t)
 		}
+	}
+}
+
+// checkCPU method set context & call usecase CheckCPU method, handle error
+func (ch *cpuCheckHandler) checkCPU(t time.Time) {
+	ctx := context.Background()
+	ctx = context.WithValue(ctx, "time", t)
+
+	if err := ch.CUsecase.CheckCPU(ctx); err != nil {
+		log.Printf("error occurs in CheckCPU, err: %v", err)
 	}
 }
