@@ -6,3 +6,13 @@
 // publishing msg to golang channel which is received from outside is not occurred in this package
 
 package channel
+
+import (
+	"github.com/DMS-SMS/v1-health-check/domain"
+)
+
+// elasticsearchCheckHandler is delivered data handler about elasticsearch check using usecase layer
+type elasticsearchCheckHandler struct {
+	// EUsecase is usecase layer interface which is injected from package outside (maybe, in main)
+	EUsecase domain.ElasticsearchCheckUseCase
+}
