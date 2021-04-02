@@ -8,17 +8,19 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/DMS-SMS/v1-health-check/domain"
 	"github.com/elastic/go-elasticsearch/v7/esapi"
 	"github.com/pkg/errors"
 	"time"
 )
 
 // GetClusterHealth return interface have various get method about cluster health inform
-func (ea *elasticsearchAgent) GetClusterHealth() (interface{
-	ActivePrimaryShards() int     // get active primary shards number in cluster health result
-	ActiveShards() int            // get active shards number in cluster health result
-	UnassignedShards() int        // get unassigned shards number in cluster health result
-	ActiveShardsPercent() float64 // get active shards percent in cluster health result
+func (ea *elasticsearchAgent) GetClusterHealth() (interface {
+	ActivePrimaryShards() int                  // get active primary shards number in cluster health result
+	ActiveShards() int                         // get active shards number in cluster health result
+	UnassignedShards() int                     // get unassigned shards number in cluster health result
+	ActiveShardsPercent() float64              // get active shards percent in cluster health result
+	WriteTo(*domain.ElasticsearchCheckHistory) // write value in result to elasticsearch check history
 }, error) {
 	var (
 		ctx = context.Background()
@@ -74,8 +76,16 @@ type getClusterHealthResult struct {
 	activePrimaryShards, activeShards, unassignedShards, activeShardsPercent float64
 }
 
-// define getClusterHealthResult methods that return field of this struct
+// define return field value methods in getClusterHealthResult
 func (result getClusterHealthResult) ActivePrimaryShards() int     { return int(result.activePrimaryShards) }
 func (result getClusterHealthResult) ActiveShards() int            { return int(result.activeShards) }
 func (result getClusterHealthResult) UnassignedShards() int        { return int(result.unassignedShards) }
 func (result getClusterHealthResult) ActiveShardsPercent() float64 { return result.activeShardsPercent }
+
+// WriteTo method write getClusterHealthResult value to history
+func (result getClusterHealthResult) WriteTo(history *domain.ElasticsearchCheckHistory) {
+	history.ActivePrimaryShards = result.ActivePrimaryShards()
+	history.ActiveShards = result.ActiveShards()
+	history.UnassignedShards = result.UnassignedShards()
+	history.ActiveShardsPercent = result.ActiveShardsPercent()
+}
