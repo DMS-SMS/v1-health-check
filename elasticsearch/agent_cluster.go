@@ -71,21 +71,21 @@ func (ea *elasticsearchAgent) GetClusterHealth() (interface {
 	return result, nil
 }
 
-// getClusterHealthResult is implementation of GetClusterHealth return type interface
-type getClusterHealthResult struct {
+// cluster is struct having & handling inform about cluster, and implementation of GetClusterHealth return type interface
+type cluster struct {
 	activePrimaryShards, activeShards, unassignedShards, activeShardsPercent float64
 }
 
-// define return field value methods in getClusterHealthResult
-func (result getClusterHealthResult) ActivePrimaryShards() int     { return int(result.activePrimaryShards) }
-func (result getClusterHealthResult) ActiveShards() int            { return int(result.activeShards) }
-func (result getClusterHealthResult) UnassignedShards() int        { return int(result.unassignedShards) }
-func (result getClusterHealthResult) ActiveShardsPercent() float64 { return result.activeShardsPercent }
+// define return field value methods in cluster
+func (c cluster) ActivePrimaryShards() int     { return int(c.activePrimaryShards) }
+func (c cluster) ActiveShards() int            { return int(c.activeShards) }
+func (c cluster) UnassignedShards() int        { return int(c.unassignedShards) }
+func (c cluster) ActiveShardsPercent() float64 { return c.activeShardsPercent }
 
-// WriteTo method write getClusterHealthResult value to history
-func (result getClusterHealthResult) WriteTo(history *domain.ElasticsearchCheckHistory) {
-	history.ActivePrimaryShards = result.ActivePrimaryShards()
-	history.ActiveShards = result.ActiveShards()
-	history.UnassignedShards = result.UnassignedShards()
-	history.ActiveShardsPercent = result.ActiveShardsPercent()
+// WriteTo method write cluster value to elasticsearch check history
+func (c cluster) WriteValueTo(history *domain.ElasticsearchCheckHistory) {
+	history.ActivePrimaryShards = c.ActivePrimaryShards()
+	history.ActiveShards = c.ActiveShards()
+	history.UnassignedShards = c.UnassignedShards()
+	history.ActiveShardsPercent = c.ActiveShardsPercent()
 }
