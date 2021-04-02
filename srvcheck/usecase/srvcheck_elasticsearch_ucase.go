@@ -71,7 +71,10 @@ type elasticsearchAgency interface {
 	}, err error)
 
 	// GetIndicesWithRegexp return indices list with regexp pattern
-	GetIndicesWithPatterns(patterns []string) (indices []string, err error)
+	GetIndicesWithPatterns(patterns []string) (indices interface {
+		SetMinLifeCycle(cycle time.Duration) // set min life cycle of index of indices
+		IndexNames() []string                // get index name list of indices
+	}, err error)
 
 	// DeleteIndices method delete indices in list received from parameter
 	DeleteIndices(indices []string) (err error)
