@@ -38,6 +38,12 @@ type srvcheckConfig struct {
 
 	// jaegerIndexMinLifeCycle represent minimum life cycle of jaeger index in elasticsearch
 	jaegerIndexMinLifeCycle *time.Duration
+
+	// --
+
+	// fields using in main function to inject delivery layer (not implement any interface)
+	// esCheckDeliveryPingCycle represent elasticsearch check delivery ping cycle
+	esCheckDeliveryPingCycle *time.Duration
 }
 
 const (
@@ -48,6 +54,8 @@ const (
 	defaultMaximumShardsNumber     = 900             // default const int for MaximumShardsNumber
 	defaultJaegerIndexMinLifeCycle = time.Hour * 720 // default const duration for JaegerIndexMinLifeCycle
 	defaultJaegerIndexPattern      = "jaeger-*"      // default const string for JaegerIndexRegexp
+
+	defaultESCheckDeliveryPingCycle = time.Hour * 12 // default const Duration for ESCheckDeliveryPingCycle
 )
 
 // implement IndexName method of esRepositoryComponentConfig interface
