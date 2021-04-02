@@ -135,6 +135,23 @@ func (sc *srvcheckConfig) JaegerIndexPattern() string {
 	return *sc.jaegerIndexPattern
 }
 
+// not implement any interface, just using in main function for delivery layer injection
+func (sc *srvcheckConfig) ESCheckDeliveryPingCycle() time.Duration {
+	var key = "srvcheck.delivery.channel.pingCycle.elasticsearchCheck"
+	if sc.esCheckDeliveryPingCycle != nil {
+		return *sc.esCheckDeliveryPingCycle
+	}
+
+	d, err := time.ParseDuration(viper.GetString(key))
+	if err != nil {
+		viper.Set(key, defaultESCheckDeliveryPingCycle.String())
+		d = defaultESCheckDeliveryPingCycle
+	}
+
+	sc.esCheckDeliveryPingCycle = &d
+	return *sc.esCheckDeliveryPingCycle
+}
+
 // init function initialize App global variable
 func init() {
 	App = &srvcheckConfig{}
