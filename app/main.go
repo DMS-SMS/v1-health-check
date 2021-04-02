@@ -35,7 +35,7 @@ func init() {
 }
 
 func main() {
-	esCli, err := elasticsearch.NewClient(elasticsearch.Config{
+	esCli, err := es.NewClient(es.Config{
 		Addresses: []string{config.App.ESAddress()},
 	})
 	if err != nil {
@@ -47,12 +47,14 @@ func main() {
 		client.WithTimeout(config.App.DockerCliTimeout()),
 	)
 
-	// add docker, system, slack agent
+	// add docker, system, slack, elasticsearch agent
 	_dkr := docker.NewAgent(dkrCli)
 	_sys := system.NewAgent(dkrCli)
 	_slk := slack.NewAgent(config.App.SlackAPIToken(), config.App.SlackChatChannel())
+	_esa := elasticsearch.NewAgent(esCli)
 
 	// syscheck domain repository
+	// the reason separate Repository, Usecase interface in same domain -> 서로 간의 연관성 X, 더욱 더 확실한 분리를 위해
 	sdr := _syscheckRepo.NewESDiskCheckHistoryRepository(_syscheckConfig.App, esCli, json.MapWriter())
 	scr := _syscheckRepo.NewESCPUCheckHistoryRepository(_syscheckConfig.App, esCli, json.MapWriter())
 	smr := _syscheckRepo.NewESMemoryCheckHistoryRepository(_syscheckConfig.App, esCli, json.MapWriter())
