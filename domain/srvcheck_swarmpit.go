@@ -3,3 +3,9 @@
 // also, additional method of model struct is declared in this file, too.
 
 package domain
+
+// SwarmpitCheckHistory model is used for record swarmpit check history and result
+type SwarmpitCheckHistory struct {
+	// get required component by embedding serviceCheckHistoryComponent
+	serviceCheckHistoryComponent
+}
