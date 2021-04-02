@@ -130,6 +130,29 @@ func (ecu *elasticsearchCheckUsecase) checkElasticsearch(ctx context.Context) (h
 		return
 	}
 	result.WriteTo(history)
+	var totalShards = intComparator{V: result.ActiveShards() + result.UnassignedShards()}
+
+	switch ecu.status {
+	case elasticsearchStatusHealthy:
+		break
+	case elasticsearchStatusRecovering:
+		history.ProcessLevel.Set(recoveringLevel)
+		history.Message = "recovering elasticsearch health is already on process"
+		return
+	case elasticsearchStatusUnhealthy:
+		if totalShards.isLessThan(ecu.myCfg.MaximumShardsNumber()) {
+			ecu.setStatus(elasticsearchStatusHealthy)
+			history.ProcessLevel.Set(recoveredLevel)
+			history.Message = "elasticsearch check is recovered to be healthy"
+			msg := fmt.Sprintf("!elasticsearch check recovered to health! total shards - %d", totalShards)
+			_, _, _ = ecu.slackChatAgency.SendMessage("heart", msg, _uuid)
+		} else {
+			history.ProcessLevel.Set(unhealthyLevel)
+			history.Message = "elasticsearch check is unhealthy now"
+		}
+		return
+	}
+
 	return
 }
 
