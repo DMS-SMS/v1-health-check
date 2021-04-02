@@ -147,13 +147,69 @@ func (ecu *elasticsearchCheckUsecase) checkElasticsearch(ctx context.Context) (h
 			ecu.setStatus(elasticsearchStatusHealthy)
 			history.ProcessLevel.Set(recoveredLevel)
 			history.Message = "elasticsearch check is recovered to be healthy"
-			msg := fmt.Sprintf("!elasticsearch check recovered to health! total shards - %d", totalShards)
+			msg := fmt.Sprintf("!elasticsearch check recovered to health! total shards - %d", totalShards.V)
 			_, _, _ = ecu.slackChatAgency.SendMessage("heart", msg, _uuid)
 		} else {
 			history.ProcessLevel.Set(unhealthyLevel)
 			history.Message = "elasticsearch check is unhealthy now"
 		}
 		return
+	}
+
+	if totalShards.isMoreThan(ecu.myCfg.MaximumShardsNumber()) {
+		ecu.setStatus(elasticsearchStatusRecovering)
+		history.ProcessLevel.Set(weakDetectedLevel)
+		msg := "!elasticsearch check weak detected! start to delete jaeger index"
+		history.SetAlarmResult(ecu.slackChatAgency.SendMessage("pill", msg, _uuid))
+
+		indices, err := ecu.elasticsearchAgency.GetIndicesWithPatterns([]string{ecu.myCfg.JaegerIndexPattern()})
+		if err != nil {
+			ecu.setStatus(elasticsearchStatusUnhealthy)
+			history.ProcessLevel.Append(errorLevel)
+			msg := "!elasticsearch check error occurred! failed to get indices, please check for yourself"
+			_, _, _ = ecu.slackChatAgency.SendMessage("broken_heart", msg, _uuid)
+			history.SetError(errors.Wrap(err, "failed to get indices with pattern"))
+			return
+		}
+		indices.SetMinLifeCycle(ecu.myCfg.JaegerIndexMinLifeCycle())
+
+		if err := ecu.elasticsearchAgency.DeleteIndices(indices.IndexNames()); err != nil {
+			ecu.setStatus(elasticsearchStatusUnhealthy)
+			history.ProcessLevel.Append(warningLevel)
+			msg := "!elasticsearch check error occurred! failed to delete indices, please check for yourself"
+			_, _, _ = ecu.slackChatAgency.SendMessage("anger", msg, _uuid)
+			history.SetError(errors.Wrap(err, "failed to delete indices"))
+			return
+		} else {
+			history.IfJaegerIndexDeleted = true
+			history.DeletedJaegerIndices = indices.IndexNames()
+			history.Message = "pruned docker system as current disk capacity is less than the minimum"
+		}
+
+		againCluster, err := ecu.elasticsearchAgency.GetClusterHealth()
+		if err != nil {
+			ecu.setStatus(elasticsearchStatusUnhealthy)
+			history.ProcessLevel.Append(errorLevel)
+			msg := "!elasticsearch check error occurred! failed to again get cluster health, please check for yourself"
+			_, _, _ = ecu.slackChatAgency.SendMessage("broken_heart", msg, _uuid)
+			history.SetError(errors.Wrap(err, "failed to again get cluster health again"))
+			return
+		}
+		againCluster.WriteValueTo(history)
+		var againTotalShards = intComparator{V: againCluster.ActiveShards() + againCluster.UnassignedShards()}
+
+		if againTotalShards.isLessThan(ecu.myCfg.MaximumShardsNumber()) {
+			ecu.setStatus(elasticsearchStatusHealthy)
+			msg := fmt.Sprintf("!elasticsearch check is recovered! total shards - %d", againTotalShards.V)
+			_, _, _ = ecu.slackChatAgency.SendMessage("heart", msg, _uuid)
+		} else {
+			ecu.setStatus(elasticsearchStatusUnhealthy)
+			msg := "!elasticsearch check has deteriorated! please check for yourself"
+			_, _, _ = ecu.slackChatAgency.SendMessage("broken_heart", msg, _uuid)
+		}
+	} else {
+		history.ProcessLevel.Set(healthyLevel)
+		history.Message = "elasticsearch service is healthy now"
 	}
 
 	return
