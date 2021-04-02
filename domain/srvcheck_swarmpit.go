@@ -4,7 +4,10 @@
 
 package domain
 
-import "github.com/inhies/go-bytesize"
+import (
+	"context"
+	"github.com/inhies/go-bytesize"
+)
 
 // SwarmpitCheckHistory model is used for record swarmpit check history and result
 type SwarmpitCheckHistory struct {
@@ -27,4 +30,10 @@ type SwarmpitCheckHistoryRepository interface {
 	// Store method save SwarmpitCheckHistory model in repository
 	// b in return represents bytes of response body(map[string]interface{})
 	Store(*SwarmpitCheckHistory) (b []byte, err error)
+}
+
+// SwarmpitCheckUseCase is interface used as business process handler about swarmpit check
+type SwarmpitCheckUseCase interface {
+	// CheckSwarmpit method check swarmpit status and store check history using repository
+	CheckSwarmpit(ctx context.Context) error
 }
