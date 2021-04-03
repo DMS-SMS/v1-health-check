@@ -6,6 +6,7 @@ package usecase
 
 import (
 	"context"
+	"fmt"
 	"github.com/docker/docker/api/types"
 	"github.com/google/uuid"
 	"github.com/inhies/go-bytesize"
@@ -122,6 +123,27 @@ func (scu *swarmpitCheckUsecase) checkSwarmpit(ctx context.Context) (history *do
 	}
 	history.SwarmpitAppMemoryUsage = ctn.MemoryUsage()
 	var memoryUsage = bytesizeComparator{V: ctn.MemoryUsage()}
+
+	switch scu.status {
+	case swarmpitStatusHealthy:
+		break
+	case swarmpitStatusRecovering:
+		history.ProcessLevel.Set(recoveringLevel)
+		history.Message = "recovering swarmpit health is already on process"
+		return
+	case swarmpitStatusUnhealthy:
+		if memoryUsage.isLessThan(scu.myCfg.SwarmpitAppMaxMemoryUsage()) {
+			scu.setStatus(swarmpitStatusHealthy)
+			history.ProcessLevel.Set(recoveredLevel)
+			history.Message = "swarmpit check is recovered to be healthy"
+			msg := fmt.Sprintf("!swarmpit check recovered to health! memory usage - %s", memoryUsage.V)
+			_, _, _ = scu.slackChatAgency.SendMessage("heart", msg, _uuid)
+		} else {
+			history.ProcessLevel.Set(unhealthyLevel)
+			history.Message = "swarmpit check is unhealthy now"
+		}
+		return
+	}
 
 	return
 }
