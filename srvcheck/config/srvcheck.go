@@ -165,6 +165,35 @@ func (sc *srvcheckConfig) ESCheckDeliveryPingCycle() time.Duration {
 	return *sc.esCheckDeliveryPingCycle
 }
 
+// implement SwarmpitAppServiceName method of swarmpitCheckUsecaseConfig interface
+func (sc *srvcheckConfig) SwarmpitAppServiceName() string {
+	var key = "srvcheck.swarmpit.swarmpitAppServiceName"
+	if sc.swarmpitAppServiceName == nil {
+		if _, ok := viper.Get(key).(string); !ok {
+			viper.Set(key, defaultSwarmpitAppServiceName)
+		}
+		sc.swarmpitAppServiceName = _string(viper.GetString(key))
+	}
+	return *sc.swarmpitAppServiceName
+}
+
+// implement DiskMinCapacity method of swarmpitCheckUsecaseConfig interface
+func (sc *srvcheckConfig) SwarmpitAppMaxMemoryUsage() bytesize.ByteSize {
+	var key = "srvcheck.swarmpit.swarmpitAppMaxMemoryUsage"
+	if sc.swarmpitAppMaxMemoryUsage != nil {
+		return *sc.swarmpitAppMaxMemoryUsage
+	}
+
+	size, err := bytesize.Parse(viper.GetString(key))
+	if err != nil {
+		viper.Set(key, defaultSwarmpitAppMaxMemoryUsage.String())
+		size = defaultSwarmpitAppMaxMemoryUsage
+	}
+
+	sc.swarmpitAppMaxMemoryUsage = &size
+	return *sc.swarmpitAppMaxMemoryUsage
+}
+
 // init function initialize App global variable
 func init() {
 	App = &srvcheckConfig{}
