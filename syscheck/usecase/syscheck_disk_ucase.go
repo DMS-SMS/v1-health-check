@@ -129,7 +129,7 @@ func (du *diskCheckUsecase) checkDisk(ctx context.Context) (history *domain.Disk
 			du.setStatus(diskStatusHealthy)
 			history.ProcessLevel.Set(recoveredLevel)
 			history.Message = "disk check is recovered to be healthy"
-			msg := fmt.Sprintf("!disk check recovered to health! remain capacity - %s", remainCap)
+			msg := fmt.Sprintf("!disk check recovered to health! remain capacity - %s", remainCap.V)
 			_, _, _ = du.slackChatAgency.SendMessage("heart", msg, _uuid)
 		} else {
 			history.ProcessLevel.Set(unhealthyLevel)
@@ -169,7 +169,7 @@ func (du *diskCheckUsecase) checkDisk(ctx context.Context) (history *domain.Disk
 
 		if againRemainCap.isMoreThan(du.myCfg.DiskMinCapacity()) {
 			du.setStatus(diskStatusHealthy)
-			msg := fmt.Sprintf("!disk check is healthy by pruning! remain capacity - %s", againRemainCap)
+			msg := fmt.Sprintf("!disk check is healthy by pruning! remain capacity - %s", againRemainCap.V)
 			_, _, _ = du.slackChatAgency.SendMessage("heart", msg, _uuid)
 		} else {
 			du.setStatus(diskStatusUnhealthy)

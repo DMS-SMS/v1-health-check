@@ -154,7 +154,7 @@ func (mu *memoryCheckUsecase) checkMemory(ctx context.Context) (history *domain.
 			mu.setStatus(memoryStatusHealthy)
 			history.ProcessLevel.Set(recoveredLevel)
 			history.Message = "memory check is recovered to be healthy"
-			msg := fmt.Sprintf("!memory check recovered to health! current memory usage - %s", totalUsage)
+			msg := fmt.Sprintf("!memory check recovered to health! current memory usage - %s", totalUsage.V)
 			_, _, _ = mu.slackChatAgency.SendMessage("heart", msg, _uuid)
 		} else {
 			history.ProcessLevel.Set(unhealthyLevel)
@@ -166,7 +166,7 @@ func (mu *memoryCheckUsecase) checkMemory(ctx context.Context) (history *domain.
 	if totalUsage.isMoreThan(mu.myCfg.MemoryMaximumUsage()) {
 		mu.setStatus(memoryStatusRecovering)
 		history.ProcessLevel.Set(weakDetectedLevel)
-		msg := fmt.Sprintf("!memory check weak detected! start to provision memory (current memory usage - %s)", totalUsage)
+		msg := fmt.Sprintf("!memory check weak detected! start to provision memory (current memory usage - %s)", totalUsage.V)
 		history.SetAlarmResult(mu.slackChatAgency.SendMessage("pill", msg, _uuid))
 
 		result, err := mu.memorySysAgency.CalculateContainersMemoryUsage()
@@ -217,7 +217,7 @@ func (mu *memoryCheckUsecase) checkMemory(ctx context.Context) (history *domain.
 
 		if againTotalUsage.isLessThan(mu.myCfg.MemoryMaximumUsage()) {
 			mu.setStatus(memoryStatusHealthy)
-			msg := fmt.Sprintf("!memory check is healthy! current memory usage - %s", againTotalUsage)
+			msg := fmt.Sprintf("!memory check is healthy! current memory usage - %s", againTotalUsage.V)
 			_, _, _ = mu.slackChatAgency.SendMessage("heart", msg, _uuid)
 		} else {
 			mu.setStatus(memoryStatusUnhealthy)
@@ -229,7 +229,7 @@ func (mu *memoryCheckUsecase) checkMemory(ctx context.Context) (history *domain.
 		history.Message = "memory check is warning now, but not weak yet"
 		if mu.status != memoryStatusWarning {
 			mu.setStatus(memoryStatusWarning)
-			msg := fmt.Sprintf("!memory check warning! current memory usage - %s", totalUsage)
+			msg := fmt.Sprintf("!memory check warning! current memory usage - %s", totalUsage.V)
 			history.SetAlarmResult(mu.slackChatAgency.SendMessage("warning", msg, _uuid))
 		}
 	} else {
