@@ -5,8 +5,10 @@
 package usecase
 
 import (
+	"context"
 	"github.com/docker/docker/api/types"
 	"github.com/inhies/go-bytesize"
+	"github.com/pkg/errors"
 	"sync"
 
 	"github.com/DMS-SMS/v1-health-check/domain"
@@ -84,4 +86,16 @@ func NewSwarmpitCheckUsecase(
 		status: swarmpitStatusHealthy,
 		mutex:  sync.Mutex{},
 	}
+}
+
+// CheckSwarmpit check swarmpit health with checkSwarmpit method & store check history in repository
+// Implement CheckSwarmpit method of SwarmpitCheckUseCase interface
+func (scu *swarmpitCheckUsecase) CheckSwarmpit(ctx context.Context) (err error) {
+	history := scu.checkSwarmpit(ctx)
+
+	if b, err := scu.historyRepo.Store(history); err != nil {
+		return errors.Wrapf(err, "failed to store swarmpit check history, response: %s", string(b))
+	}
+
+	return
 }
