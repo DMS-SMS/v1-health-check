@@ -6,6 +6,7 @@ package usecase
 
 import (
 	"github.com/DMS-SMS/v1-health-check/domain"
+	"github.com/inhies/go-bytesize"
 	"sync"
 )
 
@@ -33,4 +34,16 @@ type swarmpitCheckUsecase struct {
 
 	// mutex help to prevent race condition when set status field value
 	mutex sync.Mutex
+}
+
+// swarmpitCheckUsecaseConfig is the config getter interface for swarmpit check usecase
+type swarmpitCheckUsecaseConfig interface {
+	// get common config method from embedding serviceCheckUsecaseComponentConfig
+	serviceCheckUsecaseComponentConfig
+
+	// SwarmpitAppServiceName method returns string represent swarmpit app service name
+	SwarmpitAppServiceName() string
+
+	// JaegerIndexPattern method returns string represent jaeger index pattern
+	SwarmpitAppMaxMemoryUsage() bytesize.ByteSize
 }
