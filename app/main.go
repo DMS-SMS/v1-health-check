@@ -4,7 +4,6 @@
 package main
 
 import (
-	"fmt"
 	"github.com/docker/docker/client"
 	es "github.com/elastic/go-elasticsearch/v7"
 	"github.com/spf13/viper"
@@ -87,7 +86,6 @@ func main() {
 	ssu := _srvcheckUcase.NewSwarmpitCheckUsecase(_srvcheckConfig.App, ssr, _slk, _dkr)
 
 	// srvcheck domain delivery
-	fmt.Println(_srvcheckConfig.App.SwarmpitAppMaxMemoryUsage())
 	_srvcheckChannelDelivery.NewElasticsearchCheckHandler(time.Tick(_srvcheckConfig.App.ESCheckDeliveryPingCycle()), seu)
 	_srvcheckChannelDelivery.NewSwarmpitCheckHandler(time.Tick(_srvcheckConfig.App.SwarmpitCheckDeliveryPingCycle()), ssu)
 
