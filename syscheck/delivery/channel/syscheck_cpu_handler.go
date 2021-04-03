@@ -28,6 +28,7 @@ func NewCPUCheckHandler(c <-chan time.Time, cu domain.CPUCheckUseCase) {
 	}
 
 	go handler.startListening(c)
+	log.Println("START TO LISTEN CHANNEL MSG ABOUT SYSTEM CPU CHECK")
 }
 
 // startListening method start listening msg from golang channel & stream msg to another method
