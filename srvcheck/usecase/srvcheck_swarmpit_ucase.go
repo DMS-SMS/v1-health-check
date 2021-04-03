@@ -5,10 +5,11 @@
 package usecase
 
 import (
-	"github.com/DMS-SMS/v1-health-check/domain"
 	"github.com/docker/docker/api/types"
 	"github.com/inhies/go-bytesize"
 	"sync"
+
+	"github.com/DMS-SMS/v1-health-check/domain"
 )
 
 // swarmpitCheckStatus is type to int constant represent current swarmpit check process status
@@ -29,6 +30,9 @@ type swarmpitCheckUsecase struct {
 
 	// slackChat is used for agent slack API about chatting
 	slackChatAgency slackChatAgency
+
+	// dockerAgency is used as agency about docker engine API
+	dockerAgency dockerAgency
 
 	// status represent current process status of swarmpit health check
 	status swarmpitCheckStatus
