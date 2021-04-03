@@ -6,10 +6,57 @@ package docker
 
 import (
 	"context"
+	"encoding/json"
 	"github.com/docker/docker/api/types"
 	"github.com/inhies/go-bytesize"
 	"github.com/pkg/errors"
+	"strings"
 )
+
+// GetContainerWithServiceName return container which is instance of received service name
+func (da *dockerAgent) GetContainerWithServiceName(srv string) (interface {
+	ID() string                     // get id of container
+	MemoryUsage() bytesize.ByteSize // get memory usage of container
+}, error) {
+	var (
+		ctx = context.Background()
+	)
+	
+	containers, err := da.dkrCli.ContainerList(ctx, types.ContainerListOptions{})
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to get container list from docker")
+	}
+
+	for _, ctn := range containers {
+		// ex) [/DSM_SMS_api-gateway.1.mod9z6n0hey4n6topphc2700r] -> [DSM_SMS_api-gateway 1 mod9z6n0hey4n6topphc2700r]
+		sep := strings.Split(strings.TrimPrefix(ctn.Names[0], "/"), ".")
+		if len(sep) == 0 || sep[0] != srv {
+			continue
+		}
+
+		stats, err := da.dkrCli.ContainerStats(ctx, ctn.ID, false)
+		if err != nil {
+			return nil, errors.Wrap(err, "failed to get container stats from docker")
+		}
+
+		v := &types.StatsJSON{}
+		if err = json.NewDecoder(stats.Body).Decode(v); err != nil {
+			return nil, errors.Wrap(err, "failed to decode stats response body to struct")
+		}
+
+		size, err := getMemoryUsageSizeFrom(v)
+		if err != nil {
+			return nil, errors.Wrap(err, "failed to get memory usage size from Stats")
+		}
+
+		return container{
+			id:          ctn.ID,
+			memoryUsage: size,
+		}, nil
+	}
+	
+	return nil, nil
+}
 
 // RemoveContainer remove container with id & option (auto created from docker swarm if exists)
 func (da *dockerAgent) RemoveContainer(containerID string, options types.ContainerRemoveOptions) error {
