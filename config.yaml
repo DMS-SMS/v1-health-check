@@ -33,6 +33,10 @@ srvcheck:
     maximumShardsNumber: 800 # default -> 900
     jaegerIndexPattern: "jaeger-*"
     jaegerIndexMinLifeCycle: "720h"
+  swarmpit:
+    swarmpitAppServiceName: "swarmpit_app"
+    swarmpitAppMaxMemoryUsage: "6GB"
+
   repository:
     elasticsearch:
       index:
