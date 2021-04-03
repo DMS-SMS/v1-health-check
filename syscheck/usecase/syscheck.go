@@ -63,9 +63,6 @@ func (comparator bytesizeComparator) isMoreThan(target bytesize.ByteSize) bool {
 // isMoreThan return boolean if size of instance which call this method is less than parameter's size
 func (comparator bytesizeComparator) isLessThan(target bytesize.ByteSize) bool { return comparator.V < target }
 
-// String calling & return return value of String method in V(type of bytesize.Bytesize) field
-func (comparator bytesizeComparator) String() string { return comparator.V.String() }
-
 // float64Comparator is struct type having float64 type field which is used for compare with another float
 type float64Comparator struct { V float64 }
 
