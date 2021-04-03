@@ -47,3 +47,4 @@ srvcheck:
     channel:
       pingCycle:
         elasticsearchCheck: "12h"
+        swarmpitCheck: "1m" # default -> "6h"
