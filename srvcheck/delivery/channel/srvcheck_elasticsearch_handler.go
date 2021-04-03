@@ -28,6 +28,7 @@ func NewElasticsearchCheckHandler(c <-chan time.Time, eu domain.ElasticsearchChe
 	}
 
 	go handler.startListening(c)
+	log.Println("START TO LISTEN CHANNEL MSG ABOUT SERVICE ELASTICSEARCH CHECK")
 }
 
 // startListening method start listening msg from golang channel & stream msg to another method
