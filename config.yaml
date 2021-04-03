@@ -35,7 +35,7 @@ srvcheck:
     jaegerIndexMinLifeCycle: "720h"
   swarmpit:
     swarmpitAppServiceName: "swarmpit_app"
-    swarmpitAppMaxMemoryUsage: "200MG" # default -> "600MB"
+    swarmpitAppMaxMemoryUsage: "200MB" # default -> "600MB"
 
   repository:
     elasticsearch:
