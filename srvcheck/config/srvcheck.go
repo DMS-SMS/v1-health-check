@@ -68,8 +68,8 @@ const (
 	defaultJaegerIndexMinLifeCycle = time.Hour * 720 // default const duration for JaegerIndexMinLifeCycle
 	defaultJaegerIndexPattern      = "jaeger-*"      // default const string for JaegerIndexRegexp
 
-	defaultSwarmpitAppServiceName    = "swarmpit_app"  // default const string for swarmpitAppServiceName
-	defaultSwarmpitAppMaxMemoryUsage = bytesize.GB * 6 // default const bytesize for swarmpitAppMaxMemoryUsage
+	defaultSwarmpitAppServiceName    = "swarmpit_app"    // default const string for swarmpitAppServiceName
+	defaultSwarmpitAppMaxMemoryUsage = bytesize.MB * 600 // default const bytesize for swarmpitAppMaxMemoryUsage
 
 	defaultESCheckDeliveryPingCycle       = time.Hour * 12 // default const Duration for ESCheckDeliveryPingCycle
 	defaultSwarmpitCheckDeliveryPingCycle = time.Hour * 6  // default const Duration for SwarmpitCheckDeliveryPingCycle
