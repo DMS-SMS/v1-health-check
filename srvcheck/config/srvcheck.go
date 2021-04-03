@@ -54,6 +54,9 @@ type srvcheckConfig struct {
 	// fields using in main function to inject delivery layer (not implement any interface)
 	// esCheckDeliveryPingCycle represent elasticsearch check delivery ping cycle
 	esCheckDeliveryPingCycle *time.Duration
+
+	// swarmpitCheckDeliveryPingCycle represent swarmpit check delivery ping cycle
+	swarmpitCheckDeliveryPingCycle *time.Duration
 }
 
 const (
@@ -68,7 +71,8 @@ const (
 	defaultSwarmpitAppServiceName    = "swarmpit_app"  // default const string for swarmpitAppServiceName
 	defaultSwarmpitAppMaxMemoryUsage = bytesize.GB * 6 // default const bytesize for swarmpitAppMaxMemoryUsage
 
-	defaultESCheckDeliveryPingCycle = time.Hour * 12 // default const Duration for ESCheckDeliveryPingCycle
+	defaultESCheckDeliveryPingCycle       = time.Hour * 12 // default const Duration for ESCheckDeliveryPingCycle
+	defaultSwarmpitCheckDeliveryPingCycle = time.Hour * 6  // default const Duration for SwarmpitCheckDeliveryPingCycle
 )
 
 // implement IndexName method of esRepositoryComponentConfig interface
@@ -148,23 +152,6 @@ func (sc *srvcheckConfig) JaegerIndexPattern() string {
 	return *sc.jaegerIndexPattern
 }
 
-// not implement any interface, just using in main function for delivery layer injection
-func (sc *srvcheckConfig) ESCheckDeliveryPingCycle() time.Duration {
-	var key = "srvcheck.delivery.channel.pingCycle.elasticsearchCheck"
-	if sc.esCheckDeliveryPingCycle != nil {
-		return *sc.esCheckDeliveryPingCycle
-	}
-
-	d, err := time.ParseDuration(viper.GetString(key))
-	if err != nil {
-		viper.Set(key, defaultESCheckDeliveryPingCycle.String())
-		d = defaultESCheckDeliveryPingCycle
-	}
-
-	sc.esCheckDeliveryPingCycle = &d
-	return *sc.esCheckDeliveryPingCycle
-}
-
 // implement SwarmpitAppServiceName method of swarmpitCheckUsecaseConfig interface
 func (sc *srvcheckConfig) SwarmpitAppServiceName() string {
 	var key = "srvcheck.swarmpit.swarmpitAppServiceName"
@@ -192,6 +179,40 @@ func (sc *srvcheckConfig) SwarmpitAppMaxMemoryUsage() bytesize.ByteSize {
 
 	sc.swarmpitAppMaxMemoryUsage = &size
 	return *sc.swarmpitAppMaxMemoryUsage
+}
+
+// not implement any interface, just using in main function for delivery layer injection
+func (sc *srvcheckConfig) ESCheckDeliveryPingCycle() time.Duration {
+	var key = "srvcheck.delivery.channel.pingCycle.elasticsearchCheck"
+	if sc.esCheckDeliveryPingCycle != nil {
+		return *sc.esCheckDeliveryPingCycle
+	}
+
+	d, err := time.ParseDuration(viper.GetString(key))
+	if err != nil {
+		viper.Set(key, defaultESCheckDeliveryPingCycle.String())
+		d = defaultESCheckDeliveryPingCycle
+	}
+
+	sc.esCheckDeliveryPingCycle = &d
+	return *sc.esCheckDeliveryPingCycle
+}
+
+// not implement any interface, just using in main function for delivery layer injection
+func (sc *srvcheckConfig) SwarmpitCheckDeliveryPingCycle() time.Duration {
+	var key = "srvcheck.delivery.channel.pingCycle.swarmpitCheck"
+	if sc.swarmpitCheckDeliveryPingCycle != nil {
+		return *sc.swarmpitCheckDeliveryPingCycle
+	}
+
+	d, err := time.ParseDuration(viper.GetString(key))
+	if err != nil {
+		viper.Set(key, defaultSwarmpitCheckDeliveryPingCycle.String())
+		d = defaultSwarmpitCheckDeliveryPingCycle
+	}
+
+	sc.swarmpitCheckDeliveryPingCycle = &d
+	return *sc.swarmpitCheckDeliveryPingCycle
 }
 
 // init function initialize App global variable
