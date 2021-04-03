@@ -51,7 +51,7 @@ type swarmpitCheckUsecaseConfig interface {
 	// SwarmpitAppServiceName method returns string represent swarmpit app service name
 	SwarmpitAppServiceName() string
 
-	// JaegerIndexPattern method returns string represent jaeger index pattern
+	// SwarmpitAppMaxMemoryUsage method returns bytesize represent swarmpit app maximum memory usage
 	SwarmpitAppMaxMemoryUsage() bytesize.ByteSize
 }
 
@@ -98,4 +98,16 @@ func (scu *swarmpitCheckUsecase) CheckSwarmpit(ctx context.Context) (err error) 
 	}
 
 	return
+}
+
+// method processed with below logic about swarmpit health check according to current check status
+// 0 : 정상적으로 인지된 상태 (상태 확인 수행)
+// 0 -> 1 : SwarmpitApp 재시작 실행 (SwarmpitApp 재시동 알림 발행)
+// 1 : SwarmpitApp 재시작증 (상태 확인 수행 X)
+// 1 -> 0 : SwarmpitApp 재시작으로 인해 상태 회복 완료 (상태 회복 알림 발행)
+// 1 -> 2 : SwarmpitApp 재시작을 해도 상태 회복 X (상태 회복 불가능 상태 알림 발행)
+// 2 : 관리자가 직접 확인해야함 (상태 확인 수행 X)
+// 2 -> 0 : 관리자 직접 상태 회복 완료 (상태 회복 알림 발행)
+func (scu *swarmpitCheckUsecase) checkSwarmpit(ctx context.Context) (history *domain.SwarmpitCheckHistory) {
+	return 
 }
