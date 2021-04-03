@@ -151,7 +151,7 @@ func (scu *swarmpitCheckUsecase) checkSwarmpit(ctx context.Context) (history *do
 		msg := "!swarmpit check weak detected! start to restart swarmpit app"
 		history.SetAlarmResult(scu.slackChatAgency.SendMessage("pill", msg, _uuid))
 
-		if err := scu.dockerAgency.RemoveContainer(ctn.ID(), types.ContainerRemoveOptions{Force: false}); err != nil {
+		if err := scu.dockerAgency.RemoveContainer(ctn.ID(), types.ContainerRemoveOptions{Force: true}); err != nil {
 			scu.setStatus(swarmpitStatusUnhealthy)
 			history.ProcessLevel.Append(errorLevel)
 			msg := "!swarmpit check error occurred! failed to remove swarmpit app, please check for yourself"
