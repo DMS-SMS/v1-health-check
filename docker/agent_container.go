@@ -18,3 +18,14 @@ func (da *dockerAgent) RemoveContainer(containerID string, options types.Contain
 
 	return errors.Wrap(da.dkrCli.ContainerRemove(ctx, containerID, options), "failed to call ContainerRemove")
 }
+
+
+// container is struct having inform about container, and implementation of GetContainerWithServiceName return type interface
+type container struct {
+	id          string
+	memoryUsage bytesize.ByteSize
+}
+
+// define return field value methods in container
+func (c container) ID() string                     { return c.id }
+func (c container) MemoryUsage() bytesize.ByteSize { return c.memoryUsage }
