@@ -4,6 +4,7 @@
 package main
 
 import (
+	"fmt"
 	"github.com/docker/docker/client"
 	es "github.com/elastic/go-elasticsearch/v7"
 	"github.com/spf13/viper"
@@ -29,7 +30,7 @@ import (
 
 func init() {
 	// set flag to log current date, time & long file name
-	log.SetFlags(log.LstdFlags | log.Llongfile)
+	log.SetFlags(log.LstdFlags | log.Lshortfile)
 
 	// set and read config file in viper package
 	viper.AutomaticEnv()
@@ -86,6 +87,7 @@ func main() {
 	ssu := _srvcheckUcase.NewSwarmpitCheckUsecase(_srvcheckConfig.App, ssr, _slk, _dkr)
 
 	// srvcheck domain delivery
+	fmt.Println(_srvcheckConfig.App.SwarmpitAppMaxMemoryUsage())
 	_srvcheckChannelDelivery.NewElasticsearchCheckHandler(time.Tick(_srvcheckConfig.App.ESCheckDeliveryPingCycle()), seu)
 	_srvcheckChannelDelivery.NewSwarmpitCheckHandler(time.Tick(_srvcheckConfig.App.SwarmpitCheckDeliveryPingCycle()), ssu)
 
