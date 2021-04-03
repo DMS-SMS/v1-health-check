@@ -6,6 +6,7 @@ package usecase
 
 import (
 	"github.com/DMS-SMS/v1-health-check/domain"
+	"github.com/docker/docker/api/types"
 	"github.com/inhies/go-bytesize"
 	"sync"
 )
@@ -46,4 +47,17 @@ type swarmpitCheckUsecaseConfig interface {
 
 	// JaegerIndexPattern method returns string represent jaeger index pattern
 	SwarmpitAppMaxMemoryUsage() bytesize.ByteSize
+}
+
+// dockerAgency is agency that agent various command about docker engine API
+type dockerAgency interface {
+	// GetContainerWithServiceName return container which is instance of received service name
+	GetContainerWithServiceName(srv string) (container interface {
+		ID() string                     // get id of container
+		Name() string                   // get name of container
+		MemoryUsage() bytesize.ByteSize // get memory usage of container
+	}, err error)
+
+	// RemoveContainer remove container with id & option (auto created from docker swarm if exists)
+	RemoveContainer(containerID string, options types.ContainerRemoveOptions) error
 }
