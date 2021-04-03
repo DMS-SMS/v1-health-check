@@ -8,6 +8,7 @@
 package config
 
 import (
+	"github.com/inhies/go-bytesize"
 	"github.com/spf13/viper"
 	"time"
 )
@@ -39,7 +40,16 @@ type srvcheckConfig struct {
 	// jaegerIndexMinLifeCycle represent minimum life cycle of jaeger index in elasticsearch
 	jaegerIndexMinLifeCycle *time.Duration
 
-	// --
+	// ---
+
+	// fields using in swarmpit health checking (implement swarmpitCheckUsecaseConfig)
+	// swarmpitAppServiceName represent swarmpit app service name in docker swarm
+	swarmpitAppServiceName *string
+
+	// swarmpitAppMaxMemoryUsage represent maximum memory usage of swarmpit app container
+	swarmpitAppMaxMemoryUsage *bytesize.ByteSize
+
+	// ---
 
 	// fields using in main function to inject delivery layer (not implement any interface)
 	// esCheckDeliveryPingCycle represent elasticsearch check delivery ping cycle
