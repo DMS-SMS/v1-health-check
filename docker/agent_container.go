@@ -55,7 +55,7 @@ func (da *dockerAgent) GetContainerWithServiceName(srv string) (interface {
 		}, nil
 	}
 	
-	return nil, nil
+	return nil, errors.New("container with that service name does't exist")
 }
 
 // RemoveContainer remove container with id & option (auto created from docker swarm if exists)
