@@ -60,7 +60,6 @@ type dockerAgency interface {
 	// GetContainerWithServiceName return container which is instance of received service name
 	GetContainerWithServiceName(srv string) (container interface {
 		ID() string                     // get id of container
-		Name() string                   // get name of container
 		MemoryUsage() bytesize.ByteSize // get memory usage of container
 	}, err error)
 
@@ -109,5 +108,5 @@ func (scu *swarmpitCheckUsecase) CheckSwarmpit(ctx context.Context) (err error) 
 // 2 : 관리자가 직접 확인해야함 (상태 확인 수행 X)
 // 2 -> 0 : 관리자 직접 상태 회복 완료 (상태 회복 알림 발행)
 func (scu *swarmpitCheckUsecase) checkSwarmpit(ctx context.Context) (history *domain.SwarmpitCheckHistory) {
-	return 
+	return
 }
