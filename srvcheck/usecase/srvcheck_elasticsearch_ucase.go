@@ -175,7 +175,7 @@ func (ecu *elasticsearchCheckUsecase) checkElasticsearch(ctx context.Context) (h
 
 		if err := ecu.elasticsearchAgency.DeleteIndices(indices.IndexNames()); err != nil {
 			ecu.setStatus(elasticsearchStatusUnhealthy)
-			history.ProcessLevel.Append(warningLevel)
+			history.ProcessLevel.Append(errorLevel)
 			msg := "!elasticsearch check error occurred! failed to delete indices, please check for yourself"
 			_, _, _ = ecu.slackChatAgency.SendMessage("anger", msg, _uuid)
 			history.SetError(errors.Wrap(err, "failed to delete indices"))
