@@ -4,7 +4,13 @@
 
 package elasticsearch
 
-import "github.com/elastic/go-elasticsearch/v7"
+import (
+	"github.com/elastic/go-elasticsearch/v7"
+	"github.com/pkg/errors"
+	"log"
+
+	"github.com/DMS-SMS/v1-health-check/domain"
+)
 
 // esSwarmpitCheckHistoryRepository is to handle SwarmpitCheckHistoryRepository model using elasticsearch as data store
 type esSwarmpitCheckHistoryRepository struct {
@@ -22,4 +28,23 @@ type esSwarmpitCheckHistoryRepository struct {
 type esSwarmpitCheckHistoryRepoConfig interface {
 	// get common method from embedding esRepositoryComponentConfig
 	esRepositoryComponentConfig
+}
+
+// NewESSwarmpitCheckHistoryRepository return new object that implement SwarmpitCheckHistoryRepository interface
+func NewESSwarmpitCheckHistoryRepository(
+	cfg esSwarmpitCheckHistoryRepoConfig,
+	cli *elasticsearch.Client,
+	w reqBodyWriter,
+) domain.SwarmpitCheckHistoryRepository {
+	repo := &esSwarmpitCheckHistoryRepository{
+		myCfg:         cfg,
+		esCli:         cli,
+		reqBodyWriter: w,
+	}
+
+	if err := repo.Migrate(); err != nil {
+		log.Fatal(errors.Wrap(err, "could not migrate repository").Error())
+	}
+
+	return repo
 }
