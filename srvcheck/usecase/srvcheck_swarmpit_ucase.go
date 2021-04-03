@@ -125,3 +125,10 @@ func (scu *swarmpitCheckUsecase) checkSwarmpit(ctx context.Context) (history *do
 
 	return
 }
+
+// setStatus set status field value using mutex Lock & Unlock
+func (scu *swarmpitCheckUsecase) setStatus(status swarmpitCheckStatus) {
+	scu.mutex.Lock()
+	defer scu.mutex.Unlock()
+	scu.status = status
+}
