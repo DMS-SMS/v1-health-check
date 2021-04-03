@@ -7,6 +7,7 @@ package usecase
 import (
 	"context"
 	"github.com/docker/docker/api/types"
+	"github.com/google/uuid"
 	"github.com/inhies/go-bytesize"
 	"github.com/pkg/errors"
 	"sync"
@@ -100,7 +101,7 @@ func (scu *swarmpitCheckUsecase) CheckSwarmpit(ctx context.Context) (err error) 
 }
 
 // method processed with below logic about swarmpit health check according to current check status
-// 0 : 정상적으로 인지된 상태 (상태 확인 수행)
+// 0 : 정상적으로 인지된 상태 (상태 확인 수행) (SwarmpitApp 컨테이너 메모리 사용량 기준)
 // 0 -> 1 : SwarmpitApp 재시작 실행 (SwarmpitApp 재시동 알림 발행)
 // 1 : SwarmpitApp 재시작증 (상태 확인 수행 X)
 // 1 -> 0 : SwarmpitApp 재시작으로 인해 상태 회복 완료 (상태 회복 알림 발행)
@@ -108,5 +109,19 @@ func (scu *swarmpitCheckUsecase) CheckSwarmpit(ctx context.Context) (err error) 
 // 2 : 관리자가 직접 확인해야함 (상태 확인 수행 X)
 // 2 -> 0 : 관리자 직접 상태 회복 완료 (상태 회복 알림 발행)
 func (scu *swarmpitCheckUsecase) checkSwarmpit(ctx context.Context) (history *domain.SwarmpitCheckHistory) {
+	_uuid := uuid.New().String()
+	history = new(domain.SwarmpitCheckHistory)
+	history.FillPrivateComponent()
+	history.UUID = _uuid
+
+	ctn, err := scu.dockerAgency.GetContainerWithServiceName(scu.myCfg.SwarmpitAppServiceName())
+	if err != nil {
+		history.ProcessLevel.Set(errorLevel)
+		history.SetError(errors.Wrap(err, "failed to get cluster health"))
+		return
+	}
+	history.SwarmpitAppMemoryUsage = ctn.MemoryUsage()
+	var memoryUsage = bytesizeComparator{V: ctn.MemoryUsage()}
+
 	return
 }
