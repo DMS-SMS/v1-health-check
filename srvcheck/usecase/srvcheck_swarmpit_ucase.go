@@ -65,3 +65,23 @@ type dockerAgency interface {
 	// RemoveContainer remove container with id & option (auto created from docker swarm if exists)
 	RemoveContainer(containerID string, options types.ContainerRemoveOptions) error
 }
+
+// NewSwarmpitCheckUsecase function return swarmpitCheckUsecase ptr instance after initializing
+func NewSwarmpitCheckUsecase(
+	cfg swarmpitCheckUsecaseConfig,
+	shr domain.SwarmpitCheckHistoryRepository,
+	sca slackChatAgency,
+	da dockerAgency,
+) domain.SwarmpitCheckUseCase {
+	return &swarmpitCheckUsecase{
+		// initialize field with parameter received from caller
+		myCfg:           cfg,
+		historyRepo:     shr,
+		slackChatAgency: sca,
+		dockerAgency:    da,
+
+		// initialize field with default value
+		status: swarmpitStatusHealthy,
+		mutex:  sync.Mutex{},
+	}
+}
