@@ -17,3 +17,9 @@ type esSwarmpitCheckHistoryRepository struct {
 	// reqBodyWriter is implementation of reqBodyWriter interface to write []byte for request body
 	reqBodyWriter reqBodyWriter
 }
+
+// esSwarmpitCheckHistoryRepoConfig is the config for swarmpit check history repository using elasticsearch
+type esSwarmpitCheckHistoryRepoConfig interface {
+	// get common method from embedding esRepositoryComponentConfig
+	esRepositoryComponentConfig
+}
