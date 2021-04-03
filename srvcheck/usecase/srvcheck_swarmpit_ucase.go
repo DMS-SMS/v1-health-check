@@ -118,7 +118,7 @@ func (scu *swarmpitCheckUsecase) checkSwarmpit(ctx context.Context) (history *do
 	ctn, err := scu.dockerAgency.GetContainerWithServiceName(scu.myCfg.SwarmpitAppServiceName())
 	if err != nil {
 		history.ProcessLevel.Set(errorLevel)
-		history.SetError(errors.Wrap(err, "failed to get cluster health"))
+		history.SetError(errors.Wrap(err, "failed to get swarmpit app docker container"))
 		return
 	}
 	history.SwarmpitAppMemoryUsage = ctn.MemoryUsage()
@@ -143,6 +143,31 @@ func (scu *swarmpitCheckUsecase) checkSwarmpit(ctx context.Context) (history *do
 			history.Message = "swarmpit check is unhealthy now"
 		}
 		return
+	}
+
+	if memoryUsage.isMoreThan(scu.myCfg.SwarmpitAppMaxMemoryUsage()) {
+		scu.setStatus(swarmpitStatusRecovering)
+		history.ProcessLevel.Set(weakDetectedLevel)
+		msg := "!swarmpit check weak detected! start to restart swarmpit app"
+		history.SetAlarmResult(scu.slackChatAgency.SendMessage("pill", msg, _uuid))
+
+		if err := scu.dockerAgency.RemoveContainer(ctn.ID(), types.ContainerRemoveOptions{Force: false}); err != nil {
+			scu.setStatus(swarmpitStatusUnhealthy)
+			history.ProcessLevel.Append(errorLevel)
+			msg := "!swarmpit check error occurred! failed to remove swarmpit app, please check for yourself"
+			_, _, _ = scu.slackChatAgency.SendMessage("anger", msg, _uuid)
+			history.SetError(errors.Wrap(err, "failed to remove swarmpit app"))
+			return
+		} else {
+			scu.setStatus(swarmpitStatusHealthy)
+			history.IfSwarmpitAppRestarted = true
+			history.Message = "restart swarmpit app as swarmpit app memory usage is more than the maximum"
+			msg := "!swarmpit check is recovered! succeed to restart swarmpit app"
+			_, _, _ = scu.slackChatAgency.SendMessage("heart", msg, _uuid)
+		}
+	} else {
+		history.ProcessLevel.Set(healthyLevel)
+		history.Message = "swarmpit service is healthy now"
 	}
 
 	return
