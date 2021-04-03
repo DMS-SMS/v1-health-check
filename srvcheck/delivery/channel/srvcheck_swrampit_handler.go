@@ -17,6 +17,15 @@ type swarmpitCheckHandler struct {
 	SUsecase domain.SwarmpitCheckUseCase
 }
 
+// NewSwarmpitCheckHandler define swarmpitCheckHandler ptr instance & register handling channel msg to usecase
+func NewSwarmpitCheckHandler(c <-chan time.Time, su domain.SwarmpitCheckUseCase) {
+	handler := &swarmpitCheckHandler{
+		SUsecase: su,
+	}
+
+	go handler.startListening(c)
+}
+
 // startListening method start listening msg from golang channel & stream msg to another method
 func (sh *swarmpitCheckHandler) startListening(c <-chan time.Time) {
 	for {
