@@ -21,6 +21,9 @@ import (
 
 // esConsulCheckHistoryRepository is to handle ConsulCheckHistoryRepository model using elasticsearch as data store
 type esConsulCheckHistoryRepository struct {
+	// esMigrator is used for migrate elasticsearch repository in Migrate method
+	esMigrator esRepositoryMigrator
+
 	// myCfg is used for get consul history repository config about elasticsearch
 	myCfg esConsulCheckHistoryRepoConfig
 

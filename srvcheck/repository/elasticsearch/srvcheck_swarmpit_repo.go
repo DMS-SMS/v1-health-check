@@ -21,6 +21,9 @@ import (
 
 // esSwarmpitCheckHistoryRepository is to handle SwarmpitCheckHistoryRepository model using elasticsearch as data store
 type esSwarmpitCheckHistoryRepository struct {
+	// esMigrator is used for migrate elasticsearch repository in Migrate method
+	esMigrator esRepositoryMigrator
+
 	// myCfg is used for get swarmpit history repository config about elasticsearch
 	myCfg esSwarmpitCheckHistoryRepoConfig
 

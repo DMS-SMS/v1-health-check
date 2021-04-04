@@ -21,6 +21,9 @@ import (
 
 // esElasticsearchCheckHistoryRepository is to handle ElasticsearchCheckHistoryRepository model using elasticsearch as data store
 type esElasticsearchCheckHistoryRepository struct {
+	// esMigrator is used for migrate elasticsearch repository in Migrate method
+	esMigrator esRepositoryMigrator
+
 	// myCfg is used for get elasticsearch history repository config about elasticsearch
 	myCfg esElasticsearchCheckHistoryRepoConfig
 
