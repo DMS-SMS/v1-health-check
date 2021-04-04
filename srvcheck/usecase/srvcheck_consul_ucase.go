@@ -44,6 +44,12 @@ type consulCheckUsecaseConfig interface {
 	// CheckTargetServices method returns string slice containing target services to check in usecase
 	CheckTargetServices() []string
 
+	// ConsulInstanceNameSpace method returns name space of consul instance
+	ConsulInstanceNameSpace() string
+
+	// DockerServiceNameSpace method returns name space of docker service
+	DockerServiceNameSpace() string
+
 	// HealthCheckPingTimeOut method returns bytesize represent swarmpit app maximum memory usage
 	HealthCheckPingTimeOut() time.Duration
 }
