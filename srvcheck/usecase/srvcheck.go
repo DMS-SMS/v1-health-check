@@ -9,6 +9,7 @@
 package usecase
 
 import (
+	"github.com/docker/docker/api/types"
 	"github.com/inhies/go-bytesize"
 	"github.com/slack-go/slack"
 	"time"
@@ -33,6 +34,18 @@ type serviceCheckUsecaseComponentConfig interface {}
 type slackChatAgency interface {
 	// SendMessage send message with text & emoji using slack API and return send time & text & error
 	SendMessage(emoji, text, uuid string, opts ...slack.MsgOption) (t time.Time, _text string, err error)
+}
+
+// dockerAgency is agency that agent various command about docker engine API
+type dockerAgency interface {
+	// GetContainerWithServiceName return container which is instance of received service name
+	GetContainerWithServiceName(srv string) (container interface {
+		ID() string                     // get id of container
+		MemoryUsage() bytesize.ByteSize // get memory usage of container
+	}, err error)
+
+	// RemoveContainer remove container with id & option (auto created from docker swarm if exists)
+	RemoveContainer(containerID string, options types.ContainerRemoveOptions) error
 }
 
 // intComparator is struct type having int type field which is used for compare with another int

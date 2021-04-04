@@ -57,18 +57,6 @@ type swarmpitCheckUsecaseConfig interface {
 	SwarmpitAppMaxMemoryUsage() bytesize.ByteSize
 }
 
-// dockerAgency is agency that agent various command about docker engine API
-type dockerAgency interface {
-	// GetContainerWithServiceName return container which is instance of received service name
-	GetContainerWithServiceName(srv string) (container interface {
-		ID() string                     // get id of container
-		MemoryUsage() bytesize.ByteSize // get memory usage of container
-	}, err error)
-
-	// RemoveContainer remove container with id & option (auto created from docker swarm if exists)
-	RemoveContainer(containerID string, options types.ContainerRemoveOptions) error
-}
-
 // NewSwarmpitCheckUsecase function return swarmpitCheckUsecase ptr instance after initializing
 func NewSwarmpitCheckUsecase(
 	cfg swarmpitCheckUsecaseConfig,
