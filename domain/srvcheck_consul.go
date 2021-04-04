@@ -4,7 +4,10 @@
 
 package domain
 
-import "context"
+import (
+	"context"
+	"strings"
+)
 
 // ConsulCheckHistory model is used for record consul check history and result
 type ConsulCheckHistory struct {
@@ -42,4 +45,29 @@ type ConsulCheckHistoryRepository interface {
 type ConsulCheckUseCase interface {
 	// CheckConsul method check consul status and store check history using repository
 	CheckConsul(ctx context.Context) error
+}
+
+// FillPrivateComponent overriding FillPrivateComponent method of serviceCheckHistoryComponent
+func (ch *ConsulCheckHistory) FillPrivateComponent() {
+	ch.serviceCheckHistoryComponent.FillPrivateComponent()
+	ch._type = "ConsulCheck"
+}
+
+// DottedMapWithPrefix convert SwarmpitCheckHistory to dotted map and return using MapWithPrefixKey of upper struct
+// all key value of Map start with prefix received from parameter
+func (ch *ConsulCheckHistory) DottedMapWithPrefix(prefix string) (m map[string]interface{}) {
+	m = ch.serviceCheckHistoryComponent.DottedMapWithPrefix(prefix)
+
+	if prefix != "" {
+		prefix += "."
+	}
+
+	// setting public field value in dotted map
+	m[prefix + "instances_per_service"] = ch.InstancesPerService
+	m[prefix + "if_instance_deregistered"] = ch.IfInstanceDeregistered
+	m[prefix + "deregistered_instances"] = strings.Join(ch.DeregisteredInstances, " | ")
+	m[prefix + "if_container_restarted"] = ch.IfContainerRestarted
+	m[prefix + "restarted_containers"] = strings.Join(ch.RestartedContainers, " | ")
+
+	return
 }
