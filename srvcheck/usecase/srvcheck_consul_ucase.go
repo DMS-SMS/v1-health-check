@@ -29,6 +29,9 @@ type consulCheckUsecase struct {
 	// slackChat is used for agent slack API about chatting
 	slackChatAgency slackChatAgency
 
+	// consulAgency is used as agency about consul API
+	consulAgency consulAgency
+
 	// dockerAgency is used as agency about docker engine API
 	dockerAgency dockerAgency
 
@@ -37,6 +40,17 @@ type consulCheckUsecase struct {
 
 	// mutex help to prevent race condition when set status field value
 	mutex sync.Mutex
+}
+
+// consulAgency is agency that agent various command about consul API
+type consulAgency interface {
+	// GetAllServices method get all services in consul & return services interface implement
+	GetAllServices (services interface{
+		idsOf(srv string) (ids []string) // idsOf return id list of instances which are of received srv
+	}, err error)
+
+	// DeregisterInstance method deregister instance in consul with received id
+	DeregisterInstance(id string) (err error)
 }
 
 // consulCheckUsecaseConfig is the config getter interface for consul check usecase
