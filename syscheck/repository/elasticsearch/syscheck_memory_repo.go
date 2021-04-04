@@ -21,6 +21,9 @@ import (
 
 // esMemoryCheckHistoryRepository is to handle MemoryCheckHistory model using elasticsearch as data store
 type esMemoryCheckHistoryRepository struct {
+	// esMigrator is used for migrate elasticsearch repository in Migrate method
+	esMigrator esRepositoryMigrator
+
 	// myCfg is used for get memory check history repository config about elasticsearch
 	myCfg esMemoryCheckHistoryRepoConfig
 

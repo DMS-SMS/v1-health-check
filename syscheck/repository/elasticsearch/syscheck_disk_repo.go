@@ -21,6 +21,9 @@ import (
 
 // esDiskCheckHistoryRepository is to handle DiskCheckHistory model using elasticsearch as data store
 type esDiskCheckHistoryRepository struct {
+	// esMigrator is used for migrate elasticsearch repository in Migrate method
+	esMigrator esRepositoryMigrator
+
 	// myCfg is used for get disk check history repository config about elasticsearch
 	myCfg esDiskCheckHistoryRepoConfig
 

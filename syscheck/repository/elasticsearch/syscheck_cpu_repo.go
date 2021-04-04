@@ -21,6 +21,9 @@ import (
 
 // esCPUCheckHistoryRepository is to handle CPUCheckHistory model using elasticsearch as data store
 type esCPUCheckHistoryRepository struct {
+	// esMigrator is used for migrate elasticsearch repository in Migrate method
+	esMigrator esRepositoryMigrator
+
 	// myCfg is used for get cpu check history repository config about elasticsearch
 	myCfg esCPUCheckHistoryRepoConfig
 
