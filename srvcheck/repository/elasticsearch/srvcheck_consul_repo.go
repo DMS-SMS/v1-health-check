@@ -17,3 +17,9 @@ type esConsulCheckHistoryRepository struct {
 	// reqBodyWriter is implementation of reqBodyWriter interface to write []byte for request body
 	reqBodyWriter reqBodyWriter
 }
+
+// esConsulCheckHistoryRepoConfig is the config for consul check history repository using elasticsearch
+type esConsulCheckHistoryRepoConfig interface {
+	// get common method from embedding esRepositoryComponentConfig
+	esRepositoryComponentConfig
+}
