@@ -11,14 +11,20 @@ type ConsulCheckHistory struct {
 	// get required component by embedding serviceCheckHistoryComponent
 	serviceCheckHistoryComponent
 
-	// InstancesNumPerSrv specifies instances number per service in consul
-	InstancesNumPerSrv map[string]int
+	// InstancesPerService specifies instances list per service in consul
+	InstancesPerService map[string][]string
 
-	// DeregisteredServiceIDs specifies id list of deregistered service in consul check
-	DeregisteredServiceIDs []string
+	// IfInstanceDeregistered specifies if any instance in consul was deregistered
+	IfInstanceDeregistered bool
 
-	// IfServiceDeregister specifies if any service in consul was deregistered
-	IfServiceDeregistered bool
+	// DeregisteredInstances specifies id list of deregistered instance in consul check
+	DeregisteredInstances []string
+
+	// IfContainerRestarted specifies if container about service is restarted
+	IfContainerRestarted bool
+
+	// RestartedContainers specifies id list of restarted containers in consul check
+	RestartedContainers []string
 }
 
 // ConsulCheckHistoryRepository is interface for repository layer used in usecase layer
