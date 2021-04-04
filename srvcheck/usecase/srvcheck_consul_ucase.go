@@ -67,6 +67,6 @@ type consulCheckUsecaseConfig interface {
 	// DockerServiceNameSpace method returns name space of docker service
 	DockerServiceNameSpace() string
 
-	// HealthCheckPingTimeOut method returns bytesize represent swarmpit app maximum memory usage
-	HealthCheckPingTimeOut() time.Duration
+	// ConnCheckPingTimeOut method returns timeout duration in ping to check connection
+	ConnCheckPingTimeOut() time.Duration
 }
