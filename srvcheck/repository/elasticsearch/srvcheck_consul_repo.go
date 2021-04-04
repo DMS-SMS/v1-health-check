@@ -5,9 +5,16 @@
 package elasticsearch
 
 import (
+	"bytes"
+	"context"
+	"encoding/json"
+	"fmt"
 	"github.com/elastic/go-elasticsearch/v7"
+	"github.com/elastic/go-elasticsearch/v7/esapi"
 	"github.com/pkg/errors"
 	"log"
+	"net/http"
+	"time"
 
 	"github.com/DMS-SMS/v1-health-check/domain"
 )
@@ -47,4 +54,49 @@ func NewESConsulCheckHistoryRepository(
 	}
 
 	return repo
+}
+
+// Implement Migrate method of ConsulCheckHistoryRepository interface
+func (ecr *esConsulCheckHistoryRepository) Migrate() error {
+	resp, err := (esapi.IndicesExistsRequest{
+		Index: []string{ecr.myCfg.IndexName()},
+	}).Do(context.Background(), ecr.esCli)
+
+	if err != nil {
+		return errors.Wrap(err, fmt.Sprintf("failed to call IndicesExists, resp: %+v", resp))
+	}
+
+	if resp.StatusCode == http.StatusNotFound {
+		if err := ecr.createIndex(); err != nil {
+			return errors.Wrap(err, "failed to create index")
+		}
+	}
+
+	return nil
+}
+
+// createIndex method create index with name, shard number in esRepositoryComponentConfig
+func (ecr *esConsulCheckHistoryRepository) createIndex() error {
+	body := map[string]interface{}{}
+	body["settings.number_of_shards"] = ecr.myCfg.IndexShardNum()
+	body["settings.number_of_replicas"] = ecr.myCfg.IndexReplicaNum()
+
+	b, _ := json.Marshal(body)
+	if _, err := ecr.reqBodyWriter.Write(b); err != nil {
+		return errors.Wrap(err, "failed to write map to body writer")
+	}
+
+	buf := &bytes.Buffer{}
+	if _, err := ecr.reqBodyWriter.WriteTo(buf); err != nil {
+		return errors.Wrap(err, "failed to body writer WriteTo method")
+	}
+
+	resp, err := (esapi.IndicesCreateRequest{
+		Index:         ecr.myCfg.IndexName(),
+		Body:          bytes.NewReader(buf.Bytes()),
+		MasterTimeout: time.Second * 5,
+		Timeout:       time.Second * 5,
+	}).Do(context.Background(), ecr.esCli)
+
+	return errors.Wrap(err, fmt.Sprintf("failed to call IndicesCreate, resp: %+v", resp))
 }
