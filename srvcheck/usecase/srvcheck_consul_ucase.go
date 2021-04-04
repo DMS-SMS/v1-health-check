@@ -29,6 +29,9 @@ type consulCheckUsecase struct {
 	// slackChat is used for agent slack API about chatting
 	slackChatAgency slackChatAgency
 
+	// dockerAgency is used as agency about docker engine API
+	dockerAgency dockerAgency
+
 	// status represent current process status of consul health check
 	status consulCheckStatus
 
