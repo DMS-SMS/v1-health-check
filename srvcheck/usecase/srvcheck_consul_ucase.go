@@ -7,6 +7,7 @@ package usecase
 import (
 	"github.com/DMS-SMS/v1-health-check/domain"
 	"sync"
+	"time"
 )
 
 // consulCheckStatus is type to int constant represent current consul check process status
@@ -33,4 +34,16 @@ type consulCheckUsecase struct {
 
 	// mutex help to prevent race condition when set status field value
 	mutex sync.Mutex
+}
+
+// consulCheckUsecaseConfig is the config getter interface for consul check usecase
+type consulCheckUsecaseConfig interface {
+	// get common config method from embedding serviceCheckUsecaseComponentConfig
+	serviceCheckUsecaseComponentConfig
+
+	// CheckTargetServices method returns string slice containing target services to check in usecase
+	CheckTargetServices() []string
+
+	// HealthCheckPingTimeOut method returns bytesize represent swarmpit app maximum memory usage
+	HealthCheckPingTimeOut() time.Duration
 }
