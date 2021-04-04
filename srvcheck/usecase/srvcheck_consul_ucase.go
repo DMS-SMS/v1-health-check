@@ -70,3 +70,25 @@ type consulCheckUsecaseConfig interface {
 	// ConnCheckPingTimeOut method returns timeout duration in ping to check connection
 	ConnCheckPingTimeOut() time.Duration
 }
+
+// NewConsulCheckUsecase function return ConsulCheckUseCase implementation after initializing
+func NewConsulCheckUsecase(
+	cfg consulCheckUsecaseConfig,
+	shr domain.ConsulCheckHistoryRepository,
+	sca slackChatAgency,
+	ca consulAgency,
+	da dockerAgency,
+) domain.ConsulCheckUseCase {
+	return &consulCheckUsecase{
+		// initialize field with parameter received from caller
+		myCfg:           cfg,
+		historyRepo:     shr,
+		slackChatAgency: sca,
+		consulAgency:    ca,
+		dockerAgency:    da,
+
+		// initialize field with default value
+		status: consulStatusHealthy,
+		mutex:  sync.Mutex{},
+	}
+}
