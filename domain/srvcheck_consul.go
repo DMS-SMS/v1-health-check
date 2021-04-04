@@ -4,6 +4,8 @@
 
 package domain
 
+import "context"
+
 // ConsulCheckHistory model is used for record consul check history and result
 type ConsulCheckHistory struct {
 	// get required component by embedding serviceCheckHistoryComponent
@@ -28,4 +30,10 @@ type ConsulCheckHistoryRepository interface {
 	// Store method save ConsulCheckHistory model in repository
 	// b in return represents bytes of response body(map[string]interface{})
 	Store(*ConsulCheckHistory) (b []byte, err error)
+}
+
+// ConsulCheckUseCase is interface used as business process handler about consul check
+type ConsulCheckUseCase interface {
+	// CheckConsul method check consul status and store check history using repository
+	CheckConsul(ctx context.Context) error
 }
