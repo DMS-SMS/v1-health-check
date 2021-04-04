@@ -18,3 +18,14 @@ type ConsulCheckHistory struct {
 	// IfServiceDeregister specifies if any service in consul was deregistered
 	IfServiceDeregistered bool
 }
+
+// ConsulCheckHistoryRepository is interface for repository layer used in usecase layer
+// Repository is implemented with elasticsearch in v.1.0.0
+type ConsulCheckHistoryRepository interface {
+	// get required component by embedding serviceCheckHistoryRepositoryComponent
+	serviceCheckHistoryRepositoryComponent
+
+	// Store method save ConsulCheckHistory model in repository
+	// b in return represents bytes of response body(map[string]interface{})
+	Store(*ConsulCheckHistory) (b []byte, err error)
+}
