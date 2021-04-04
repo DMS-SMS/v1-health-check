@@ -13,7 +13,6 @@ import (
 	"github.com/elastic/go-elasticsearch/v7/esapi"
 	"github.com/pkg/errors"
 	"log"
-	"net/http"
 	"time"
 
 	"github.com/DMS-SMS/v1-health-check/domain"
@@ -57,47 +56,7 @@ func NewESCPUCheckHistoryRepository(cfg esCPUCheckHistoryRepoConfig, cli *elasti
 
 // Implement Migrate method of CPUCheckHistoryRepository interface
 func (esr *esCPUCheckHistoryRepository) Migrate() error {
-	resp, err := (esapi.IndicesExistsRequest{
-		Index: []string{esr.myCfg.IndexName()},
-	}).Do(context.Background(), esr.esCli)
-
-	if err != nil {
-		return errors.Wrap(err, fmt.Sprintf("failed to call IndicesExists, resp: %+v", resp))
-	}
-
-	if resp.StatusCode == http.StatusNotFound {
-		if err := esr.createIndex(); err != nil {
-			return errors.Wrap(err, "failed to create index")
-		}
-	}
-
-	return nil
-}
-
-// createIndex method create index with name, share number in esCPUCheckHistoryRepository
-func (esr *esCPUCheckHistoryRepository) createIndex() error {
-	body := map[string]interface{}{}
-	body["settings.number_of_shards"] = esr.myCfg.IndexShardNum()
-	body["settings.number_of_replicas"] = esr.myCfg.IndexReplicaNum()
-
-	b, _ := json.Marshal(body)
-	if _, err := esr.bodyWriter.Write(b); err != nil {
-		return errors.Wrap(err, "failed to write map to body writer")
-	}
-
-	buf := &bytes.Buffer{}
-	if _, err := esr.bodyWriter.WriteTo(buf); err != nil {
-		return errors.Wrap(err, "failed to body writer WriteTo method")
-	}
-
-	resp, err := (esapi.IndicesCreateRequest{
-		Index:         esr.myCfg.IndexName(),
-		Body:          bytes.NewReader(buf.Bytes()),
-		MasterTimeout: time.Second * 5,
-		Timeout:       time.Second * 5,
-	}).Do(context.Background(), esr.esCli)
-
-	return errors.Wrap(err, fmt.Sprintf("failed to call IndicesCreate, resp: %+v", resp))
+	return esr.esMigrator.Migrate(esr.myCfg, esr.esCli, esr.bodyWriter)
 }
 
 // Implement Store method of CPUCheckHistoryRepository interface
