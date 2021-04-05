@@ -6,6 +6,7 @@ package usecase
 
 import (
 	"context"
+	"github.com/google/uuid"
 	"github.com/pkg/errors"
 	"google.golang.org/grpc"
 	"sync"
@@ -130,5 +131,10 @@ func (ccu *consulCheckUsecase) CheckConsul(ctx context.Context) (err error) {
 // 2 : 관리자가 직접 확인해야함 (상태 확인 수행 X)
 // 2 -> 0 : 관리자 직접 상태 회복 완료 (상태 회복 알림 발행)
 func (ccu *consulCheckUsecase) checkConsul(ctx context.Context) (history *domain.ConsulCheckHistory) {
+	_uuid := uuid.New().String()
+	history = new(domain.ConsulCheckHistory)
+	history.FillPrivateComponent()
+	history.UUID = _uuid
+	history.InstancesPerService = map[string][]string{}
 	return
 }
