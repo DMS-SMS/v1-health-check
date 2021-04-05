@@ -21,21 +21,22 @@ import (
 	"github.com/DMS-SMS/v1-health-check/consul"
 	"github.com/DMS-SMS/v1-health-check/docker"
 	"github.com/DMS-SMS/v1-health-check/elasticsearch"
+	"github.com/DMS-SMS/v1-health-check/grpc"
 	"github.com/DMS-SMS/v1-health-check/json"
 	"github.com/DMS-SMS/v1-health-check/slack"
 	"github.com/DMS-SMS/v1-health-check/system"
 
 	// import system check domain package
-	_syscheckConfig       "github.com/DMS-SMS/v1-health-check/syscheck/config"
+	_syscheckConfig "github.com/DMS-SMS/v1-health-check/syscheck/config"
 	_syscheckChanDelivery "github.com/DMS-SMS/v1-health-check/syscheck/delivery/channel"
-	_syscheckRepo         "github.com/DMS-SMS/v1-health-check/syscheck/repository/elasticsearch"
-	_syscheckUcase        "github.com/DMS-SMS/v1-health-check/syscheck/usecase"
+	_syscheckRepo "github.com/DMS-SMS/v1-health-check/syscheck/repository/elasticsearch"
+	_syscheckUcase "github.com/DMS-SMS/v1-health-check/syscheck/usecase"
 
 	// import service check domain package
-	_srvcheckConfig       "github.com/DMS-SMS/v1-health-check/srvcheck/config"
+	_srvcheckConfig "github.com/DMS-SMS/v1-health-check/srvcheck/config"
 	_srvcheckChanDelivery "github.com/DMS-SMS/v1-health-check/srvcheck/delivery/channel"
-	_srvcheckRepo         "github.com/DMS-SMS/v1-health-check/srvcheck/repository/elasticsearch"
-	_srvcheckUcase        "github.com/DMS-SMS/v1-health-check/srvcheck/usecase"
+	_srvcheckRepo "github.com/DMS-SMS/v1-health-check/srvcheck/repository/elasticsearch"
+	_srvcheckUcase "github.com/DMS-SMS/v1-health-check/srvcheck/usecase"
 )
 
 func init() {
@@ -79,6 +80,7 @@ func main() {
 	_slk := slack.NewAgent(config.App.SlackAPIToken(), config.App.SlackChatChannel())
 	_es := elasticsearch.NewAgent(esCli)
 	_csl := consul.NewAgent(cslCli)
+	_rpc := grpc.NewGRPCAgent()
 
 	// syscheck domain repository
 	// the reason separate Repository, Usecase interface in same domain -> 서로 간의 연관성 X, 더욱 더 확실한 분리를 위해
@@ -107,7 +109,7 @@ func main() {
 	// srvcheck domain usecase
 	seu := _srvcheckUcase.NewElasticsearchCheckUsecase(_srvcheckConfig.App, ser, _slk, _es)
 	ssu := _srvcheckUcase.NewSwarmpitCheckUsecase(_srvcheckConfig.App, ssr, _slk, _dkr)
-	scsu := _srvcheckUcase.NewConsulCheckUsecase(_srvcheckConfig.App, scsr, _slk, _csl, _dkr)
+	scsu := _srvcheckUcase.NewConsulCheckUsecase(_srvcheckConfig.App, scsr, _slk, _csl, _rpc, _dkr)
 
 	// srvcheck domain delivery
 	_srvcheckChanDelivery.NewElasticsearchCheckHandler(time.Tick(_srvcheckConfig.App.ESCheckDeliveryPingCycle()), seu)
