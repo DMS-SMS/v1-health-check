@@ -5,9 +5,12 @@
 package usecase
 
 import (
-	"github.com/DMS-SMS/v1-health-check/domain"
+	"context"
+	"github.com/pkg/errors"
 	"sync"
 	"time"
+
+	"github.com/DMS-SMS/v1-health-check/domain"
 )
 
 // consulCheckStatus is type to int constant represent current consul check process status
@@ -92,4 +95,16 @@ func NewConsulCheckUsecase(
 		status: consulStatusHealthy,
 		mutex:  sync.Mutex{},
 	}
+}
+
+// CheckConsul check consul health with checkConsul method & store check history in repository
+// Implement CheckConsul method of ConsulCheckUseCase interface
+func (ccu *consulCheckUsecase) CheckConsul(ctx context.Context) (err error) {
+	history := ccu.checkConsul(ctx)
+
+	if b, err := ccu.historyRepo.Store(history); err != nil {
+		return errors.Wrapf(err, "failed to store consul check history, response: %s", string(b))
+	}
+
+	return
 }
