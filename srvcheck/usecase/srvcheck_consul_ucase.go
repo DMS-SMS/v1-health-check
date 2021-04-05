@@ -136,5 +136,19 @@ func (ccu *consulCheckUsecase) checkConsul(ctx context.Context) (history *domain
 	history.FillPrivateComponent()
 	history.UUID = _uuid
 	history.InstancesPerService = map[string][]string{}
+
+	switch ccu.status {
+	case consulStatusHealthy:
+		break
+	case consulStatusRecovering:
+		history.ProcessLevel.Set(recoveringLevel)
+		history.Message = "recovering consul health is already on process"
+		return
+	case consulStatusUnhealthy:
+		history.ProcessLevel.Set(unhealthyLevel)
+		history.Message = "consul check is unhealthy now"
+		return
+	}
+
 	return
 }
