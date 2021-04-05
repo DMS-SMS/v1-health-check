@@ -10,6 +10,7 @@ package config
 import (
 	"github.com/inhies/go-bytesize"
 	"github.com/spf13/viper"
+	"strings"
 	"time"
 )
 
@@ -199,6 +200,60 @@ func (sc *srvcheckConfig) SwarmpitAppMaxMemoryUsage() bytesize.ByteSize {
 
 	sc.swarmpitAppMaxMemoryUsage = &size
 	return *sc.swarmpitAppMaxMemoryUsage
+}
+
+// implement CheckTargetServices method of consulCheckUsecaseConfig interface
+func (sc *srvcheckConfig) CheckTargetServices() []string {
+	var key = "srvcheck.consul.checkTargetServices"
+	if sc.checkTargetServices == nil {
+		if _, ok := viper.Get(key).(string); !ok {
+			viper.Set(key, defaultCheckTargetServices)
+		}
+		sep := strings.Split(viper.GetString(key), ",")
+		sc.checkTargetServices = &sep
+	}
+	return *sc.checkTargetServices
+}
+
+// implement ConsulServiceNameSpace method of consulCheckUsecaseConfig interface
+func (sc *srvcheckConfig) ConsulServiceNameSpace() string {
+	var key = "srvcheck.consul.consulServiceNameSpace"
+	if sc.consulServiceNameSpace == nil {
+		if _, ok := viper.Get(key).(string); !ok {
+			viper.Set(key, defaultConsulServiceNameSpace)
+		}
+		sc.consulServiceNameSpace = _string(viper.GetString(key))
+	}
+	return *sc.consulServiceNameSpace
+}
+
+// implement DockerServiceNameSpace method of consulCheckUsecaseConfig interface
+func (sc *srvcheckConfig) DockerServiceNameSpace() string {
+	var key = "srvcheck.consul.dockerServiceNameSpace"
+	if sc.dockerServiceNameSpace == nil {
+		if _, ok := viper.Get(key).(string); !ok {
+			viper.Set(key, defaultDockerServiceNameSpace)
+		}
+		sc.dockerServiceNameSpace = _string(viper.GetString(key))
+	}
+	return *sc.dockerServiceNameSpace
+}
+
+// implement ConnCheckPingTimeOut method of consulCheckUsecaseConfig interface
+func (sc *srvcheckConfig) ConnCheckPingTimeOut() time.Duration {
+	var key = "srvcheck.consul.connCheckPingTimeOut"
+	if sc.connCheckPingTimeOut != nil {
+		return *sc.connCheckPingTimeOut
+	}
+
+	d, err := time.ParseDuration(viper.GetString(key))
+	if err != nil {
+		viper.Set(key, defaultConnCheckPingTimeOut.String())
+		d = defaultConnCheckPingTimeOut
+	}
+
+	sc.connCheckPingTimeOut = &d
+	return *sc.connCheckPingTimeOut
 }
 
 // not implement any interface, just using in main function for delivery layer injection
