@@ -44,19 +44,30 @@ func main() {
 		Addresses: []string{config.App.ESAddress()},
 	})
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal(errors.Wrap(err, "failed to create elasticsearch client"))
 	}
 
 	dkrCli, err := client.NewClientWithOpts(
 		client.WithVersion(config.App.DockerCliVer()),
 		client.WithTimeout(config.App.DockerCliTimeout()),
 	)
+	if err != nil {
+		log.Fatal(errors.Wrap(err, "failed to create docker client"))
+	}
+
+	cslCfg := api.DefaultConfig()
+	cslCfg.Address = config.App.ConsulAddress()
+	cslCli, err := api.NewClient(cslCfg)
+	if err != nil {
+		log.Fatal(errors.Wrap(err, "failed to create consul client"))
+	}
 
 	// add docker, system, slack, elasticsearch agent
 	_dkr := docker.NewAgent(dkrCli)
 	_sys := system.NewAgent(dkrCli)
 	_slk := slack.NewAgent(config.App.SlackAPIToken(), config.App.SlackChatChannel())
-	_esa := elasticsearch.NewAgent(esCli)
+	_es := elasticsearch.NewAgent(esCli)
+	_csl := consul.NewAgent(cslCli)
 
 	// syscheck domain repository
 	// the reason separate Repository, Usecase interface in same domain -> 서로 간의 연관성 X, 더욱 더 확실한 분리를 위해
@@ -82,7 +93,7 @@ func main() {
 	ssr := _srvcheckRepo.NewESSwarmpitCheckHistoryRepository(_srvcheckConfig.App, esCli, json.MapWriter())
 
 	// srvcheck domain usecase
-	seu := _srvcheckUcase.NewElasticsearchCheckUsecase(_srvcheckConfig.App, ser, _slk, _esa)
+	seu := _srvcheckUcase.NewElasticsearchCheckUsecase(_srvcheckConfig.App, ser, _slk, _es)
 	ssu := _srvcheckUcase.NewSwarmpitCheckUsecase(_srvcheckConfig.App, ssr, _slk, _dkr)
 
 	// srvcheck domain delivery
