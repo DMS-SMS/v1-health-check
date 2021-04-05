@@ -5,27 +5,35 @@
 package consul
 
 import (
+	"fmt"
 	"github.com/pkg/errors"
 )
 
-// GetAllServices method get all services in consul & return services interface implement
-func (ca *consulAgent) GetAllServices() (interface {
-	IDsOf(srv string) (ids []string) // idsOf return id list of instances which are of received srv
-	All() (srvs map[string][]string) // All return all id list of all services as map
+// GetServices method get services in consul & return services interface implement
+func (ca *consulAgent) GetServices(srv string) (interface {
+	HasNext() bool           // HasNext method return if srvIter has next element
+	Next() (id, addr string) // Next method return next service id, address
 }, error) {
-	srvs, err := ca.cslCli.Agent().Services()
+	srvs, err := ca.cslCli.Agent().ServicesWithFilter(fmt.Sprintf("Service==%s", srv))
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to get all services in consul")
 	}
 
-	srvM := services{}
-	for _, srv := range srvs {
-		if _, ok := srvM[srv.Service]; !ok {
-			srvM[srv.Service] = []string{}
-		}
-		srvM[srv.Service] = append(srvM[srv.Service], srv.ID)
+	iter := &srvIter{
+		srv: []struct{ id, addr string }{},
+		x:   0,
 	}
-	return srvM, nil
+
+	for _, srv := range srvs {
+		iter.srv = append(iter.srv, struct {
+			id, addr string
+		}{
+			id:   srv.ID,
+			addr: fmt.Sprintf("ipv4:%s[:%d]", srv.Address, srv.Port),
+		})
+	}
+
+	return iter, nil
 }
 
 // DeregisterInstance method deregister instance in consul with received id
