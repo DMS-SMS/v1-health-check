@@ -49,7 +49,7 @@ type consulAgency interface {
 		IDsOf(srv string) (ids []string) // IDsOf return id list of instances which are of received srv
 	}, err error)
 
-	// DeregisterInstance method deregister instance in consul with received id
+	// DeregisterInstance method deregister service in consul with received id
 	DeregisterInstance(id string) (err error)
 }
 
@@ -61,8 +61,8 @@ type consulCheckUsecaseConfig interface {
 	// CheckTargetServices method returns string slice containing target services to check in usecase
 	CheckTargetServices() []string
 
-	// ConsulInstanceNameSpace method returns name space of consul instance
-	ConsulInstanceNameSpace() string
+	// ConsulServiceNameSpace method returns name space of consul service
+	ConsulServiceNameSpace() string
 
 	// DockerServiceNameSpace method returns name space of docker service
 	DockerServiceNameSpace() string
