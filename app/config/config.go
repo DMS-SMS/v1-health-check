@@ -22,6 +22,9 @@ type appConfig struct {
 	// esAddress represent host address of elasticsearch server
 	esAddress *string
 
+	// consulAddress represent host address of consul server
+	consulAddress *string
+
 	// configFile represent full name of config file
 	configFile *string
 
@@ -44,6 +47,20 @@ func (ac *appConfig) ESAddress() string {
 		log.Fatal("please set ES_ADDRESS in environment variable")
 	}
 	return *ac.esAddress
+}
+
+// return consul address get from environment variable
+func (ac *appConfig) ConsulAddress() string {
+	if ac.consulAddress != nil {
+		return *ac.consulAddress
+	}
+
+	if viper.IsSet("CONSUL_ADDRESS") {
+		ac.consulAddress = _string(viper.GetString("CONSUL_ADDRESS"))
+	} else {
+		log.Fatal("please set CONSUL_ADDRESS in environment variable")
+	}
+	return *ac.consulAddress
 }
 
 // return elasticsearch address get from environment variable
