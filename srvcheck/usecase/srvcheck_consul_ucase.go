@@ -45,8 +45,8 @@ type consulCheckUsecase struct {
 // consulAgency is agency that agent various command about consul API
 type consulAgency interface {
 	// GetAllServices method get all services in consul & return services interface implement
-	GetAllServices () (services interface{
-		idsOf(srv string) (ids []string) // idsOf return id list of instances which are of received srv
+	GetAllServices() (services interface {
+		IDsOf(srv string) (ids []string) // IDsOf return id list of instances which are of received srv
 	}, err error)
 
 	// DeregisterInstance method deregister instance in consul with received id
