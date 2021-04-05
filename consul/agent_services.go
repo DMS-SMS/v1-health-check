@@ -34,7 +34,20 @@ func (ca *consulAgent) DeregisterInstance(id string) (err error) {
 }
 
 // services is map binding type having id list per services, and implement GetAllServices return type interface
-type services map[string][]string
+type srvIter struct {
+	srv []struct{ id, addr string } // srv contains array of struct having id, addr
+	x   int                         // x represent current access index in iterator
+}
 
-func (s services) IDsOf(srv string) (ids []string) { ids, _ = s[srv]; return } // IDsOf return id list of service
-func (s services) All() (srvs map[string][]string) { return s }                // All return all services id list
+// HasNext method return if srvIter has next element
+func(si *srvIter) HasNext() bool {
+	return si.x < len(si.srv)
+}
+
+// Next method return next service id, address
+func(si *srvIter) Next() (id, addr string) {
+	id = si.srv[si.x].id
+	addr = si.srv[si.x].addr
+	si.x++
+	return
+}
