@@ -47,6 +47,7 @@ type consulAgency interface {
 	// GetAllServices method get all services in consul & return services interface implement
 	GetAllServices() (services interface {
 		IDsOf(srv string) (ids []string) // IDsOf return id list of instances which are of received srv
+		All() (srvs map[string][]string) // All return all id list of all services as map
 	}, err error)
 
 	// DeregisterInstance method deregister service in consul with received id
