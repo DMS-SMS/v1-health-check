@@ -29,7 +29,7 @@ func (ca *consulAgent) GetServices(srv string) (interface {
 			id, addr string
 		}{
 			id:   srv.ID,
-			addr: fmt.Sprintf("ipv4:%s[:%d]", srv.Address, srv.Port),
+			addr: fmt.Sprintf("%s:%d", srv.Address, srv.Port),
 		})
 	}
 
