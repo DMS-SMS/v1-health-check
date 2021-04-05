@@ -4,27 +4,38 @@
 package main
 
 import (
-	"github.com/docker/docker/client"
-	es "github.com/elastic/go-elasticsearch/v7"
-	"github.com/spf13/viper"
+	// import Go SDK package
 	"log"
 	"runtime"
 	"time"
 
+	// import external package
+	"github.com/docker/docker/client"
+	es "github.com/elastic/go-elasticsearch/v7"
+	"github.com/hashicorp/consul/api"
+	"github.com/pkg/errors"
+	"github.com/spf13/viper"
+
+	// import app config & various agent package
 	"github.com/DMS-SMS/v1-health-check/app/config"
+	"github.com/DMS-SMS/v1-health-check/consul"
 	"github.com/DMS-SMS/v1-health-check/docker"
 	"github.com/DMS-SMS/v1-health-check/elasticsearch"
 	"github.com/DMS-SMS/v1-health-check/json"
 	"github.com/DMS-SMS/v1-health-check/slack"
-	_srvcheckConfig "github.com/DMS-SMS/v1-health-check/srvcheck/config"
-	_srvcheckChannelDelivery "github.com/DMS-SMS/v1-health-check/srvcheck/delivery/channel"
-	_srvcheckRepo "github.com/DMS-SMS/v1-health-check/srvcheck/repository/elasticsearch"
-	_srvcheckUcase "github.com/DMS-SMS/v1-health-check/srvcheck/usecase"
+	"github.com/DMS-SMS/v1-health-check/system"
+
+	// import system check domain package
 	_syscheckConfig "github.com/DMS-SMS/v1-health-check/syscheck/config"
 	_syscheckChannelDelivery "github.com/DMS-SMS/v1-health-check/syscheck/delivery/channel"
 	_syscheckRepo "github.com/DMS-SMS/v1-health-check/syscheck/repository/elasticsearch"
 	_syscheckUcase "github.com/DMS-SMS/v1-health-check/syscheck/usecase"
-	"github.com/DMS-SMS/v1-health-check/system"
+
+	// import service check domain package
+	_srvcheckConfig "github.com/DMS-SMS/v1-health-check/srvcheck/config"
+	_srvcheckChannelDelivery "github.com/DMS-SMS/v1-health-check/srvcheck/delivery/channel"
+	_srvcheckRepo "github.com/DMS-SMS/v1-health-check/srvcheck/repository/elasticsearch"
+	_srvcheckUcase "github.com/DMS-SMS/v1-health-check/srvcheck/usecase"
 )
 
 func init() {
@@ -91,10 +102,12 @@ func main() {
 	// the reason separate Repository, Usecase interface in same domain -> 서로 간의 연관성 X, 더욱 더 확실한 분리를 위해
 	ser := _srvcheckRepo.NewESElasticsearchCheckHistoryRepository(_srvcheckConfig.App, esCli, json.MapWriter())
 	ssr := _srvcheckRepo.NewESSwarmpitCheckHistoryRepository(_srvcheckConfig.App, esCli, json.MapWriter())
+	scsr := _srvcheckRepo.NewESConsulCheckHistoryRepository(_srvcheckConfig.App, esCli, json.MapWriter())
 
 	// srvcheck domain usecase
 	seu := _srvcheckUcase.NewElasticsearchCheckUsecase(_srvcheckConfig.App, ser, _slk, _es)
 	ssu := _srvcheckUcase.NewSwarmpitCheckUsecase(_srvcheckConfig.App, ssr, _slk, _dkr)
+	scsu := _srvcheckUcase.NewConsulCheckUsecase(_srvcheckConfig.App, scsr, _slk, _csl, _dkr)
 
 	// srvcheck domain delivery
 	_srvcheckChannelDelivery.NewElasticsearchCheckHandler(time.Tick(_srvcheckConfig.App.ESCheckDeliveryPingCycle()), seu)
