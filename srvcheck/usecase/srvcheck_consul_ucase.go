@@ -7,6 +7,7 @@ package usecase
 import (
 	"context"
 	"github.com/pkg/errors"
+	"google.golang.org/grpc"
 	"sync"
 	"time"
 
@@ -34,6 +35,9 @@ type consulCheckUsecase struct {
 
 	// consulAgency is used as agency about consul API
 	consulAgency consulAgency
+
+	// gRPCAgency is used as agency about gRPC
+	gRPCAgency gRPCAgency
 
 	// dockerAgency is used as agency about docker engine API
 	dockerAgency dockerAgency
@@ -87,6 +91,7 @@ func NewConsulCheckUsecase(
 	shr domain.ConsulCheckHistoryRepository,
 	sca slackChatAgency,
 	ca consulAgency,
+	ga gRPCAgency,
 	da dockerAgency,
 ) domain.ConsulCheckUseCase {
 	return &consulCheckUsecase{
@@ -95,6 +100,7 @@ func NewConsulCheckUsecase(
 		historyRepo:     shr,
 		slackChatAgency: sca,
 		consulAgency:    ca,
+		gRPCAgency:      ga,
 		dockerAgency:    da,
 
 		// initialize field with default value
