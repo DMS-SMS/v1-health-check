@@ -27,6 +27,11 @@ func (ca *consulAgent) GetAllServices() (interface {
 	return srvM, nil
 }
 
+// DeregisterInstance method deregister instance in consul with received id
+func (ca *consulAgent) DeregisterInstance(id string) (err error) {
+	return errors.Wrap(ca.cslCli.Agent().ServiceDeregister(id), "failed to deregister consul service")
+}
+
 // services is map binding type having id list per services, and implement GetAllServices return type interface
 type services map[string][]string
 
