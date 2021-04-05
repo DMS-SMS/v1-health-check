@@ -26,16 +26,16 @@ import (
 	"github.com/DMS-SMS/v1-health-check/system"
 
 	// import system check domain package
-	_syscheckConfig "github.com/DMS-SMS/v1-health-check/syscheck/config"
-	_syscheckChannelDelivery "github.com/DMS-SMS/v1-health-check/syscheck/delivery/channel"
-	_syscheckRepo "github.com/DMS-SMS/v1-health-check/syscheck/repository/elasticsearch"
-	_syscheckUcase "github.com/DMS-SMS/v1-health-check/syscheck/usecase"
+	_syscheckConfig       "github.com/DMS-SMS/v1-health-check/syscheck/config"
+	_syscheckChanDelivery "github.com/DMS-SMS/v1-health-check/syscheck/delivery/channel"
+	_syscheckRepo         "github.com/DMS-SMS/v1-health-check/syscheck/repository/elasticsearch"
+	_syscheckUcase        "github.com/DMS-SMS/v1-health-check/syscheck/usecase"
 
 	// import service check domain package
-	_srvcheckConfig "github.com/DMS-SMS/v1-health-check/srvcheck/config"
-	_srvcheckChannelDelivery "github.com/DMS-SMS/v1-health-check/srvcheck/delivery/channel"
-	_srvcheckRepo "github.com/DMS-SMS/v1-health-check/srvcheck/repository/elasticsearch"
-	_srvcheckUcase "github.com/DMS-SMS/v1-health-check/srvcheck/usecase"
+	_srvcheckConfig       "github.com/DMS-SMS/v1-health-check/srvcheck/config"
+	_srvcheckChanDelivery "github.com/DMS-SMS/v1-health-check/srvcheck/delivery/channel"
+	_srvcheckRepo         "github.com/DMS-SMS/v1-health-check/srvcheck/repository/elasticsearch"
+	_srvcheckUcase        "github.com/DMS-SMS/v1-health-check/srvcheck/usecase"
 )
 
 func init() {
@@ -92,9 +92,9 @@ func main() {
 	smu := _syscheckUcase.NewMemoryCheckUsecase(_syscheckConfig.App, smr, _slk, _sys, _dkr)
 
 	// syscheck domain delivery
-	_syscheckChannelDelivery.NewDiskCheckHandler(time.Tick(_syscheckConfig.App.DiskCheckDeliveryPingCycle()), sdu)
-	_syscheckChannelDelivery.NewCPUCheckHandler(time.Tick(_syscheckConfig.App.CPUCheckDeliveryPingCycle()), scu)
-	_syscheckChannelDelivery.NewMemoryCheckHandler(time.Tick(_syscheckConfig.App.MemoryCheckDeliveryPingCycle()), smu)
+	_syscheckChanDelivery.NewDiskCheckHandler(time.Tick(_syscheckConfig.App.DiskCheckDeliveryPingCycle()), sdu)
+	_syscheckChanDelivery.NewCPUCheckHandler(time.Tick(_syscheckConfig.App.CPUCheckDeliveryPingCycle()), scu)
+	_syscheckChanDelivery.NewMemoryCheckHandler(time.Tick(_syscheckConfig.App.MemoryCheckDeliveryPingCycle()), smu)
 
 	// ---
 
@@ -110,8 +110,8 @@ func main() {
 	scsu := _srvcheckUcase.NewConsulCheckUsecase(_srvcheckConfig.App, scsr, _slk, _csl, _dkr)
 
 	// srvcheck domain delivery
-	_srvcheckChannelDelivery.NewElasticsearchCheckHandler(time.Tick(_srvcheckConfig.App.ESCheckDeliveryPingCycle()), seu)
-	_srvcheckChannelDelivery.NewSwarmpitCheckHandler(time.Tick(_srvcheckConfig.App.SwarmpitCheckDeliveryPingCycle()), ssu)
+	_srvcheckChanDelivery.NewElasticsearchCheckHandler(time.Tick(_srvcheckConfig.App.ESCheckDeliveryPingCycle()), seu)
+	_srvcheckChanDelivery.NewSwarmpitCheckHandler(time.Tick(_srvcheckConfig.App.SwarmpitCheckDeliveryPingCycle()), ssu)
 
 	runtime.Goexit()
 }
