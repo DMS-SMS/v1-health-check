@@ -120,3 +120,15 @@ func (ccu *consulCheckUsecase) CheckConsul(ctx context.Context) (err error) {
 
 	return
 }
+
+// method processed with below logic about consul health check according to current check status
+// 0 : 정상적으로 인지된 상태 (상태 확인 수행) (모든 등록된 Service 정상 작동 & 서비스별 인스턴스 최소 1개 존재)
+// 0 -> 1 : Consul 상태 회복(작동X 노드 삭제 or 특정 서비스 재실행) 실행 (Consul 상태 회복 실행 알림 발행)
+// 1 : Consul 상태 회복중 (상태 확인 수행 X)
+// 1 -> 0 : Consul 상태 회복으로 인해 상태 회복 완료 (상태 회복 알림 발행)
+// 1 -> 2 : Consul 상태 회복을 해도 상태 회복 X (상태 회복 불가능 상태 알림 발행)
+// 2 : 관리자가 직접 확인해야함 (상태 확인 수행 X)
+// 2 -> 0 : 관리자 직접 상태 회복 완료 (상태 회복 알림 발행)
+func (ccu *consulCheckUsecase) checkConsul(ctx context.Context) (history *domain.ConsulCheckHistory) {
+	return
+}
