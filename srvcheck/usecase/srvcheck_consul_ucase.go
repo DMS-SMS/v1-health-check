@@ -57,6 +57,12 @@ type consulAgency interface {
 	DeregisterInstance(id string) (err error)
 }
 
+// gRPCAgency is agency that agent various command about gRPC
+type gRPCAgency interface {
+	// PingToCheckConn ping for connection check to gRPC node
+	PingToCheckConn(ctx context.Context, target string, opts ...grpc.DialOption) (err error)
+}
+
 // consulCheckUsecaseConfig is the config getter interface for consul check usecase
 type consulCheckUsecaseConfig interface {
 	// get common config method from embedding serviceCheckUsecaseComponentConfig
