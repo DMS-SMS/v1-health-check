@@ -6,6 +6,7 @@ package usecase
 
 import (
 	"context"
+	"fmt"
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
 	"google.golang.org/grpc"
@@ -148,6 +149,30 @@ func (ccu *consulCheckUsecase) checkConsul(ctx context.Context) (history *domain
 		history.ProcessLevel.Set(unhealthyLevel)
 		history.Message = "consul check is unhealthy now"
 		return
+	}
+
+	srvM := map[string][]struct{ id, addr string }{}
+	for _, srv := range ccu.myCfg.CheckTargetServices() {
+		cslSrv := ccu.myCfg.ConsulServiceNameSpace() + srv
+		iter, err := ccu.consulAgency.GetServices(cslSrv)
+		if err != nil {
+			history.ProcessLevel.Set(errorLevel)
+			history.SetError(errors.Wrap(err, "failed to get services"))
+			return
+		}
+
+		if _, ok := history.InstancesPerService[cslSrv]; !ok {
+			history.InstancesPerService[cslSrv] = []string{}
+		}
+		if _, ok := srvM[cslSrv]; !ok {
+			srvM[cslSrv] = []struct{ id, addr string }{}
+		}
+
+		for iter.HasNext() {
+			id, addr := iter.Next()
+			history.InstancesPerService[cslSrv] = append(history.InstancesPerService[cslSrv], id)
+			srvM[cslSrv] = append(srvM[cslSrv], struct{ id, addr string }{id: id, addr: addr})
+		}
 	}
 
 	return
