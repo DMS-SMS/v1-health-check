@@ -51,6 +51,21 @@ type srvcheckConfig struct {
 
 	// ---
 
+	// fields using in consul health checking (implement consulCheckUsecaseConfig)
+	// checkTargetServices represent check target services in check usecase
+	checkTargetServices *[]string
+
+	// consulServiceNameSpace represent consul service name space saved in consul
+	consulServiceNameSpace *string
+
+	// dockerServiceNameSpace represent docker service name space saved in docker
+	dockerServiceNameSpace *string
+
+	// ConnCheckPingTimeOut represent connection ping time out when check connection
+	connCheckPingTimeOut *time.Duration
+
+	// ---
+
 	// fields using in main function to inject delivery layer (not implement any interface)
 	// esCheckDeliveryPingCycle represent elasticsearch check delivery ping cycle
 	esCheckDeliveryPingCycle *time.Duration
