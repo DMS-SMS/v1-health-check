@@ -6,3 +6,20 @@
 // Also if exist, custom type or variable used in common in each of method will declared in this file.
 
 package consul
+
+import (
+	"github.com/hashicorp/consul/api"
+)
+
+// consulAgent is struct that agent various command about consul including get services, deregister service, etc ...
+type consulAgent struct {
+	// cslCli is client connection about consul & can access consul API with this client
+	cslCli *api.Client
+}
+
+// NewAgent return new instance of consulAgent pointer type initialized with parameter
+func NewAgent(cc *api.Client) *consulAgent {
+	return &consulAgent{
+		cslCli: cc,
+	}
+}
