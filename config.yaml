@@ -37,7 +37,11 @@ srvcheck:
   swarmpit:
     swarmpitAppServiceName: "swarmpit_app"
     swarmpitAppMaxMemoryUsage: "600MB"
-
+  consul:
+    checkTargetServices: "announcement,auth,club,outing,schedule"
+    consulServiceNameSpace: "DMS.SMS.v1.service."
+    dockerServiceNameSpace: "DSM_SMS_service-"
+    connCheckPingTimeOut: "5s"
   repository:
     elasticsearch:
       index:
