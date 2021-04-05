@@ -88,6 +88,11 @@ const (
 
 	defaultESCheckDeliveryPingCycle       = time.Hour * 12 // default const Duration for ESCheckDeliveryPingCycle
 	defaultSwarmpitCheckDeliveryPingCycle = time.Hour * 6  // default const Duration for SwarmpitCheckDeliveryPingCycle
+
+	defaultCheckTargetServices    = "announcement,auth,club,outing,schedule" // default const string for checkTargetServices
+	defaultConsulServiceNameSpace = "DMS.SMS.v1.service."                    // default const string for consulServiceNameSpace
+	defaultDockerServiceNameSpace = "DSM_SMS_service-"                       // default const string for dockerServiceNameSpace
+	defaultConnCheckPingTimeOut   = time.Second * 5                          // default const duration for connCheckPingTimeOut
 )
 
 // implement IndexName method of esRepositoryComponentConfig interface
