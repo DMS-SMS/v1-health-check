@@ -11,6 +11,7 @@ import (
 // GetAllServices method get all services in consul & return services interface implement
 func (ca *consulAgent) GetAllServices() (interface {
 	IDsOf(srv string) (ids []string) // idsOf return id list of instances which are of received srv
+	All() (srvs map[string][]string) // All return all id list of all services as map
 }, error) {
 	srvs, err := ca.cslCli.Agent().Services()
 	if err != nil {
@@ -35,5 +36,5 @@ func (ca *consulAgent) DeregisterInstance(id string) (err error) {
 // services is map binding type having id list per services, and implement GetAllServices return type interface
 type services map[string][]string
 
-// idsOf return id list of instances which are of received srv
-func (s services) IDsOf(srv string) (ids []string) { ids, _ = s[srv]; return }
+func (s services) IDsOf(srv string) (ids []string) { ids, _ = s[srv]; return } // IDsOf return id list of service
+func (s services) All() (srvs map[string][]string) { return s }                // All return all services id list
