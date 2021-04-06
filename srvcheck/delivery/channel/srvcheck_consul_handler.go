@@ -8,6 +8,10 @@
 package channel
 
 import (
+	"context"
+	"log"
+	"time"
+
 	"github.com/DMS-SMS/v1-health-check/domain"
 )
 
@@ -15,4 +19,24 @@ import (
 type consulCheckHandler struct {
 	// CUsecase is usecase layer interface which is injected from package outside (maybe, in main)
 	CUsecase domain.ConsulCheckUseCase
+}
+
+// startListening method start listening msg from golang channel & stream msg to another method
+func (ch *consulCheckHandler) startListening(c <-chan time.Time) {
+	for {
+		select {
+		case t := <-c:
+			go ch.checkConsul(t)
+		}
+	}
+}
+
+// checkConsul method set context & call CheckConsul usecase method, handle error
+func (ch *consulCheckHandler) checkConsul(t time.Time) {
+	ctx := context.Background()
+	ctx = context.WithValue(ctx, "time", t)
+
+	if err := ch.CUsecase.CheckConsul(ctx); err != nil {
+		log.Printf("error occurs in CheckConsul, err: %v", err)
+	}
 }
