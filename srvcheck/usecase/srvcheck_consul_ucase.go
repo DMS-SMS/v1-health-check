@@ -6,7 +6,6 @@ package usecase
 
 import (
 	"context"
-	"fmt"
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
 	"google.golang.org/grpc"
@@ -157,7 +156,7 @@ func (ccu *consulCheckUsecase) checkConsul(ctx context.Context) (history *domain
 		iter, err := ccu.consulAgency.GetServices(cslSrv)
 		if err != nil {
 			history.ProcessLevel.Set(errorLevel)
-			history.SetError(errors.Wrap(err, "failed to get services"))
+			history.SetError(errors.Wrap(err, "failed to get services in consul"))
 			return
 		}
 
@@ -172,6 +171,22 @@ func (ccu *consulCheckUsecase) checkConsul(ctx context.Context) (history *domain
 			id, addr := iter.Next()
 			history.InstancesPerService[cslSrv] = append(history.InstancesPerService[cslSrv], id)
 			srvM[cslSrv] = append(srvM[cslSrv], struct{ id, addr string }{id: id, addr: addr})
+		}
+	}
+
+	// check connection enable of service in consul with ping
+	var unableSrvIDs []string
+	for _, srvs := range srvM {
+		for _, srv := range srvs {
+			toCtx, _ := context.WithTimeout(context.Background(), ccu.myCfg.ConnCheckPingTimeOut())
+			err := ccu.gRPCAgency.PingToCheckConn(toCtx, srv.addr, grpc.WithInsecure(), grpc.WithBlock())
+			if toCtx.Err() != nil {
+				unableSrvIDs = append(unableSrvIDs, srv.id)
+			} else if err != nil {
+				history.ProcessLevel.Set(errorLevel)
+				history.SetError(errors.Wrapf(err, "failed to ping connection check, id: %s", srv.id))
+				return
+			}
 		}
 	}
 
