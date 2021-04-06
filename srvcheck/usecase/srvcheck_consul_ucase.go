@@ -197,6 +197,7 @@ func (ccu *consulCheckUsecase) checkConsul(ctx context.Context) (history *domain
 	if len(unableSrvIDs) > 0 {
 		ccu.setStatus(consulStatusRecovering)
 		history.ProcessLevel.Set(weakDetectedLevel)
+		history.Message = "deregistered services in consul which is unable to check connection pick"
 		msg := "!consul check weak detected! start to deregister unable services"
 		history.SetAlarmResult(ccu.slackChatAgency.SendMessage("pill", msg, _uuid))
 		history.IfInstanceDeregistered = true
@@ -208,16 +209,23 @@ func (ccu *consulCheckUsecase) checkConsul(ctx context.Context) (history *domain
 				history.ProcessLevel.Append(errorLevel)
 				msg := fmt.Sprintf("!consul check error occurred! failed to deregister service, id: %s, err: %v", srvID, err)
 				_, _, _ = ccu.slackChatAgency.SendMessage("broken_heart", msg, _uuid)
-				history.SetError(errors.Wrap(err, "failed to again deregister service"))
+				history.SetError(errors.Wrap(err, "failed to deregister service"))
 			} else {
 				successIDs = append(successIDs, srvID)
 			}
 		}
 		history.DeregisteredInstances = successIDs
 		history.DeregisterFailedInstances = failIDs
-		history.Message += "deregistered services in consul which is unable to check connection pick"
 		ccu.setStatus(consulStatusHealthy)
 		return
+	}
+
+	// check services that don't have any instances registered in consul
+	var unableSrvs []string
+	for _, srv := range ccu.myCfg.CheckTargetServices() {
+		if len(srvM[ccu.myCfg.ConsulServiceNameSpace() + srv]) == 0 {
+			unableSrvs = append(unableSrvs, ccu.myCfg.ConsulServiceNameSpace() + srv)
+		}
 	}
 
 	return
