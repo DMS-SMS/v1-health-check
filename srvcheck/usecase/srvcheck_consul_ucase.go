@@ -177,3 +177,10 @@ func (ccu *consulCheckUsecase) checkConsul(ctx context.Context) (history *domain
 
 	return
 }
+
+// setStatus set status field value using mutex Lock & Unlock
+func (ccu *consulCheckUsecase) setStatus(status consulCheckStatus) {
+	ccu.mutex.Lock()
+	defer ccu.mutex.Unlock()
+	ccu.status = status
+}
