@@ -107,6 +107,8 @@ func (scu *swarmpitCheckUsecase) checkSwarmpit(ctx context.Context) (history *do
 	if err != nil {
 		history.ProcessLevel.Set(errorLevel)
 		history.SetError(errors.Wrap(err, "failed to get swarmpit app docker container"))
+		msg := "!swarmpit check error occurred! unable to get swarmpit app container"
+		history.SetAlarmResult(scu.slackChatAgency.SendMessage("x", msg, _uuid))
 		return
 	}
 	history.SwarmpitAppMemoryUsage = ctn.MemoryUsage()

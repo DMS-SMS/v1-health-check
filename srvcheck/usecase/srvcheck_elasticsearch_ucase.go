@@ -130,6 +130,8 @@ func (ecu *elasticsearchCheckUsecase) checkElasticsearch(ctx context.Context) (h
 	if err != nil {
 		history.ProcessLevel.Set(errorLevel)
 		history.SetError(errors.Wrap(err, "failed to get cluster health"))
+		msg := "!elasticsearch check error occurred! unable to get cluster health"
+		history.SetAlarmResult(ecu.slackChatAgency.SendMessage("x", msg, _uuid))
 		return
 	}
 	cluster.WriteValueTo(history)

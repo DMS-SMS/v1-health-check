@@ -158,6 +158,8 @@ func (ccu *consulCheckUsecase) checkConsul(ctx context.Context) (history *domain
 		if err != nil {
 			history.ProcessLevel.Set(errorLevel)
 			history.SetError(errors.Wrap(err, "failed to get services in consul"))
+			msg := "!consul check error occurred! unable to get services in consul"
+			history.SetAlarmResult(ccu.slackChatAgency.SendMessage("x", msg, _uuid))
 			return
 		}
 
