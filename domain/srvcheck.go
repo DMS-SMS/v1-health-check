@@ -138,6 +138,11 @@ func (pl *srvcheckProcessLevel) Set(level string) {
 
 // Append method append srvcheckProcessLevel slice with level received from parameter
 func (pl *srvcheckProcessLevel) Append(level string) {
+	for _, l := range *pl {
+		if l == level {
+			return
+		}
+	}
 	*pl = append(*pl, level)
 }
 
