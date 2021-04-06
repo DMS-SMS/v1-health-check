@@ -6,6 +6,7 @@ package usecase
 
 import (
 	"context"
+	"fmt"
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
 	"google.golang.org/grpc"
@@ -188,6 +189,33 @@ func (ccu *consulCheckUsecase) checkConsul(ctx context.Context) (history *domain
 				return
 			}
 		}
+	}
+
+	// recover(deregister) if any connection unable service is exist
+	if len(unableSrvIDs) > 0 {
+		ccu.setStatus(consulStatusRecovering)
+		history.ProcessLevel.Set(weakDetectedLevel)
+		msg := "!consul check weak detected! start to deregister unable services"
+		history.SetAlarmResult(ccu.slackChatAgency.SendMessage("pill", msg, _uuid))
+		history.IfInstanceDeregistered = true
+
+		var successIDs, failIDs []string
+		for _, srvID := range unableSrvIDs {
+			if err := ccu.consulAgency.DeregisterInstance(srvID); err != nil {
+				failIDs = append(failIDs, srvID)
+				history.ProcessLevel.Append(errorLevel)
+				msg := fmt.Sprintf("!consul check error occurred! failed to deregister service, id: %s, err: %v", srvID, err)
+				_, _, _ = ccu.slackChatAgency.SendMessage("broken_heart", msg, _uuid)
+				history.SetError(errors.Wrap(err, "failed to again deregister service"))
+			} else {
+				successIDs = append(successIDs, srvID)
+			}
+		}
+		history.DeregisteredInstances = successIDs
+		history.DeregisterFailedInstances = failIDs
+		history.Message += "deregistered services in consul which is unable to check connection pick"
+		ccu.setStatus(consulStatusHealthy)
+		return
 	}
 
 	return
