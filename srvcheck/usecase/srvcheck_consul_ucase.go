@@ -7,6 +7,7 @@ package usecase
 import (
 	"context"
 	"fmt"
+	"github.com/docker/docker/api/types"
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
 	"google.golang.org/grpc"
@@ -214,6 +215,7 @@ func (ccu *consulCheckUsecase) checkConsul(ctx context.Context) (history *domain
 				successIDs = append(successIDs, srvID)
 			}
 		}
+
 		history.DeregisteredInstances = successIDs
 		history.DeregisterFailedInstances = failIDs
 		ccu.setStatus(consulStatusHealthy)
@@ -226,6 +228,43 @@ func (ccu *consulCheckUsecase) checkConsul(ctx context.Context) (history *domain
 		if len(srvM[ccu.myCfg.ConsulServiceNameSpace() + srv]) == 0 {
 			unableSrvs = append(unableSrvs, ccu.myCfg.ConsulServiceNameSpace() + srv)
 		}
+	}
+
+	// restart(registered when start) if any service don't have any instances
+	if len(unableSrvs) > 0 {
+		ccu.setStatus(consulStatusRecovering)
+		history.ProcessLevel.Set(weakDetectedLevel)
+		history.Message = "restart container in docker which is don't have any instances in consul"
+		msg := "!consul check weak detected! start to restart container"
+		history.SetAlarmResult(ccu.slackChatAgency.SendMessage("pill", msg, _uuid))
+		history.IfContainerRestarted = true
+
+		var successSrvs, failSrvs []string
+		for _, srv := range unableSrvs {
+			container, err := ccu.dockerAgency.GetContainerWithServiceName(srv)
+			if err != nil {
+				failSrvs = append(failSrvs, srv)
+				history.ProcessLevel.Append(errorLevel)
+				msg := fmt.Sprintf("!consul check error occurred! failed to get container, srv: %s, err: %v", srv, err)
+				_, _, _ = ccu.slackChatAgency.SendMessage("broken_heart", msg, _uuid)
+				history.SetError(errors.Wrap(err, "failed to get container"))
+				continue
+			}
+
+			if err := ccu.dockerAgency.RemoveContainer(container.ID(), types.ContainerRemoveOptions{Force: true}); err != nil {
+				failSrvs = append(failSrvs, srv)
+				history.ProcessLevel.Append(errorLevel)
+				msg := fmt.Sprintf("!consul check error occurred! failed to restart container, id: %s, err: %v", container.ID(), err)
+				_, _, _ = ccu.slackChatAgency.SendMessage("broken_heart", msg, _uuid)
+				history.SetError(errors.Wrap(err, "failed to restart container"))
+			} else {
+				successSrvs = append(successSrvs, srv)
+			}
+		}
+
+		history.DeregisteredInstances = successSrvs
+		history.DeregisterFailedInstances = failSrvs
+		ccu.setStatus(consulStatusHealthy)
 	}
 
 	return
