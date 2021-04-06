@@ -73,6 +73,9 @@ type srvcheckConfig struct {
 
 	// swarmpitCheckDeliveryPingCycle represent swarmpit check delivery ping cycle
 	swarmpitCheckDeliveryPingCycle *time.Duration
+
+	// consulCheckDeliveryPingCycle represent consul check delivery ping cycle
+	consulCheckDeliveryPingCycle *time.Duration
 }
 
 const (
@@ -87,13 +90,14 @@ const (
 	defaultSwarmpitAppServiceName    = "swarmpit_app"    // default const string for swarmpitAppServiceName
 	defaultSwarmpitAppMaxMemoryUsage = bytesize.MB * 600 // default const bytesize for swarmpitAppMaxMemoryUsage
 
-	defaultESCheckDeliveryPingCycle       = time.Hour * 12 // default const Duration for ESCheckDeliveryPingCycle
-	defaultSwarmpitCheckDeliveryPingCycle = time.Hour * 6  // default const Duration for SwarmpitCheckDeliveryPingCycle
-
 	defaultCheckTargetServices    = "announcement,auth,club,outing,schedule" // default const string for checkTargetServices
 	defaultConsulServiceNameSpace = "DMS.SMS.v1.service."                    // default const string for consulServiceNameSpace
 	defaultDockerServiceNameSpace = "DSM_SMS_service-"                       // default const string for dockerServiceNameSpace
 	defaultConnCheckPingTimeOut   = time.Second * 5                          // default const duration for connCheckPingTimeOut
+
+	defaultESCheckDeliveryPingCycle       = time.Hour * 12  // default const Duration for esCheckDeliveryPingCycle
+	defaultSwarmpitCheckDeliveryPingCycle = time.Hour * 6   // default const Duration for swarmpitCheckDeliveryPingCycle
+	defaultConsulCheckDeliveryPingCycle   = time.Minute * 1 // default const Duration for consulCheckDeliveryPingCycle
 )
 
 // implement IndexName method of esRepositoryComponentConfig interface
@@ -288,6 +292,23 @@ func (sc *srvcheckConfig) SwarmpitCheckDeliveryPingCycle() time.Duration {
 
 	sc.swarmpitCheckDeliveryPingCycle = &d
 	return *sc.swarmpitCheckDeliveryPingCycle
+}
+
+// not implement any interface, just using in main function for delivery layer injection
+func (sc *srvcheckConfig) ConsulCheckDeliveryPingCycle() time.Duration {
+	var key = "srvcheck.delivery.channel.pingCycle.consulCheck"
+	if sc.consulCheckDeliveryPingCycle != nil {
+		return *sc.consulCheckDeliveryPingCycle
+	}
+
+	d, err := time.ParseDuration(viper.GetString(key))
+	if err != nil {
+		viper.Set(key, defaultConsulCheckDeliveryPingCycle.String())
+		d = defaultConsulCheckDeliveryPingCycle
+	}
+
+	sc.consulCheckDeliveryPingCycle = &d
+	return *sc.consulCheckDeliveryPingCycle
 }
 
 // init function initialize App global variable
