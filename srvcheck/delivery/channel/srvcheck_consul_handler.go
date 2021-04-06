@@ -21,6 +21,16 @@ type consulCheckHandler struct {
 	CUsecase domain.ConsulCheckUseCase
 }
 
+// NewConsulCheckHandler define consulCheckHandler ptr instance & register handling channel msg to usecase
+func NewConsulCheckHandler(c <-chan time.Time, cu domain.ConsulCheckUseCase) {
+	handler := &consulCheckHandler{
+		CUsecase: cu,
+	}
+
+	go handler.startListening(c)
+	log.Println("START TO LISTEN CHANNEL MSG ABOUT SERVICE CONSUL CHECK")
+}
+
 // startListening method start listening msg from golang channel & stream msg to another method
 func (ch *consulCheckHandler) startListening(c <-chan time.Time) {
 	for {
