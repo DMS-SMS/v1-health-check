@@ -53,3 +53,4 @@ srvcheck:
       pingCycle:
         elasticsearchCheck: "12h"
         swarmpitCheck: "6h"
+        consulCheck: "1m"
