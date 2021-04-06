@@ -23,6 +23,9 @@ type ConsulCheckHistory struct {
 	// DeregisteredInstances specifies id list of deregistered instance in consul check
 	DeregisteredInstances []string
 
+	// DeregisterFailedInstances specifies id list of deregister failed instance in consul check
+	DeregisterFailedInstances []string
+
 	// IfContainerRestarted specifies if container about service is restarted
 	IfContainerRestarted bool
 
@@ -66,6 +69,7 @@ func (ch *ConsulCheckHistory) DottedMapWithPrefix(prefix string) (m map[string]i
 	m[prefix + "instances_per_service"] = ch.InstancesPerService
 	m[prefix + "if_instance_deregistered"] = ch.IfInstanceDeregistered
 	m[prefix + "deregistered_instances"] = strings.Join(ch.DeregisteredInstances, " | ")
+	m[prefix + "deregister_failed_instances"] = strings.Join(ch.DeregisterFailedInstances, " | ")
 	m[prefix + "if_container_restarted"] = ch.IfContainerRestarted
 	m[prefix + "restarted_containers"] = strings.Join(ch.RestartedContainers, " | ")
 
