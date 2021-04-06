@@ -114,6 +114,7 @@ func main() {
 	// srvcheck domain delivery
 	_srvcheckChanDelivery.NewElasticsearchCheckHandler(time.Tick(_srvcheckConfig.App.ESCheckDeliveryPingCycle()), seu)
 	_srvcheckChanDelivery.NewSwarmpitCheckHandler(time.Tick(_srvcheckConfig.App.SwarmpitCheckDeliveryPingCycle()), ssu)
+	_srvcheckChanDelivery.NewConsulCheckHandler(time.Tick(_srvcheckConfig.App.ConsulCheckDeliveryPingCycle()), scsu)
 
 	runtime.Goexit()
 }
