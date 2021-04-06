@@ -132,6 +132,8 @@ func (cu *cpuCheckUsecase) checkCPU(ctx context.Context) (history *domain.CPUChe
 	if err != nil {
 		history.ProcessLevel.Set(errorLevel)
 		history.SetError(errors.Wrap(err, "failed to get total system cpu usage"))
+		msg := "!cpu check error occurred! unable to get total cpu usage"
+		history.SetAlarmResult(cu.slackChatAgency.SendMessage("x", msg, _uuid))
 		return
 	}
 	history.TotalUsageCore = _totalUsage

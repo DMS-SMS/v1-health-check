@@ -112,6 +112,8 @@ func (du *diskCheckUsecase) checkDisk(ctx context.Context) (history *domain.Disk
 	if err != nil {
 		history.ProcessLevel.Set(errorLevel)
 		history.SetError(errors.Wrap(err, "failed to get disk capacity"))
+		msg := "!disk check error occurred! unable to get remain disk capacity"
+		history.SetAlarmResult(du.slackChatAgency.SendMessage("x", msg, _uuid))
 		return
 	}
 	history.RemainingCap = _remainCap

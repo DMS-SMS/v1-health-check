@@ -133,6 +133,8 @@ func (mu *memoryCheckUsecase) checkMemory(ctx context.Context) (history *domain.
 	if err != nil {
 		history.ProcessLevel.Set(errorLevel)
 		history.SetError(errors.Wrap(err, "failed to get total system memory usage"))
+		msg := "!memory check error occurred! unable to get total memory usage"
+		history.SetAlarmResult(mu.slackChatAgency.SendMessage("x", msg, _uuid))
 		return
 	}
 	history.TotalUsageMemory = _totalUsage
