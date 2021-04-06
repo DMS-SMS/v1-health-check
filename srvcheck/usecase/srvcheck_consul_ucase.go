@@ -226,7 +226,7 @@ func (ccu *consulCheckUsecase) checkConsul(ctx context.Context) (history *domain
 	var unableSrvs []string
 	for _, srv := range ccu.myCfg.CheckTargetServices() {
 		if len(srvM[ccu.myCfg.ConsulServiceNameSpace() + srv]) == 0 {
-			unableSrvs = append(unableSrvs, ccu.myCfg.ConsulServiceNameSpace() + srv)
+			unableSrvs = append(unableSrvs, ccu.myCfg.DockerServiceNameSpace() + srv)
 		}
 	}
 
