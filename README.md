@@ -24,24 +24,24 @@
 
 ---
 ## **Health Check 종류**
-`모든 Health Check는 수행 결과를 Elasticsearch에 저장하여 관리합니다.`
+#### **`모든 Health Check는 수행 결과를 Elasticsearch에 저장하여 관리합니다.`**
 ### 1. [**System Check**](https://github.com/DMS-SMS/v1-health-check/tree/develop/syscheck)
-- ### **disk check**
+- **disk check**
     - **디스크 사용 용량 특정 수치 초과** 시 알람 발행 후 **Docker Prune 실행**
     - 디스크 사용의 주요 원인에는 로그 및 DB 데이터 또한 존재하지만,  Docker Pruning만 실행
-- ### **memory check**
+- **memory check**
     - **총 메모리 사용량 특정 수치 초과** 시 알람 발행 후 **메모리 과다 사용 프로세스 재부팅**
     - 프로세스 메모리 사용 조회 및 재부팅은 **Docker Engine API**를 통해 수행
 
 ### 2. [**Service Check**](https://github.com/DMS-SMS/v1-health-check/tree/develop/srvcheck)
-- ### **elasticsearch check**
+- **elasticsearch check**
     - **Elasticsearch Shard 갯수 특정 수치 초과** 시 알람 발행 후 **Jaeger Index 삭제**
     - Jaeger에서 **매일 새로운 Index를 생성**하여 데이터를 저장하기에 **주기적으로 관리 필요**
     - 예전에 생성된 Index부터 삭제를 진행하며, **최근 한 달 내**에 생성된 Index는 **삭제되지 않음**
-- ### **swarmpit check**
+- **swarmpit check**
     - **Swarmpit App 컨테이너 메모리 사용량 특정 기준 초과** 시 알람 발행 후 **해당 서비스 재부팅**
     - Swarmpit App의 경우, **메모리 사용량이 지속적으로 증가**하기 때문에 특정 수치에 도달할 때 마다 **재부팅**이 필요함
-- ### **consul check**
+- **consul check**
     - Consul에 **작동되지 않는 노드가 등록**되었다면 알람 발행 후 **해당 노드 등록 해제**
     - 또한, 서비스별로 **등록된 노드가 존재하지 않는** 경우 알람 발행 후 **해당 서비스 재부팅**
     - 작동되지 않는 노드인지는 해당 노드와 **gRPC 연결 시도**를 통해 판별
