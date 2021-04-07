@@ -1,4 +1,4 @@
-# **SMS-Health-Check**
+# **SMS-Health-Check**
 
 > ### 대덕소프트웨어마이스터고등학교 [**SMS(학교 지원 시스템)**](https://github.com/DMS-SMS) 서버 **Health Check 서비스**
 
@@ -24,4 +24,6 @@
 
 <br>
 
-![godepgraph](./godepgraph.png)
+![godepgraph1](https://user-images.githubusercontent.com/48676834/113800510-08960180-9792-11eb-8c5d-a5650ab0799b.png)
+
+![godepgraph2](https://user-images.githubusercontent.com/48676834/113800517-0df34c00-9792-11eb-90ab-d048f3b847a1.png)
