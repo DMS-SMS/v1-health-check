@@ -196,7 +196,7 @@ func (ecu *elasticsearchCheckUsecase) checkElasticsearch(ctx context.Context) (h
 			history.SetError(errors.Wrap(err, "failed to again get cluster health again"))
 			return
 		}
-		againCluster.WriteValueTo(history)
+		history.SetClusterHealth(againCluster)
 		var againTotalShards = intComparator{V: againCluster.ActiveShards() + againCluster.UnassignedShards()}
 
 		if againTotalShards.isLessThan(ecu.myCfg.MaximumShardsNumber()) {
