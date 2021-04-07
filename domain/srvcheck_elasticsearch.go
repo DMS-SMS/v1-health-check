@@ -75,3 +75,16 @@ func (eh *ElasticsearchCheckHistory) DottedMapWithPrefix(prefix string) (m map[s
 
 	return
 }
+
+// SetClusterHealth method set field about cluster health with received cluster
+func (eh *ElasticsearchCheckHistory) SetClusterHealth(cluster interface {
+	ActivePrimaryShards() int     // get active primary shards number in cluster health result
+	ActiveShards() int            // get active shards number in cluster health result
+	UnassignedShards() int        // get unassigned shards number in cluster health result
+	ActiveShardsPercent() float64 // get active shards percent in cluster health result)
+}) {
+	eh.ActivePrimaryShards = cluster.ActivePrimaryShards()
+	eh.ActiveShards = cluster.ActiveShards()
+	eh.UnassignedShards = cluster.UnassignedShards()
+	eh.ActiveShardsPercent = cluster.ActiveShardsPercent()
+}
