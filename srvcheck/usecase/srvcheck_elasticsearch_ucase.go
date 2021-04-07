@@ -133,7 +133,7 @@ func (ecu *elasticsearchCheckUsecase) checkElasticsearch(ctx context.Context) (h
 		history.SetAlarmResult(ecu.slackChatAgency.SendMessage("x", msg, _uuid))
 		return
 	}
-	cluster.WriteValueTo(history)
+	history.SetClusterHealth(cluster)
 	var totalShards = intComparator{V: cluster.ActiveShards() + cluster.UnassignedShards()}
 
 	switch ecu.status {
