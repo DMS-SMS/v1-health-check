@@ -26,7 +26,7 @@
 
 ---
 ## **Health Check 종류**
-> #### **`모든 Health Check는 수행 결과를 Elasticsearch에 저장하여 관리합니다.`**
+> ### **모든 Health Check는 수행 결과를 Elasticsearch에 저장하여 관리합니다.x**
 ### 1. [**System Check**](https://github.com/DMS-SMS/v1-health-check/tree/develop/syscheck)
 - **disk check**
     - **디스크 사용 용량 특정 수치 초과** 시 알람 발행 후 **Docker Prune 실행**
