@@ -4,6 +4,7 @@
 
 <br>
 
+---
 ## **INDEX**
 ### [**1. SMS Health Check란?**](#SMS-Health-Check란?)
 ### [**2. Health Check 종류**](#Health-Check-종류)
@@ -15,6 +16,7 @@
 
 <br>
 
+---
 ## **SMS Health Check란?**
 - [**SMS**](https://github.com/DMS-SMS/v1-api-gateway)(School Management System)는 대덕소프트웨어마이스터고등학교 전공 동아리 [**DMS**](https://github.com/DSM-DMS)에서 개발하여 현재 운영하고 있는 **학교 지원 시스템**입니다.
 
@@ -24,6 +26,7 @@
 
 <br>
 
+---
 ## **Health Check 종류**
 > ### **모든 Health Check는 수행 결과를 Elasticsearch에 저장하여 관리합니다.**
 ### 1. [**System Check**](https://github.com/DMS-SMS/v1-health-check/tree/develop/syscheck)
@@ -54,21 +57,24 @@
 
 <br>
 
+---
 ## **Clean한 코드에 대해**
 > ### **Clean한 코드의 기준은 무엇일까요? 제가 생각하는 기준은 다음과 같습니다.**
 ### 1. **의존적인 관계**에서 서로의 **계층**을 명확하게 **분리**하였고, 그 관계가 **느슨하게 결합**되었는가?
->> #### -> 의존 관계 추상화 완료시, mocking을 이용한 business logic 단위 테스트 가능
 - 기능에 따라 계층을 분리하고, **분리된 계층별로 패키지**를 생성하여 해당 패키지에 구현
+
 - 직접적인 **타입의 명시**가 아닌 **인터페이스 추상화**를 통해 느슨한 상하위 계층 간의 의존 관계 형성
 - 상위 계층에서, 하위 계층의 **처리 방식을 모른채로** 데이터 처리의 **책임을 빌려주는** 구조
 - 따라서 계층끼리의 의존성을 편리하게 관리하기 위해서 **모든 의존성 주입**은 **main에서 발생**
+- **-> 모든 의존 관계 추상화 완료시, mocking을 이용한 business logic 단위 테스트 가능**
 
 ### 2. 하위 계층과의 **의존 관계를 표현하는 추상화**(인터페이스)를 **상위 계층이 소유**하고 있는가?
->> #### -> DIP 패턴 적용 완료시, [domain](https://github.com/DMS-SMS/v1-health-check/tree/develop/domain)을 제외한 모든 패키지의 임포트가 [main](https://github.com/DMS-SMS/v1-health-check/blob/develop/app/main.go) 패키지에서만 발생
 - 만약 인터페이스를 **하위 계층이 소유**하고 있다면, 여전히 **하위 계층에 명시적으로 결합**된 상태
+
 - 따라서 인터페이스 소유권을 **사용하는 계층으로 옮김**으로써, 하위 계층과의 **명시적인 결합**을 완전히 **끊을** 수 있음
 - SOLID 중 마지막 원칙인 **DIP(의존성 역전)** 패턴을 적용함으로써 이를 구현할 수 있음 
 - 예외) **domain model 관련 패키지**(repo, ucase)들에 대한 추상화는 **[domain](https://github.com/DMS-SMS/v1-health-check/tree/develop/domain) 패키지에 묶어서 관리**
+- **-> DIP 패턴 적용 완료시, domain을 제외한 모든 패키지의 임포트가 [main](https://github.com/DMS-SMS/v1-health-check/blob/develop/app/main.go) 패키지에서만 발생**
 ##
 
 <br>
@@ -79,6 +85,7 @@ SOLID
 
 <br>
 
+---
 ## **패키지 의존 흐름 및 그래프**
 - 해당 프로젝트는 다음과 같이 크게 3 종류의 패키지로 구성되어 있습니다.
 
