@@ -27,6 +27,9 @@
 ---
 ## **Health Check 종류**
 > ### **모든 Health Check는 수행 결과를 Elasticsearch에 저장하여 관리합니다.**
+
+<br>
+
 ### 1. [**System Check**](https://github.com/DMS-SMS/v1-health-check/tree/develop/syscheck)
 - **disk check**
     - **디스크 사용 용량 특정 수치 초과** 시 알람 발행 후 **Docker Prune 실행**
@@ -57,6 +60,8 @@
 ---
 ## **Clean한 코드에 대해**
 > ### **Clean한 코드의 기준**은 무엇일까요? **제가 생각하는 기준**은 다음과 같습니다.
+
+<br>
 
 ### 1. **의존적인 관계**에서 서로의 **계층**을 명확하게 **분리**하였고, 그 관계가 **느슨하게 결합**되었는가?
 - 기능에 따라 계층을 분리하고, **분리된 계층별로 패키지**를 생성하여 해당 패키지에 구현
