@@ -4,7 +4,6 @@
 
 <br>
 
----
 ## **INDEX**
 ### [**1. SMS Health Check란?**](#SMS-Health-Check란?)
 ### [**2. Health Check 종류**](#Health-Check-종류)
@@ -15,7 +14,6 @@
 
 <br>
 
----
 ## **SMS Health Check란?**
 - [**SMS**](https://github.com/DMS-SMS/v1-api-gateway)(School Management System)는 대덕소프트웨어마이스터고등학교 전공 동아리 [**DMS**](https://github.com/DSM-DMS)에서 개발하여 현재 운영하고 있는 **학교 지원 시스템**입니다.
 
@@ -24,7 +22,6 @@
 
 <br>
 
----
 ## **Health Check 종류**
 > ### **모든 Health Check는 수행 결과를 Elasticsearch에 저장하여 관리합니다.**
 ### 1. [**System Check**](https://github.com/DMS-SMS/v1-health-check/tree/develop/syscheck)
@@ -54,7 +51,6 @@
 
 <br>
 
----
 ## **Clean한 코드에 대해**
 > ### **Clean한 코드의 기준**은 무엇일까요? **제가 생각하는 기준**은 다음과 같습니다.
 ### 1. **의존적인 관계**에서 서로의 **계층**을 명확하게 **분리**하였고, 그 관계가 **느슨하게 결합**되었는가?
@@ -78,7 +74,6 @@ SOLID
 
 <br>
 
----
 ## **패키지 의존 흐름 및 그래프**
 - 해당 프로젝트는 다음과 같이 크게 3 종류의 패키지로 구성되어 있습니다.
 
