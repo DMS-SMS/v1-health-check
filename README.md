@@ -1,6 +1,6 @@
 # **SMS-Health-Check**
 
-> ### 대덕소프트웨어마이스터고등학교 [**SMS(학교 지원 시스템)**](https://github.com/DMS-SMS/v1-api-gateway) 서버 **Health Check 서비스**
+> ## 대덕소프트웨어마이스터고등학교 [**SMS(학교 지원 시스템)**](https://github.com/DMS-SMS/v1-api-gateway) 서버 **Health Check 서비스**
 
 <br>
 
@@ -9,8 +9,8 @@
 ### [**1. SMS Health Check란?**](#SMS-Health-Check란?)
 ### [**2. Health Check 종류**](#Health-Check-종류)
 ### [**3. Clean한 코드에 대해**](#Clean한-코드에-대해)
-### [**4. 패키지 종류 및 그래프**](#패키지-종류-및-그래프)
-### [**5. 프로젝트 구조**](#프로젝트-구조)
+### [**4. 패키지 종류 및 구조**](#패키지-종류-및-구조)
+### [**5. 패키지 의존성 그래프**](#패키지-의존성-그래프)
 
 <br>
 
@@ -64,14 +64,29 @@
 #### `-> DIP 패턴 적용 완료시, domain을 제외한 모든 패키지의 임포트가 main 패키지에서만 발생`
 - 만약 인터페이스를 **하위 계층이 소유**하고 있다면, 여전히 **하위 계층에 명시적으로 결합**된 상태
 - 따라서 인터페이스 소유권을 **사용하는 계층으로 옮김**으로써, 하위 계층과의 **명시적인 결합**을 완전히 **끊을** 수 있다.
-- SOLID 중 **DIP(의존성 역전)** 원칙으로, **사용할 메서드들만 추상화**하여 의존성을 생성할 수 있다.
+- SOLID 중 **DIP(의존성 역전)** 원칙으로, **사용할 메서드들만 추상화**하여 의존성을 생성할 수 있다는 장점 또한 존재한다.
 - 예외) **domain model 관련 패키지**(repo, ucase)들에 대한 추상화는 **[domain](https://github.com/DMS-SMS/v1-health-check/tree/develop/domain) 패키지에 묶어서 관리**
 
 <br>
 
 ---
-## **패키지 의존 흐름 및 그래프**
-- 해당 프로젝트는 다음과 같이 크게 3 종류의 패키지로 구성되어 있습니다.
+## **패키지 종류 및 구조**
+> ### **프로젝트를 구성하는 패키지들을 크게 세 가지 종류로 나누어 설명합니다.**
+### **App**
+- [**app**](https://github.com/DMS-SMS/v1-health-check/tree/develop/app)
+    - **main function**을 가지고 있는 **main package**로, Health Check를 실행시키는 시작점이다.
+    - 모든 **의존성 객체 생성 및 주입**이 여기서 일어나며, [**domain 패키지**](https://github.com/DMS-SMS/v1-health-check/tree/develop/domain)를 제외한 다른 패키지를 명시적으로 import하는 유일한 패키지이다.
+- [**app/config**](https://github.com/DMS-SMS/v1-health-check/tree/develop/app/config)
+    - app(main) 패키지에서 사용하는 **config value**들을 **관리**하고 **반환**하는 **객체를 정의**하는 패키지
+    - **싱글톤 패턴**으로 구현되어 있으며, **environment variable** 또는 **fixed** value 반환
+    - 특정 인터페이스의 **구현체 아니라**, 단순히 app 패키지에서 **명시적**으로 불러와서 사용하는 객체이다.
+### **Agent**
+- [**consul**](https://github.com/DMS-SMS/v1-health-check/tree/develop/consul)
+- 
+### **Domain**
+- [**domain**](https://github.com/DMS-SMS/v1-health-check/tree/develop/domain)
+- 
+
 
 <!-- 
 ![godepgraph1](https://user-images.githubusercontent.com/48676834/113800510-08960180-9792-11eb-8c5d-a5650ab0799b.png)
