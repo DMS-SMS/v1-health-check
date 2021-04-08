@@ -12,7 +12,6 @@
 ### [**4. 패키지 의존 흐름 및 그래프**](#패키지-의존-흐름-및-그래프)
 ### [**5. 프로젝트 구조**](#프로젝트-구조)
 ### [**6. 부가 기능**](#부가-기능)
-##
 
 <br>
 
@@ -22,7 +21,6 @@
 
 - [**SMS Health Check**](https://github.com/DMS-SMS/v1-health-check)는 SMS 서버를 **운영중인 환경**과 서버를 **구성중인 여러 서비스**들의 상태를 **주기적으로 관리**하는 플러그인 식의 서비스입니다.
 - 특정 서비스의 **상태 확인 결과**가 특정 기준을 통해 **정상적이지 않다고 판단**이 되면 해당 서비스의 **상태 회복을 위한 작업을 수행**합니다.
-##
 
 <br>
 
@@ -53,7 +51,6 @@
     - 또한, MSA 상의 서비스별로 **등록된 노드가 존재하지 않는** 경우 알람 발행 후 **해당 서비스 재부팅**
     - 작동되지 않는 노드인지는 해당 노드와 **gRPC 연결 시도**를 통해 판별
     - 노드 부재시에는, **서비스 재부팅**을 함으로써 재시작 시점에 **스스로 노드를 등록**하게 함
-##
 
 <br>
 
@@ -73,7 +70,6 @@
 - SOLID 중 마지막 원칙인 **DIP(의존성 역전)** 패턴을 적용함으로써 이를 구현할 수 있음 
 - 예외) **domain model 관련 패키지**(repo, ucase)들에 대한 추상화는 **[domain](https://github.com/DMS-SMS/v1-health-check/tree/develop/domain) 패키지에 묶어서 관리**
 - **-> DIP 패턴 적용 완료시, domain을 제외한 모든 패키지의 임포트가 [main](https://github.com/DMS-SMS/v1-health-check/blob/develop/app/main.go) 패키지에서만 발생**
-##
 
 <br>
 
@@ -91,4 +87,3 @@ SOLID
 ![godepgraph1](https://user-images.githubusercontent.com/48676834/113800510-08960180-9792-11eb-8c5d-a5650ab0799b.png)
 
 ![godepgraph2](https://user-images.githubusercontent.com/48676834/113800517-0df34c00-9792-11eb-90ab-d048f3b847a1.png) -->
-##
