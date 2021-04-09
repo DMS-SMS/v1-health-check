@@ -72,7 +72,7 @@
 ---
 ## **패키지 종류 및 구조**
 > ### **프로젝트를 구성하는 패키지들을 크게 세 가지 종류로 나누어 설명합니다.**
-### **App**
+### 1. **App**
 - [**app**](https://github.com/DMS-SMS/v1-health-check/tree/develop/app)
     - **main function**을 가지고 있는 **main package**로, Health Check를 실행시키는 시작점
     - 모든 **의존성 객체 생성 및 주입**이 여기서 일어나며, [**domain 패키지**](https://github.com/DMS-SMS/v1-health-check/tree/develop/domain)를 제외한 다른 패키지를 명시적으로 import하는 유일한 패키지
@@ -81,7 +81,7 @@
     - **싱글톤 패턴**으로 구현되어 있으며, **environment variable** 또는 **fixed value** 반환
     - 특정 **인터페이스의 구현체**가 아니라, 단순히 app 패키지에서 **명시적**으로 불러와서 사용하는 객체이다.
 
-### **Domain**
+### 2. **Domain**
 - [**domain**](https://github.com/DMS-SMS/v1-health-check/tree/develop/domain)
     - 특정 **domain**에서 사용할 **model 정의**와 그와 **연관된 계층**들(repo, use case)을 **추상화**하는 것이 필요
     - 따라서 이와 관련된 것을 해당 패키지에서 **묶어서 관리**하며, 추상화에 대한 **구현**은 **domain 이름으로 된 패키지** 내부에서 진행
@@ -108,7 +108,7 @@
         - **싱글톤 패턴**으로 구현되어 있으며, [**config.yaml**](https://github.com/DMS-SMS/v1-health-check/blob/develop/config.yaml) 파일에 설정된 값 또는 기본 값 반환
         - repository, usecase, delivery 패키지에서 **추상화된 인터페이스**들을 모두 **구현**하고 있음.
     - 같은 도메인 내에서도 기능들끼리의 연관성을 없애기 위해, **모든 기능들에 대한 추상화와 구현체들이 서로 다른 타입으로 분리되어있다.**
-### **Agent**
+### 3. **Agent**
 - [**consul**](https://github.com/DMS-SMS/v1-health-check/tree/develop/consul)
 - 
 
