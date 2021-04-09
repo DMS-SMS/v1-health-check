@@ -97,16 +97,16 @@
     - [**usecase**](https://github.com/DMS-SMS/v1-health-check/tree/develop/syscheck/usecase)
         - domain 패키지에서 **추상화**된 **system check** 관련 **usecase**들을 구현하는 패키지
         - domain 패키지에 정의된 **repository 추상화에 의존**하고 있으며, 실질적인 **business logic**을 처리하는 기능의 계층이다.
-        - 또한 **외부 서비스들**(docker, slack, etc..)에 대해서도 **추상화에 의존**하고 있으며, 해당 **추상화에 대한 소유권**은 해당 패키지가 가지고 있다.
+        - 또한 **외부 서비스들**(docker, slack, etc..)에 대해서도 **추상화에 의존**하고 있으며, **해당 추상화에 대한 소유권**은 해당 패키지가 가지고 있다.
         - 이러한 추상화에 대한 구현체는 **Agent 관련 패키지**에서 확인할 수 있다.
     - [**delivery**](https://github.com/DMS-SMS/v1-health-check/tree/develop/syscheck/delivery)
         - 특정 API로부터 들어온 데이터를 **usecase layer으로 전달**하는 기능의 계층
         - 따라서, domain 패키지에 정의된 **usecase 추상화에 의존**하고 있다.
-        - 해당 프로젝트 내에서 **최상위 계층**으로, 특정 인터페이스에 대한 구현체가 아니다.
+        - 해당 프로젝트 내에서 **최상위 계층**으로, 어떠한 추상화에 대한 구현체가 아니다.
     - [**config**](https://github.com/DMS-SMS/v1-health-check/tree/develop/syscheck/config)
         - **syscheck의 모든 하위 패키지**에서 사용하는 **config value**들을 **관리**하고 **반환**하는 패키지
         - **싱글톤 패턴**으로 구현되어 있으며, [**config.yaml**](https://github.com/DMS-SMS/v1-health-check/blob/develop/config.yaml) 파일에 설정된 값 또는 기본 값 반환
-        - repository, usecase, delivery 패키지에서 **추상화된 인터페이스**들을 모두 **구현**하고 있음.
+        - repository, usecase, delivery 패키지에서 **추상화된 인터페이스**들을 **모두 구현**하고 있음.
     - 같은 도메인 내에서도 기능들끼리의 연관성을 없애기 위해, **모든 기능들에 대한 추상화와 구현체들이 서로 다른 타입으로 분리되어있다.**
 ### 3. **Agent**
 - [**consul**](https://github.com/DMS-SMS/v1-health-check/tree/develop/consul)
