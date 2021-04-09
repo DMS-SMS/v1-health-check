@@ -108,10 +108,12 @@
         - **싱글톤 패턴**으로 구현되어 있으며, [**config.yaml**](https://github.com/DMS-SMS/v1-health-check/blob/develop/config.yaml) 파일에 설정된 값 또는 기본 값 반환
         - repository, usecase, delivery 패키지에서 **추상화된 인터페이스**들을 **모두 구현**하고 있음.
     - 같은 도메인 내에서도 기능들끼리의 연관성을 없애기 위해, **모든 기능들에 대한 추상화와 구현체들이 서로 다른 타입으로 분리되어있다.**
+- [**srvcheck**](https://github.com/DMS-SMS/v1-health-check/tree/develop/srvcheck)
+    - syscheck 패키지와 비슷하게, **service check** 기능의 domain에 대한 **추상화**를 **구현**하는 패키지이다.
+    - syscheck 패키지와 하위 구성 또한 동일하지만, 서로 간의 **결합**이 전혀 **존재하지 않다.**
 ### 3. **Agent**
 - [**consul**](https://github.com/DMS-SMS/v1-health-check/tree/develop/consul)
 - 
-
 
 <!-- 
 ![godepgraph1](https://user-images.githubusercontent.com/48676834/113800510-08960180-9792-11eb-8c5d-a5650ab0799b.png)
