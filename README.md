@@ -80,6 +80,7 @@
     - app(main) 패키지에서 사용하는 **config value**들을 **관리**하고 **반환**하는 패키지
     - **싱글톤 패턴**으로 구현되어 있으며, **environment variable** 또는 **fixed value** 반환
     - 특정 **인터페이스의 구현체**가 아니라, 단순히 app 패키지에서 **명시적**으로 불러와서 사용하는 객체이다.
+
 ### **Domain**
 - [**domain**](https://github.com/DMS-SMS/v1-health-check/tree/develop/domain)
     - 특정 **domain**에서 사용할 **model 정의**와 그와 **연관된 계층**들(repo, use case)을 **추상화**하는 것이 필요
@@ -87,15 +88,17 @@
     - 결론적으로 도메인에 대한 **model** struct, **repository**와 **usecase** interface를 정의한다.
     - 현재 존재하는 domain -> **syscheck, srvcheck**
 - [**syscheck**](https://github.com/DMS-SMS/v1-health-check/tree/develop/syscheck)
-    - **system check** 기능에 대한 **domain을 구현하는 패키지**로, 다음과 같은 하위 패키지로 구성되어있다.
+    - 위에서 말한대로 실제로 **추상화에 대한 구현을 진행**하는 패키지로, **domain 패키지**에서 정의한 **추상화**에 의존하고 있다.
+    - syscheck 도메인에 대한 구현은 다음과 같이 **네가지의 하위 패키지**로 구성되어있다.
     - [**repository**](https://github.com/DMS-SMS/v1-health-check/tree/develop/syscheck/repository)
-        - domain 패키지에서 **추상회**된 **system check** 관련 **repository**들을 구현하는 패키지
+        - domain 패키지에서 **추상화**된 **system check** 관련 **repository**들을 구현하는 패키지
         - domain 패키지에 정의된 **model struct에 의존**하고 있으며, 데이터를 **명령 혹은 조회**하는 기능의 계층이다.
         - 현재로써는 **elasticsearch**를 저장소로 사용하는 구현체만 존재한다.
     - [**usecase**](https://github.com/DMS-SMS/v1-health-check/tree/develop/syscheck/usecase)
-        - domain 패키지에서 추상화된 **system check** 관련 **usecase**들을 구현하는 패키지
+        - domain 패키지에서 **추상화**된 **system check** 관련 **usecase**들을 구현하는 패키지
         - domain 패키지에 정의된 **repository 추상화에 의존**하고 있으며, 실질적인 **business logic**을 처리하는 기능의 계층이다.
-        - 해당 패키지에서 정의한 **외부 서비스들에 대한 추상화에 의존**하고 있으며, 아래 나오는 **Agent 관련 패키지**에서 해당 추상화에 대한 **구현체**를 정의한다.
+        - 또한 **외부 서비스들**(docker, slack, etc..)에 대해서도 **추상화에 의존**하고 있으며, 해당 **추상화에 대한 소유권**은 해당 패키지가 가지고 있다.
+        - 이러한 추상화에 대한 구현체는 **Agent 관련 패키지**에서 확인할 수 있다.
     - [**delivery**](https://github.com/DMS-SMS/v1-health-check/tree/develop/syscheck/delivery)
         - 특정 API로부터 들어온 데이터를 **usecase layer으로 전달**하는 기능의 계층
         - 따라서, domain 패키지에 정의된 **usecase 추상화에 의존**하고 있다.
