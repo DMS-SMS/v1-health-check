@@ -84,12 +84,12 @@
 ### 2. **Domain**
 - [**domain**](https://github.com/DMS-SMS/v1-health-check/tree/develop/domain)
     - 특정 **domain**에서 사용할 **model 정의**와 그와 **연관된 계층**들(repo, use case)을 **추상화**하는 것이 필요
-    - 따라서 이와 관련된 것을 해당 패키지에서 **묶어서 관리**하며, 추상화에 대한 **구현**은 **domain 이름으로 된 패키지** 내부에서 진행
+    - 따라서 이와 관련된 것을 **해당 패키지**에서 **묶어서 관리**하며, 추상화에 대한 **구현**은 **domain 이름으로 된 패키지** 내부에서 진행한다.
     - 결론적으로 도메인에 대한 **model struct, repository와 usecase interface**를 정의한다.
-    - 현재 존재하는 domain -> **syscheck, srvcheck**
+    - 현재 추상화 및 구현이 완료된 domain에는 **syscheck**와 **srvcheck**가 있다.
 - [**syscheck**](https://github.com/DMS-SMS/v1-health-check/tree/develop/syscheck)
-    - 위에서 말한대로 실제로 **추상화에 대한 구현을 진행**하는 패키지로, **domain 패키지**에서 정의한 **추상화**에 의존하고 있다.
-    - syscheck 도메인에 대한 구현은 다음과 같이 **네 가지의 하위 패키지**로 구성되어있다.
+    - **system check** 기능의 **domain에 대한 추상화**를 실제로 **구현** 하는 패키지 
+    - **domain 패키지**에서 정의한 **추상화**에 의존하고 있으며, **네 가지의 하위 패키지**로 구성되어있다.
     - [**repository**](https://github.com/DMS-SMS/v1-health-check/tree/develop/syscheck/repository)
         - domain 패키지에서 **추상화**된 **system check** 관련 **repository**들을 구현하는 패키지
         - domain 패키지에 정의된 **model struct에 의존**하고 있으며, 데이터를 **명령 혹은 조회**하는 기능의 계층이다.
