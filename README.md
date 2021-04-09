@@ -85,11 +85,11 @@
 - [**domain**](https://github.com/DMS-SMS/v1-health-check/tree/develop/domain)
     - 특정 **domain**에서 사용할 **model 정의**와 그와 **연관된 계층**들(repo, use case)을 **추상화**하는 것이 필요
     - 따라서 이와 관련된 것을 해당 패키지에서 **묶어서 관리**하며, 추상화에 대한 **구현**은 **domain 이름으로 된 패키지** 내부에서 진행
-    - 결론적으로 도메인에 대한 **model** struct, **repository**와 **usecase** interface를 정의한다.
+    - 결론적으로 도메인에 대한 **model struct, repository와 usecase interface**를 정의한다.
     - 현재 존재하는 domain -> **syscheck, srvcheck**
 - [**syscheck**](https://github.com/DMS-SMS/v1-health-check/tree/develop/syscheck)
     - 위에서 말한대로 실제로 **추상화에 대한 구현을 진행**하는 패키지로, **domain 패키지**에서 정의한 **추상화**에 의존하고 있다.
-    - syscheck 도메인에 대한 구현은 다음과 같이 **네가지의 하위 패키지**로 구성되어있다.
+    - syscheck 도메인에 대한 구현은 다음과 같이 **네 가지의 하위 패키지**로 구성되어있다.
     - [**repository**](https://github.com/DMS-SMS/v1-health-check/tree/develop/syscheck/repository)
         - domain 패키지에서 **추상화**된 **system check** 관련 **repository**들을 구현하는 패키지
         - domain 패키지에 정의된 **model struct에 의존**하고 있으며, 데이터를 **명령 혹은 조회**하는 기능의 계층이다.
@@ -105,9 +105,9 @@
         - 해당 프로젝트 내에서 **최상위 계층**으로, 특정 인터페이스에 대한 구현체가 아니다.
     - [**config**](https://github.com/DMS-SMS/v1-health-check/tree/develop/syscheck/config)
         - **syscheck의 모든 하위 패키지**에서 사용하는 **config value**들을 **관리**하고 **반환**하는 패키지
-        - **싱글톤 패턴**으로 구현되어 있으며, [**config.yaml**](https://github.com/DMS-SMS/v1-health-check/blob/develop/config.yaml) 파일에 설정된 값 또는 고정 값 반환
-        - repository, usecase, delivery 패키지에서 **각각 추상화한 인터페이스**를 모두 **구현**하고 있음.
-    - 같은 도메인 내에서도 기능들끼리의 연관성을 없애기 위해, **모든 기능들에 대한 추상화와 구현체들이 분리되어있다.**
+        - **싱글톤 패턴**으로 구현되어 있으며, [**config.yaml**](https://github.com/DMS-SMS/v1-health-check/blob/develop/config.yaml) 파일에 설정된 값 또는 기본 값 반환
+        - repository, usecase, delivery 패키지에서 **추상화된 인터페이스**들을 모두 **구현**하고 있음.
+    - 같은 도메인 내에서도 기능들끼리의 연관성을 없애기 위해, **모든 기능들에 대한 추상화와 구현체들이 서로 다른 타입으로 분리되어있다.**
 ### **Agent**
 - [**consul**](https://github.com/DMS-SMS/v1-health-check/tree/develop/consul)
 - 
