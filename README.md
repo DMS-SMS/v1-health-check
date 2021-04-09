@@ -65,7 +65,7 @@
 - 만약 인터페이스를 **하위 계층이 소유**하고 있다면, 여전히 **하위 계층에 명시적으로 결합**된 상태
 - 따라서 인터페이스 소유권을 **사용하는 계층으로 옮김**으로써, 하위 계층과의 **명시적인 결합**을 완전히 **끊을** 수 있다.
 - SOLID 중 **DIP(의존성 역전)** 원칙으로, **사용할 메서드들만 추상화**하여 의존성을 생성할 수 있다는 장점 또한 존재한다.
-- 예외) **domain model 관련 패키지**(repo, ucase)들에 대한 추상화는 **[domain](https://github.com/DMS-SMS/v1-health-check/tree/develop/domain) 패키지에 묶어서 관리**
+- 예외) **domain model 관련 패키지**(repo, use case)들에 대한 추상화는 **[domain](https://github.com/DMS-SMS/v1-health-check/tree/develop/domain) 패키지에 묶어서 관리**
 
 <br>
 
@@ -77,12 +77,34 @@
     - **main function**을 가지고 있는 **main package**로, Health Check를 실행시키는 시작점
     - 모든 **의존성 객체 생성 및 주입**이 여기서 일어나며, [**domain 패키지**](https://github.com/DMS-SMS/v1-health-check/tree/develop/domain)를 제외한 다른 패키지를 명시적으로 import하는 유일한 패키지
 - [**app/config**](https://github.com/DMS-SMS/v1-health-check/tree/develop/app/config)
-    - app(main) 패키지에서 사용하는 **config value**들을 **관리**하고 **반환**하는 **객체를 정의**하는 패키지
+    - app(main) 패키지에서 사용하는 **config value**들을 **관리**하고 **반환**하는 패키지
     - **싱글톤 패턴**으로 구현되어 있으며, **environment variable** 또는 **fixed value** 반환
     - 특정 **인터페이스의 구현체**가 아니라, 단순히 app 패키지에서 **명시적**으로 불러와서 사용하는 객체이다.
 ### **Domain**
 - [**domain**](https://github.com/DMS-SMS/v1-health-check/tree/develop/domain)
-- 
+    - 특정 **domain**에서 사용할 **model 정의**와 그와 **연관된 계층**들(repo, use case)을 **추상화**하는 것이 필요
+    - 따라서 이와 관련된 것을 해당 패키지에서 **묶어서 관리**하며, 추상화에 대한 **구현**은 **domain 이름으로 된 패키지** 내부에서 진행
+    - 결론적으로 도메인에 대한 **model** struct, **repository**와 **usecase** interface를 정의한다.
+    - 현재 존재하는 domain -> **syscheck, srvcheck**
+- [**syscheck**](https://github.com/DMS-SMS/v1-health-check/tree/develop/syscheck)
+    - **system check** 기능에 대한 **domain을 구현하는 패키지**로, 다음과 같은 하위 패키지로 구성되어있다.
+    - [**repository**](https://github.com/DMS-SMS/v1-health-check/tree/develop/syscheck/repository)
+        - domain 패키지에서 **추상회**된 **system check** 관련 **repository**들을 구현하는 패키지
+        - domain 패키지에 정의된 **model struct에 의존**하고 있으며, 데이터를 **명령 혹은 조회**하는 기능의 계층이다.
+        - 현재로써는 **elasticsearch**를 저장소로 사용하는 구현체만 존재한다.
+    - [**usecase**](https://github.com/DMS-SMS/v1-health-check/tree/develop/syscheck/usecase)
+        - domain 패키지에서 추상화된 **system check** 관련 **usecase**들을 구현하는 패키지
+        - domain 패키지에 정의된 **repository 추상화에 의존**하고 있으며, 실질적인 **business logic**을 처리하는 기능의 계층이다.
+        - 해당 패키지에서 정의한 **외부 서비스들에 대한 추상화에 의존**하고 있으며, 아래 나오는 **Agent 관련 패키지**에서 해당 추상화에 대한 **구현체**를 정의한다.
+    - [**delivery**](https://github.com/DMS-SMS/v1-health-check/tree/develop/syscheck/delivery)
+        - 특정 API로부터 들어온 데이터를 **usecase layer으로 전달**하는 기능의 계층
+        - 따라서, domain 패키지에 정의된 **usecase 추상화에 의존**하고 있다.
+        - 해당 프로젝트 내에서 **최상위 계층**으로, 특정 인터페이스에 대한 구현체가 아니다.
+    - [**config**](https://github.com/DMS-SMS/v1-health-check/tree/develop/syscheck/config)
+        - **syscheck의 모든 하위 패키지**에서 사용하는 **config value**들을 **관리**하고 **반환**하는 패키지
+        - **싱글톤 패턴**으로 구현되어 있으며, [**config.yaml**](https://github.com/DMS-SMS/v1-health-check/blob/develop/config.yaml) 파일에 설정된 값 또는 고정 값 반환
+        - repository, usecase, delivery 패키지에서 **각각 추상화한 인터페이스**를 모두 **구현**하고 있음.
+    - 같은 도메인 내에서도 기능들끼리의 연관성을 없애기 위해, **모든 기능들에 대한 추상화와 구현체들이 분리되어있다.**
 ### **Agent**
 - [**consul**](https://github.com/DMS-SMS/v1-health-check/tree/develop/consul)
 - 
