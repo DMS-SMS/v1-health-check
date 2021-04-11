@@ -97,8 +97,8 @@
     - [**usecase**](https://github.com/DMS-SMS/v1-health-check/tree/develop/syscheck/usecase)
         - domain 패키지에서 **추상화**된 **system check** 관련 **usecase**들을 구현하는 패키지
         - domain 패키지에 정의된 **repository 추상화에 의존**하고 있으며, 실질적인 **business logic**을 처리하는 기능의 계층이다.
-        - 또한 **외부 서비스들**(docker, slack, etc..)에 대해서도 **추상화에 의존**하고 있으며, **해당 추상화에 대한 소유권**은 해당 패키지가 가지고 있다.
-        - 이러한 추상화에 대한 구현체는 **Agent 관련 패키지**에서 확인할 수 있다.
+        - 또한 **외부 서비스**들에 대해 추상화한 **agency 인터페이스**에도 **의존**하고 있으며, 해당 추상화에 대한 **소유권**은 해당 패키지가 가지고 있다.
+        - 외부 서비스에 대한 추상화의 **구현체**는 [**Agent**](#3.-Agent) 패키지에서 확인할 수 있다.
     - [**delivery**](https://github.com/DMS-SMS/v1-health-check/tree/develop/syscheck/delivery)
         - 특정 API로부터 들어온 데이터를 **usecase layer으로 전달**하는 기능의 계층
         - 따라서, domain 패키지에 정의된 **usecase 추상화에 의존**하고 있다.
@@ -112,8 +112,16 @@
     - syscheck 패키지와 비슷하게, **service check** 기능의 domain에 대한 **추상화**를 **구현**하는 패키지이다.
     - syscheck 패키지와 하위 구성 또한 동일하지만, 서로 간의 **결합**이 전혀 **존재하지 않다.**
 ### 3. **Agent**
+> Agent 관련 패키지 내의 모든 객체들은 **usecase 패키지**에서 정의된 **추상화**에 대한 **구현체**입니다.
 - [**consul**](https://github.com/DMS-SMS/v1-health-check/tree/develop/consul)
-- 
+    - **Consul API**를 이용하여 **consul agent** 객체를 구현하는 패키지
+    - usecase 패키지에 정의된 **consul agent**를 추상화한 **인터페이스**에 대한 **구현체**이다.
+    - consul에 등록된 노드 조회, 노드 등록 해제 등의 기능이 있다.
+- [**docker**](https://github.com/DMS-SMS/v1-health-check/tree/develop/docker)
+    - **Docker Engine API**를 이용하여 **docker agent** 객체를 구현하는 패키지
+    - usecase 패키지에 정의된 **docker agent**를 추상화한 **인터페이스**에 대한 **구현체**이다.
+    - 특정 컨테이너의 ID 및 메모리 사용량 조회, 컨테이너 삭제 등의 기능이 있다.
+
 
 <!-- 
 ![godepgraph1](https://user-images.githubusercontent.com/48676834/113800510-08960180-9792-11eb-8c5d-a5650ab0799b.png)
