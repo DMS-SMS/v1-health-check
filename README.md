@@ -83,7 +83,7 @@
     - 특정 **인터페이스의 구현체**가 아니라, 단순히 app 패키지에서 **명시적**으로 불러와서 사용하는 객체이다.
 ##
 ### 2. **Domain**
-> #### 기능을 기준으로 domain을 분리하고, 그와 관련된 추상화를 진행하는 패키지입니다.
+> #### 기능을 기준으로 domain을 분리하고, 그에 따라 model을 정의하고 추상화를 진행하는 패키지입니다.
 - [**domain**](https://github.com/DMS-SMS/v1-health-check/tree/develop/domain)
     - 특정 **domain**에서 사용할 **model 정의**와 그와 **연관된 계층**들(repo, use case)을 **추상화**하는 것이 필요
     - 따라서 이와 관련된 것을 **해당 패키지**에서 **묶어서 관리**하며, 추상화에 대한 **구현**은 **domain 이름으로 된 패키지** 내부에서 진행한다.
@@ -100,7 +100,7 @@
         - domain 패키지에서 **추상화**된 **system check** 관련 **usecase**들을 구현하는 패키지
         - domain 패키지에 정의된 **repository 추상화에 의존**하고 있으며, 실질적인 **business logic**을 처리하는 기능의 계층이다.
         - 또한 **외부 서비스**들에 대해 추상화한 **agency 인터페이스**에도 **의존**하고 있으며, 해당 추상화에 대한 **소유권**은 해당 패키지가 가지고 있다.
-        - 외부 서비스에 대한 추상화의 **구현체**는 [**Agent**](#3\.-Agent) 패키지에서 확인할 수 있다.
+        - 외부 서비스들의 추상화에 대한 **구현체**는 아래의 Agent 패키지에서 확인할 수 있다.
     - [**delivery**](https://github.com/DMS-SMS/v1-health-check/tree/develop/syscheck/delivery)
         - 특정 API로부터 들어온 데이터를 **usecase layer으로 전달**하는 기능의 계층
         - 따라서, domain 패키지에 정의된 **usecase 추상화에 의존**하고 있다.
@@ -117,7 +117,7 @@
 ### 3. **Agent**
 > #### 모든 Agent 관련 패키지들은 usecase 패키지에서 정의된 agency 인터페이스를 구현하기 위한 패키지입니다.
 - [**consul**](https://github.com/DMS-SMS/v1-health-check/tree/develop/consul)
-    - **consul API**를 이용하여 **consul agency 인터페이스**를 구현하는 **agent 객체** 정의
+    - **consul API**를 이용하여 **consul agency 인터페이스**를 구현하는 **agent 객체**를 정의하는 패키지
     - consul에 등록된 노드 조회, 노드 등록 해제 등의 기능이 있다.
 - [**docker**](https://github.com/DMS-SMS/v1-health-check/tree/develop/docker)
     - **docker engine API**를 이용하여 **docker** agency 인터페이스를 구현하는 agent 객체 정의
@@ -134,9 +134,12 @@
 - [**system**](https://github.com/DMS-SMS/v1-health-check/tree/develop/system)
     - **linux kernel API**를 이용하여 **각종 system** agency 인터페이스를 구현하는 agent 객체 정의
     - cpu 및 memory 사용량 조회, disk 잔여 용량 조회 등의 기능이 있다.
-##
-### 4. **Else**
-- 
+- [**json**](https://github.com/DMS-SMS/v1-health-check/tree/develop/json)
+    - **[reqBodyWriter](https://github.com/DMS-SMS/v1-health-check/blob/develop/syscheck/repository/elasticsearch/syscheck.go#L37) 인터페이스**를 **json 형식**으로 구현하는 객체를 정의하는 패키지
+    - 위의 패키지들과는 달리, 외부 서비스를 추상화한 인터페이스에 대한 구현체는 아니다.
+    - 구현체인 [**mapWriter**](https://github.com/DMS-SMS/v1-health-check/blob/develop/json/map_writer.go#L19)는 key값에 dot으로 depth가 구분된 **map 타입의 변수**를 json 형식으로 변환해준다.
+    - **Ex) **map["a.b": "c", "a.b": "d"]** -> **map["a": map["b": []string{"c", "d"}]]****
+
 
 <!-- 
 ![godepgraph1](https://user-images.githubusercontent.com/48676834/113800510-08960180-9792-11eb-8c5d-a5650ab0799b.png)
