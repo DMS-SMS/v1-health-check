@@ -141,7 +141,14 @@
     - **Ex) **map["a.b": "c", "a.b": "d"]** -> **map["a": map["b": []string{"c", "d"}]]****
 
 
-<!-- 
-![godepgraph1](https://user-images.githubusercontent.com/48676834/113800510-08960180-9792-11eb-8c5d-a5650ab0799b.png)
+<br>
 
-![godepgraph2](https://user-images.githubusercontent.com/48676834/113800517-0df34c00-9792-11eb-90ab-d048f3b847a1.png) -->
+---
+## **패키지 의존성 그래프**
+> ### **의존성 그래프는 [godepgraph](https://github.com/kisielk/godepgraph)에서 제공하는 툴을 통해 생성하였습니다.**
+
+### **Domain 패키지간의 의존성 그래프**
+![godepgraph2](https://user-images.githubusercontent.com/48676834/113800517-0df34c00-9792-11eb-90ab-d048f3b847a1.png)
+##
+### **Agent 패키지 의존성 그래프**
+![godepgraph1](https://user-images.githubusercontent.com/48676834/113800510-08960180-9792-11eb-8c5d-a5650ab0799b.png)
