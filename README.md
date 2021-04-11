@@ -114,10 +114,10 @@
 ### 3. **Agent**
 > #### 모든 Agent 관련 패키지들은 usecase 패키지에서 정의된 agency 인터페이스를 구현하기 위한 패키지입니다.
 - [**consul**](https://github.com/DMS-SMS/v1-health-check/tree/develop/consul)
-    - **Consul API**를 이용하여 **consul agency 인터페이스**를 구현하는 **agent 객체**를 정의하는 패키지
+    - **Consul API**를 이용하여 **consul agency 인터페이스**를 구현하는 agent 객체를 정의하는 패키지
     - consul에 등록된 노드 조회, 노드 등록 해제 등의 기능이 있다.
 - [**docker**](https://github.com/DMS-SMS/v1-health-check/tree/develop/docker)
-    - **Docker Engine API**를 이용하여 **docker agency 인터페이스**를 구현하는 **agent 객체**를 정의하는 패키지
+    - **Docker Engine API**를 이용하여 **docker agency 인터페이스**를 구현하는 agent 객체를 정의하는 패키지
     - 특정 컨테이너의 ID 및 메모리 사용량 조회, 컨테이너 삭제 등의 기능이 있다.
 
 
