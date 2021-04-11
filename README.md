@@ -1,6 +1,6 @@
 # **SMS-Health-Check**
 
-> ## 대덕소프트웨어마이스터고등학교 [**SMS(학교 지원 시스템)**](https://github.com/DMS-SMS/v1-api-gateway) 서버 **Health Check 서비스**
+> ### 대덕소프트웨어마이스터고등학교 [**SMS(학교 지원 시스템)**](https://github.com/DMS-SMS/v1-api-gateway) 서버 **Health Check 서비스**
 
 <br>
 
