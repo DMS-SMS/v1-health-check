@@ -73,6 +73,7 @@
 ## **패키지 종류 및 구조**
 > ### **프로젝트를 구성하는 패키지들을 크게 세 가지 종류로 나누어 설명합니다.**
 ### 1. **App**
+> #### 프로세스를 시작하고, main문에서 사용하는 설정 값들을 관리하기 위한 패키지입니다.
 - [**app**](https://github.com/DMS-SMS/v1-health-check/tree/develop/app)
     - **main function**을 가지고 있는 **main package**로, Health Check를 실행시키는 시작점
     - 모든 **의존성 객체 생성 및 주입**이 여기서 일어나며, [**domain 패키지**](https://github.com/DMS-SMS/v1-health-check/tree/develop/domain)를 제외한 다른 패키지를 명시적으로 import하는 유일한 패키지
@@ -82,6 +83,7 @@
     - 특정 **인터페이스의 구현체**가 아니라, 단순히 app 패키지에서 **명시적**으로 불러와서 사용하는 객체이다.
 ##
 ### 2. **Domain**
+> #### 기능을 기준으로 domain을 분리하고, 그와 관련된 추상화를 진행하는 패키지입니다.
 - [**domain**](https://github.com/DMS-SMS/v1-health-check/tree/develop/domain)
     - 특정 **domain**에서 사용할 **model 정의**와 그와 **연관된 계층**들(repo, use case)을 **추상화**하는 것이 필요
     - 따라서 이와 관련된 것을 **해당 패키지**에서 **묶어서 관리**하며, 추상화에 대한 **구현**은 **domain 이름으로 된 패키지** 내부에서 진행한다.
@@ -130,10 +132,11 @@
     - **slack API**를 이용하여 **slack** agency 인터페이스를 구현하는 agent 객체 정의
     - slack app을 이용하여 특정 채널에 메시지를 전송하는 기능이 있다.
 - [**system**](https://github.com/DMS-SMS/v1-health-check/tree/develop/system)
-    - **linux kernel API**를 이용하여 각종 **system** agency 인터페이스를 구현하는 agent 객체 정의
+    - **linux kernel API**를 이용하여 **각종 system** agency 인터페이스를 구현하는 agent 객체 정의
     - cpu 및 memory 사용량 조회, disk 잔여 용량 조회 등의 기능이 있다.
-
-
+##
+### 4. **Else**
+- 
 
 <!-- 
 ![godepgraph1](https://user-images.githubusercontent.com/48676834/113800510-08960180-9792-11eb-8c5d-a5650ab0799b.png)
