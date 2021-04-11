@@ -114,11 +114,24 @@
 ### 3. **Agent**
 > #### 모든 Agent 관련 패키지들은 usecase 패키지에서 정의된 agency 인터페이스를 구현하기 위한 패키지입니다.
 - [**consul**](https://github.com/DMS-SMS/v1-health-check/tree/develop/consul)
-    - **Consul API**를 이용하여 **consul agency 인터페이스**를 구현하는 agent 객체를 정의하는 패키지
+    - **consul API**를 이용하여 **consul agency 인터페이스**를 구현하는 **agent 객체** 정의
     - consul에 등록된 노드 조회, 노드 등록 해제 등의 기능이 있다.
 - [**docker**](https://github.com/DMS-SMS/v1-health-check/tree/develop/docker)
-    - **Docker Engine API**를 이용하여 **docker agency 인터페이스**를 구현하는 agent 객체를 정의하는 패키지
+    - **docker engine API**를 이용하여 **docker** agency 인터페이스를 구현하는 agent 객체 정의
     - 특정 컨테이너의 ID 및 메모리 사용량 조회, 컨테이너 삭제 등의 기능이 있다.
+- [**elasticsearch**](https://github.com/DMS-SMS/v1-health-check/tree/develop/elasticsearch)
+    - **elasticsearch API**를 이용하여 **elasticsearch** agency 인터페이스를 구현하는 agent 객체 정의
+    - cluster 정보 조회, indices 조회 및 삭제 등의 기능이 있다.
+- [**grpc**](https://github.com/DMS-SMS/v1-health-check/tree/develop/grpc)
+    - **gRPC SDK**를 이용하여 **gRPC** agency 인터페이스를 구현하는 agent 객체 정의
+    - connection check를 위한 gRPC ping을 발행하는 기능이 있다.
+- [**slack**](https://github.com/DMS-SMS/v1-health-check/tree/develop/slack)
+    - **slack API**를 이용하여 **slack** agency 인터페이스를 구현하는 agent 객체 정의
+    - slack app을 이용하여 특정 채널에 메시지를 전송하는 기능이 있다.
+- [**system**](https://github.com/DMS-SMS/v1-health-check/tree/develop/system)
+    - **linux kernel API**를 이용하여 각종 **system** agency 인터페이스를 구현하는 agent 객체 정의
+    - cpu 및 memory 사용량 조회, disk 잔여 용량 조회 등의 기능이 있다.
+
 
 
 <!-- 
