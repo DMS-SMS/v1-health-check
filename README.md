@@ -80,7 +80,7 @@
     - app(main) 패키지에서 사용하는 **config value**들을 **관리**하고 **반환**하는 패키지
     - **싱글톤 패턴**으로 구현되어 있으며, **environment variable** 또는 **fixed value** 반환
     - 특정 **인터페이스의 구현체**가 아니라, 단순히 app 패키지에서 **명시적**으로 불러와서 사용하는 객체이다.
-
+##
 ### 2. **Domain**
 - [**domain**](https://github.com/DMS-SMS/v1-health-check/tree/develop/domain)
     - 특정 **domain**에서 사용할 **model 정의**와 그와 **연관된 계층**들(repo, use case)을 **추상화**하는 것이 필요
@@ -111,6 +111,7 @@
 - [**srvcheck**](https://github.com/DMS-SMS/v1-health-check/tree/develop/srvcheck)
     - syscheck 패키지와 비슷하게, **service check** 기능의 domain에 대한 **추상화**를 **구현**하는 패키지이다.
     - syscheck 패키지와 하위 구성 또한 동일하지만, 서로 간의 **결합**이 전혀 **존재하지 않다.**
+##
 ### 3. **Agent**
 > #### 모든 Agent 관련 패키지들은 usecase 패키지에서 정의된 agency 인터페이스를 구현하기 위한 패키지입니다.
 - [**consul**](https://github.com/DMS-SMS/v1-health-check/tree/develop/consul)
