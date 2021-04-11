@@ -112,7 +112,7 @@
     - syscheck 패키지와 비슷하게, **service check** 기능의 domain에 대한 **추상화**를 **구현**하는 패키지이다.
     - syscheck 패키지와 하위 구성 또한 동일하지만, 서로 간의 **결합**이 전혀 **존재하지 않다.**
 ### 3. **Agent**
-> Agent 관련 패키지 내의 모든 객체들은 **usecase 패키지**에서 정의된 **추상화**에 대한 **구현체**입니다.
+> #### Agent 관련 패키지 내의 모든 객체들은 usecase 패키지에서 정의된 agency 인터페이스에 대한 구현체입니다.
 - [**consul**](https://github.com/DMS-SMS/v1-health-check/tree/develop/consul)
     - **Consul API**를 이용하여 **consul agent** 객체를 구현하는 패키지
     - usecase 패키지에 정의된 **consul agent**를 추상화한 **인터페이스**에 대한 **구현체**이다.
