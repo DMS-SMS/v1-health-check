@@ -14,28 +14,27 @@ import (
 
 // swarmpitCheckHandler is delivered data handler about swarmpit check using usecase layer
 type swarmpitCheckHandler struct {
-	// SUsecase is usecase layer interface which is injected from package outside (maybe, in main)
-	SUsecase domain.SwarmpitCheckUseCase
+	// handlerCtx is used for handling delivered channel using context
+	handlerCtx systemCheckHandlerContext
+
+	// sUsecase is usecase layer interface which is injected from package outside (maybe, in main)
+	sUsecase domain.SwarmpitCheckUseCase
 }
 
 // NewSwarmpitCheckHandler define swarmpitCheckHandler ptr instance & register handling channel msg to usecase
 func NewSwarmpitCheckHandler(c <-chan time.Time, su domain.SwarmpitCheckUseCase) {
 	handler := &swarmpitCheckHandler{
-		SUsecase: su,
+		handlerCtx: globalContext,
+		sUsecase:   su,
 	}
 
 	go handler.startListening(c)
 	log.Println("START TO LISTEN CHANNEL MSG ABOUT SERVICE SWARMPIT CHECK")
 }
 
-// startListening method start listening msg from golang channel & stream msg to another method
+// startListening method start listening using handlerCtx field startListening method
 func (sh *swarmpitCheckHandler) startListening(c <-chan time.Time) {
-	for {
-		select {
-		case t := <-c:
-			go sh.checkSwarmpit(t)
-		}
-	}
+	sh.handlerCtx.startListening(c, sh.checkSwarmpit)
 }
 
 // checkSwarmpit method set context & call CheckSwarmpit usecase method, handle error
@@ -43,7 +42,7 @@ func (sh *swarmpitCheckHandler) checkSwarmpit(t time.Time) {
 	ctx := context.Background()
 	ctx = context.WithValue(ctx, "time", t)
 
-	if err := sh.SUsecase.CheckSwarmpit(ctx); err != nil {
+	if err := sh.sUsecase.CheckSwarmpit(ctx); err != nil {
 		log.Printf("error occurs in CheckSwarmpit, err: %v", err)
 	}
 }
