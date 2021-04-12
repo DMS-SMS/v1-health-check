@@ -9,6 +9,8 @@ package channel
 
 import (
 	"context"
+	"log"
+	"sync"
 )
 
 var (
@@ -18,3 +20,20 @@ var (
 	// chanWaitGroup is used when start & end handling delivered chan with Add & Done method
 	chanWaitGroup *sync.WaitGroup
 )
+
+// SetGlobalContext method set global context using in all handler defined in this package
+// context received from parameter must be WithCancel context & have *sync.WaitGroup value
+// the panic will be raised if parameter context is not valid to above constraints.
+func SetGlobalContext(ctx context.Context) {
+	if ctx.Done() == nil {
+		log.Fatal("context received from parameter must be WithCancel")
+	} else {
+		ChanCancelCtx = ctx
+	}
+
+	if wg, ok := ctx.Value("WaitGroup").(*sync.WaitGroup); !ok {
+		log.Fatal("context received from parameter must have WaitGroup value")
+	} else {
+		chanWaitGroup = wg
+	}
+}
