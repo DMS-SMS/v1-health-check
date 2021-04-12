@@ -11,29 +11,34 @@ import (
 	"context"
 	"log"
 	"sync"
+	"time"
 )
 
-var (
+// globalContext is global variable set in SetGlobalContext function
+var globalContext = systemCheckHandlerContext{}
+
+// systemCheckHandlerContext is struct that handle channel delivery using context
+type systemCheckHandlerContext struct {
 	// chanCancelCtx is used for checking if channel delivery is canceled by cancel method
-	ChanCancelCtx context.Context
+	chanCancelCtx context.Context
 
 	// chanWaitGroup is used when start & end handling delivered chan with Add & Done method
 	chanWaitGroup *sync.WaitGroup
-)
+}
 
-// SetGlobalContext method set global context using in all handler defined in this package
+// SetGlobalContext method set globalContext variable using in all handler defined in this package
 // context received from parameter must be WithCancel context & have *sync.WaitGroup value
 // the panic will be raised if parameter context is not valid to above constraints.
 func SetGlobalContext(ctx context.Context) {
 	if ctx.Done() == nil {
 		log.Fatal("context received from parameter must be WithCancel")
 	} else {
-		ChanCancelCtx = ctx
+		globalContext.chanCancelCtx = ctx
 	}
 
 	if wg, ok := ctx.Value("WaitGroup").(*sync.WaitGroup); !ok {
 		log.Fatal("context received from parameter must have WaitGroup value")
 	} else {
-		chanWaitGroup = wg
+		globalContext.chanWaitGroup = wg
 	}
 }
