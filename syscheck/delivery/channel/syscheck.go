@@ -6,3 +6,15 @@
 // in this file, define global variable or function using in all struct defined in another file
 
 package channel
+
+import (
+	"context"
+)
+
+var (
+	// chanCancelCtx is used for checking if channel delivery is canceled by cancel method
+	ChanCancelCtx context.Context
+
+	// chanWaitGroup is used when start & end handling delivered chan with Add & Done method
+	chanWaitGroup *sync.WaitGroup
+)
