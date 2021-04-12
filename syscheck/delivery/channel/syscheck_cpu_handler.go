@@ -14,28 +14,27 @@ import (
 
 // cpuCheckHandler is delivered data handler about cpu check using usecase layer
 type cpuCheckHandler struct {
-	// CUsecase is usecase layer interface which is injected from package outside (maybe, in main)
-	CUsecase domain.CPUCheckUseCase
+	// handlerCtx is used for handling delivered channel using context
+	handlerCtx systemCheckHandlerContext
+
+	// cUsecase is usecase layer interface which is injected from package outside (maybe, in main)
+	cUsecase domain.CPUCheckUseCase
 }
 
 // NewDiskCheckHandler define diskCheckHandler ptr instance & register handling channel msg to usecase
 func NewCPUCheckHandler(c <-chan time.Time, cu domain.CPUCheckUseCase) {
 	handler := &cpuCheckHandler{
-		CUsecase: cu,
+		handlerCtx: globalContext,
+		cUsecase:   cu,
 	}
 
 	go handler.startListening(c)
 	log.Println("START TO LISTEN CHANNEL MSG ABOUT SYSTEM CPU CHECK")
 }
 
-// startListening method start listening msg from golang channel & stream msg to another method
+// startListening method start listening using handlerCtx field startListening method
 func (ch *cpuCheckHandler) startListening(c <-chan time.Time) {
-	for {
-		select {
-		case t := <-c:
-			go ch.checkCPU(t)
-		}
-	}
+	ch.handlerCtx.startListening(c, ch.checkCPU)
 }
 
 // checkCPU method set context & call usecase CheckCPU method, handle error
@@ -43,7 +42,7 @@ func (ch *cpuCheckHandler) checkCPU(t time.Time) {
 	ctx := context.Background()
 	ctx = context.WithValue(ctx, "time", t)
 
-	if err := ch.CUsecase.CheckCPU(ctx); err != nil {
+	if err := ch.cUsecase.CheckCPU(ctx); err != nil {
 		log.Printf("error occurs in CheckCPU, err: %v", err)
 	}
 }

@@ -14,28 +14,27 @@ import (
 
 // diskCheckHandler is delivered data handler about disk check using usecase layer
 type diskCheckHandler struct {
-	// DUsecase is usecase layer interface which is injected from package outside (maybe, in main)
-	DUsecase domain.DiskCheckUseCase
+	// handlerCtx is used for handling delivered channel using context
+	handlerCtx systemCheckHandlerContext
+
+	// dUsecase is usecase layer interface which is injected from package outside (maybe, in main)
+	dUsecase domain.DiskCheckUseCase
 }
 
 // NewDiskCheckHandler define diskCheckHandler ptr instance & register handling channel msg to usecase
 func NewDiskCheckHandler(c <-chan time.Time, du domain.DiskCheckUseCase) {
 	handler := &diskCheckHandler{
-		DUsecase: du,
+		handlerCtx: globalContext,
+		dUsecase:   du,
 	}
 
 	go handler.startListening(c)
 	log.Println("START TO LISTEN CHANNEL MSG ABOUT SYSTEM DISK CHECK")
 }
 
-// startListening method start listening msg from golang channel & stream msg to another method
+// startListening method start listening using handlerCtx field startListening method
 func (dh *diskCheckHandler) startListening(c <-chan time.Time) {
-	for {
-		select {
-		case t := <-c:
-			go dh.checkDisk(t)
-		}
-	}
+	dh.handlerCtx.startListening(c, dh.checkDisk)
 }
 
 // checkDisk method set context & call usecase CheckDisk method, handle error
@@ -43,7 +42,7 @@ func (dh *diskCheckHandler) checkDisk(t time.Time) {
 	ctx := context.Background()
 	ctx = context.WithValue(ctx, "time", t)
 
-	if err := dh.DUsecase.CheckDisk(ctx); err != nil {
+	if err := dh.dUsecase.CheckDisk(ctx); err != nil {
 		log.Printf("error occurs in CheckDisk, err: %v", err)
 	}
 }
