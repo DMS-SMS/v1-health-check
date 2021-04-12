@@ -266,6 +266,7 @@ func (ccu *consulCheckUsecase) checkConsul(ctx context.Context) (history *domain
 		history.DeregisterFailedInstances = failSrvs
 		ccu.setStatus(consulStatusHealthy)
 	}
+	history.ProcessLevel.Set(healthyLevel)
 
 	return
 }
