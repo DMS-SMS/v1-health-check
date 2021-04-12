@@ -83,7 +83,7 @@ func main() {
 	_rpc := grpc.NewGRPCAgent()
 
 	// syscheck domain repository
-	// the reason separate Repository, Usecase interface in same domain -> 서로 간의 연관성 X, 더욱 더 확실한 분리를 위해
+	// the reason separate Repository, Usecase interface in same domain
 	sdr := _syscheckRepo.NewESDiskCheckHistoryRepository(_syscheckConfig.App, esCli, json.MapWriter())
 	scr := _syscheckRepo.NewESCPUCheckHistoryRepository(_syscheckConfig.App, esCli, json.MapWriter())
 	smr := _syscheckRepo.NewESMemoryCheckHistoryRepository(_syscheckConfig.App, esCli, json.MapWriter())
@@ -101,7 +101,6 @@ func main() {
 	// ---
 
 	// srvcheck domain repository
-	// the reason separate Repository, Usecase interface in same domain -> 서로 간의 연관성 X, 더욱 더 확실한 분리를 위해
 	ser := _srvcheckRepo.NewESElasticsearchCheckHistoryRepository(_srvcheckConfig.App, esCli, json.MapWriter())
 	ssr := _srvcheckRepo.NewESSwarmpitCheckHistoryRepository(_srvcheckConfig.App, esCli, json.MapWriter())
 	scsr := _srvcheckRepo.NewESConsulCheckHistoryRepository(_srvcheckConfig.App, esCli, json.MapWriter())
