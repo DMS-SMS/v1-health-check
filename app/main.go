@@ -7,8 +7,11 @@ import (
 	// import Go SDK package
 	"context"
 	"log"
+	"os"
+	"os/signal"
 	"runtime"
 	"sync"
+	"syscall"
 	"time"
 
 	// import external package
@@ -91,6 +94,7 @@ func main() {
 	wg := &sync.WaitGroup{}
 	ctx, cancel := context.WithCancel(context.WithValue(context.Background(), "WaitGroup", wg))
 
+	// about syscheck domain
 	// syscheck domain repository
 	sdr := _syscheckRepo.NewESDiskCheckHistoryRepository(_syscheckConfig.App, esCli, json.MapWriter())
 	scr := _syscheckRepo.NewESCPUCheckHistoryRepository(_syscheckConfig.App, esCli, json.MapWriter())
@@ -107,8 +111,7 @@ func main() {
 	_syscheckChanDelivery.NewCPUCheckHandler(time.Tick(_syscheckConfig.App.CPUCheckDeliveryPingCycle()), scu)
 	_syscheckChanDelivery.NewMemoryCheckHandler(time.Tick(_syscheckConfig.App.MemoryCheckDeliveryPingCycle()), smu)
 
-	// ---
-
+	// about srvcheck domain
 	// srvcheck domain repository
 	ser := _srvcheckRepo.NewESElasticsearchCheckHistoryRepository(_srvcheckConfig.App, esCli, json.MapWriter())
 	ssr := _srvcheckRepo.NewESSwarmpitCheckHistoryRepository(_srvcheckConfig.App, esCli, json.MapWriter())
@@ -124,6 +127,21 @@ func main() {
 	_srvcheckChanDelivery.NewElasticsearchCheckHandler(time.Tick(_srvcheckConfig.App.ESCheckDeliveryPingCycle()), seu)
 	_srvcheckChanDelivery.NewSwarmpitCheckHandler(time.Tick(_srvcheckConfig.App.SwarmpitCheckDeliveryPingCycle()), ssu)
 	_srvcheckChanDelivery.NewConsulCheckHandler(time.Tick(_srvcheckConfig.App.ConsulCheckDeliveryPingCycle()), scsu)
+
+	// handle signal to graceful shutdown
+	sigs := make(chan os.Signal, 1)
+	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
+	go func() {
+		s := <-sigs
+		log.Printf("SIGNAL TO STOP PROCESS WAS NOTIFIED!, SIGNAL: %s", s)
+
+		log.Println("CANCEL DELIVERY CONTEXT & WAIT TO ALL HANDLING GROUP DONE!")
+		cancel()
+		wg.Wait()
+
+		log.Println("ALL HANDLING GROUP WAS DONE! SUCCEED TO GRACEFUL SHUTDOWN.")
+		os.Exit(0)
+	}()
 
 	runtime.Goexit()
 }
