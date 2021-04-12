@@ -42,3 +42,21 @@ func SetGlobalContext(ctx context.Context) {
 		globalContext.chanWaitGroup = wg
 	}
 }
+
+// startListening method start listening msg from golang channel & stream msg to another method using WaitGroup
+func (shc *systemCheckHandlerContext) startListening(c <-chan time.Time, h func(time.Time)) {
+	for {
+		if shc.chanCancelCtx.Err() == context.Canceled {
+			break
+		}
+
+		select {
+		case t := <-c:
+			shc.chanWaitGroup.Add(1)
+			go func() {
+				defer shc.chanWaitGroup.Done()
+				h(t)
+			}()
+		}
+	}
+}
