@@ -5,8 +5,10 @@ package main
 
 import (
 	// import Go SDK package
+	"context"
 	"log"
 	"runtime"
+	"sync"
 	"time"
 
 	// import external package
@@ -81,6 +83,10 @@ func main() {
 	_es := elasticsearch.NewAgent(esCli)
 	_csl := consul.NewAgent(cslCli)
 	_rpc := grpc.NewGRPCAgent()
+
+	// define ctx having WaitGroup in value & which is type of cancelCtx
+	wg := &sync.WaitGroup{}
+	ctx, cancel := context.WithCancel(context.WithValue(context.Background(), "WaitGroup", wg))
 
 	// syscheck domain repository
 	// the reason separate Repository, Usecase interface in same domain
