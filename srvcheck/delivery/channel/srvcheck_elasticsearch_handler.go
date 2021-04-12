@@ -1,3 +1,4 @@
+// Create file in v.1.0.0
 // in srvcheck_elasticsearch_handler.go file, define delivery from channel msg to elasticsearch check usecase handler
 // publishing msg to golang channel which is received from outside is not occurred in this package
 
