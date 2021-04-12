@@ -54,6 +54,7 @@ func init() {
 }
 
 func main() {
+	// add elasticsearch API connection
 	esCli, err := es.NewClient(es.Config{
 		Addresses: []string{config.App.ESAddress()},
 	})
@@ -61,6 +62,7 @@ func main() {
 		log.Fatal(errors.Wrap(err, "failed to create elasticsearch client"))
 	}
 
+	// add docker engine API connection
 	dkrCli, err := client.NewClientWithOpts(
 		client.WithVersion(config.App.DockerCliVer()),
 		client.WithTimeout(config.App.DockerCliTimeout()),
@@ -69,6 +71,7 @@ func main() {
 		log.Fatal(errors.Wrap(err, "failed to create docker client"))
 	}
 
+	// add consul API connection
 	cslCfg := api.DefaultConfig()
 	cslCfg.Address = config.App.ConsulAddress()
 	cslCli, err := api.NewClient(cslCfg)
@@ -89,7 +92,6 @@ func main() {
 	ctx, cancel := context.WithCancel(context.WithValue(context.Background(), "WaitGroup", wg))
 
 	// syscheck domain repository
-	// the reason separate Repository, Usecase interface in same domain
 	sdr := _syscheckRepo.NewESDiskCheckHistoryRepository(_syscheckConfig.App, esCli, json.MapWriter())
 	scr := _syscheckRepo.NewESCPUCheckHistoryRepository(_syscheckConfig.App, esCli, json.MapWriter())
 	smr := _syscheckRepo.NewESMemoryCheckHistoryRepository(_syscheckConfig.App, esCli, json.MapWriter())
@@ -100,6 +102,7 @@ func main() {
 	smu := _syscheckUcase.NewMemoryCheckUsecase(_syscheckConfig.App, smr, _slk, _sys, _dkr)
 
 	// syscheck domain delivery
+	_syscheckChanDelivery.SetGlobalContext(ctx)
 	_syscheckChanDelivery.NewDiskCheckHandler(time.Tick(_syscheckConfig.App.DiskCheckDeliveryPingCycle()), sdu)
 	_syscheckChanDelivery.NewCPUCheckHandler(time.Tick(_syscheckConfig.App.CPUCheckDeliveryPingCycle()), scu)
 	_syscheckChanDelivery.NewMemoryCheckHandler(time.Tick(_syscheckConfig.App.MemoryCheckDeliveryPingCycle()), smu)
@@ -117,6 +120,7 @@ func main() {
 	scsu := _srvcheckUcase.NewConsulCheckUsecase(_srvcheckConfig.App, scsr, _slk, _csl, _rpc, _dkr)
 
 	// srvcheck domain delivery
+	_srvcheckChanDelivery.SetGlobalContext(ctx)
 	_srvcheckChanDelivery.NewElasticsearchCheckHandler(time.Tick(_srvcheckConfig.App.ESCheckDeliveryPingCycle()), seu)
 	_srvcheckChanDelivery.NewSwarmpitCheckHandler(time.Tick(_srvcheckConfig.App.SwarmpitCheckDeliveryPingCycle()), ssu)
 	_srvcheckChanDelivery.NewConsulCheckHandler(time.Tick(_srvcheckConfig.App.ConsulCheckDeliveryPingCycle()), scsu)
