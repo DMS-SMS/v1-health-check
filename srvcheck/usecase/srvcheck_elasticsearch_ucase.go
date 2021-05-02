@@ -55,7 +55,7 @@ type elasticsearchCheckUsecaseConfig interface {
 	// JaegerIndexPattern method returns string represent jaeger index pattern
 	JaegerIndexPattern() string
 
-	// JaegerIndexLifeCycle method returns duration represent jaeger index life cycle
+	// JaegerIndexMinLifeCycle JaegerIndexLifeCycle method returns duration represent jaeger index life cycle
 	JaegerIndexMinLifeCycle() time.Duration
 }
 
@@ -69,7 +69,7 @@ type elasticsearchAgency interface {
 		ActiveShardsPercent() float64 // get active shards percent of cluster
 	}, err error)
 
-	// GetIndicesWithRegexp return indices list with regexp pattern
+	// GetIndicesWithPatterns return indices list with regexp pattern
 	GetIndicesWithPatterns(patterns []string) (indices interface {
 		SetMinLifeCycle(cycle time.Duration) // set min life cycle of index of indices
 		IndexNames() []string                // get index name list of indices

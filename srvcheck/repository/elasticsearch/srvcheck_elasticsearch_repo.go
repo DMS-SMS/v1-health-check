@@ -58,12 +58,12 @@ func NewESElasticsearchCheckHistoryRepository(
 	return repo
 }
 
-// Implement Migrate method of ElasticsearchCheckHistoryRepository interface
+// Migrate Implement Migrate method of ElasticsearchCheckHistoryRepository interface
 func (eer *esElasticsearchCheckHistoryRepository) Migrate() error {
 	return eer.esMigrator.Migrate(eer.myCfg, eer.esCli, eer.reqBodyWriter)
 }
 
-// Implement Store method of ElasticsearchCheckHistoryRepository interface
+// Store Implement Store method of ElasticsearchCheckHistoryRepository interface
 func (eer *esElasticsearchCheckHistoryRepository) Store(history *domain.ElasticsearchCheckHistory) (b []byte, err error) {
 	body, _ := json.Marshal(history.DottedMapWithPrefix(""))
 	if _, err = eer.reqBodyWriter.Write(body); err != nil {

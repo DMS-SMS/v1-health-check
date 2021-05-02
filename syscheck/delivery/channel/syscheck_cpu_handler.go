@@ -21,7 +21,7 @@ type cpuCheckHandler struct {
 	cUsecase domain.CPUCheckUseCase
 }
 
-// NewDiskCheckHandler define diskCheckHandler ptr instance & register handling channel msg to usecase
+// NewCPUCheckHandler define diskCheckHandler ptr instance & register handling channel msg to usecase
 func NewCPUCheckHandler(c <-chan time.Time, cu domain.CPUCheckUseCase) {
 	handler := &cpuCheckHandler{
 		handlerCtx: globalContext,

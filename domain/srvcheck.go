@@ -70,7 +70,7 @@ type serviceCheckHistoryRepositoryComponent interface {
 	Migrate() error
 }
 
-// FillComponent fill field of serviceCheckHistoryComponent if is empty
+// FillPrivateComponent FillComponent fill field of serviceCheckHistoryComponent if is empty
 func (sch *serviceCheckHistoryComponent) FillPrivateComponent() {
 	sch.version = version
 	sch.agent = "sms-health-check"
