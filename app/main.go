@@ -9,7 +9,6 @@ import (
 	"log"
 	"os"
 	"os/signal"
-	"runtime"
 	"sync"
 	"syscall"
 	"time"
@@ -131,17 +130,12 @@ func main() {
 	// handle signal to graceful shutdown
 	sigs := make(chan os.Signal, 1)
 	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
-	go func() {
-		s := <-sigs
-		log.Printf("SIGNAL TO STOP PROCESS WAS NOTIFIED!, SIGNAL: %s", s)
+	s := <-sigs
+	log.Printf("SIGNAL TO STOP PROCESS WAS NOTIFIED!, SIGNAL: %s", s)
 
-		log.Println("CANCEL DELIVERY CONTEXT & WAIT TO ALL HANDLING GROUP DONE!")
-		cancel()
-		wg.Wait()
+	log.Println("CANCEL DELIVERY CONTEXT & WAIT TO ALL HANDLING GROUP DONE!")
+	cancel()
+	wg.Wait()
 
-		log.Println("ALL HANDLING GROUP WAS DONE! SUCCEED TO GRACEFUL SHUTDOWN.")
-		os.Exit(0)
-	}()
-
-	runtime.Goexit()
+	log.Println("ALL HANDLING GROUP WAS DONE! SUCCEED TO GRACEFUL SHUTDOWN.")
 }
