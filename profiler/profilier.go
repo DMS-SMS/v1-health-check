@@ -130,3 +130,8 @@ func (dp *defaultProfiler) StartProfiling() {
 		log.Fatalf("unable to upload block profiling result to s3, err: %v\n", err)
 	}
 }
+
+func (dp *defaultProfiler) StopProfiling(sig os.Signal) {
+	dp.waitGroup.Add(1)
+	dp.signalChan <- sig
+}
