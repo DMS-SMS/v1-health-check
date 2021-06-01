@@ -3,6 +3,11 @@ app:
   CONSUL_ADDRESS:     # set value in environment variable
   CONFIG_FILE:        # set value in environment variable
   SLACK_CHAT_CHANNEL: # set value in environment variable
+  VERSION:            # set value in environment variable
+  SMS_AWS_ID:         # set value in environment variable
+  SMS_AWS_KEY:        # set value in environment variable
+  SMS_AWS_REGION:     # set value in environment variable
+  SMS_AWS_BUCKET:     # set value in environment variable
 
 syscheck:
   diskcheck:
