@@ -33,6 +33,21 @@ type appConfig struct {
 
 	// slackChatCnl represent slack channel ID to send chat
 	slackChatCnl *string
+
+	// awsAccountID represent aws account ID
+	awsAccountID *string
+
+	// awsAccountKey represent aws account key
+	awsAccountKey *string
+
+	// awsRegion represent aws region
+	awsRegion *string
+
+	// awsS3Bucket represent aws s3 bucket
+	awsS3Bucket *string
+
+	// version represent version of sms health check(this application)
+	version *string
 }
 
 // return elasticsearch address get from environment variable
@@ -105,6 +120,20 @@ func (ac *appConfig) SlackChatChannel() string {
 	return *ac.slackChatCnl
 }
 
+// Version return version from environment variable
+func (ac *appConfig) Version() string {
+	if ac.version != nil {
+		return *ac.version
+	}
+
+	if viper.IsSet("VERSION") {
+		ac.version = _string(viper.GetString("VERSION"))
+	} else {
+		log.Fatal("please set VERSION in environment variable")
+	}
+	return *ac.version
+}
+
 // return docker client version as literal
 func (ac *appConfig) DockerCliVer() string {
 	return "1.40"
@@ -113,6 +142,66 @@ func (ac *appConfig) DockerCliVer() string {
 // return docker client connection time out as literal
 func (ac *appConfig) DockerCliTimeout() time.Duration {
 	return time.Second * 5
+}
+
+// AWSS3Bucket return s3 bucket name from environment variable
+func (ac *appConfig) AWSS3Bucket() string {
+	if ac.awsS3Bucket != nil {
+		return *ac.awsS3Bucket
+	}
+
+	if viper.IsSet("SMS_AWS_BUCKET") {
+		ac.awsS3Bucket = _string(viper.GetString("SMS_AWS_BUCKET"))
+	} else {
+		log.Fatal("please set SMS_AWS_BUCKET in environment variable")
+	}
+	return *ac.awsS3Bucket
+}
+
+func (ac *appConfig) ProfilerS3Bucket() string {
+	return ac.AWSS3Bucket()
+}
+
+// AWSAccountID return aws account id from environment variable
+func (ac *appConfig) AWSAccountID() string {
+	if ac.awsAccountID != nil {
+		return *ac.awsAccountID
+	}
+
+	if viper.IsSet("SMS_AWS_ID") {
+		ac.awsAccountID = _string(viper.GetString("SMS_AWS_ID"))
+	} else {
+		log.Fatal("please set SMS_AWS_ID in environment variable")
+	}
+	return *ac.awsAccountID
+}
+
+// AWSAccountKey return aws account key from environment variable
+func (ac *appConfig) AWSAccountKey() string {
+	if ac.awsAccountKey != nil {
+		return *ac.awsAccountKey
+	}
+
+	if viper.IsSet("SMS_AWS_KEY") {
+		ac.awsAccountKey = _string(viper.GetString("SMS_AWS_KEY"))
+	} else {
+		log.Fatal("please set SMS_AWS_KEY in environment variable")
+	}
+	return *ac.awsAccountKey
+}
+
+// AWSRegion return aws region from environment variable
+func (ac *appConfig) AWSRegion() string {
+	if ac.awsRegion != nil {
+		return *ac.awsRegion
+	}
+
+	if viper.IsSet("SMS_AWS_REGION") {
+		ac.awsRegion = _string(viper.GetString("SMS_AWS_REGION"))
+	} else {
+		log.Fatal("please set SMS_AWS_REGION in environment variable")
+	}
+	return *ac.awsRegion
 }
 
 func init() {
