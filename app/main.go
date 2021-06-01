@@ -6,9 +6,6 @@ package main
 import (
 	// import Go SDK package
 	"context"
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/credentials"
-	"github.com/aws/aws-sdk-go/aws/session"
 	"log"
 	"os"
 	"os/signal"
@@ -17,8 +14,12 @@ import (
 	"time"
 
 	// import external package
+	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/credentials"
+	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/docker/docker/client"
 	es "github.com/elastic/go-elasticsearch/v7"
+	"github.com/gin-gonic/gin"
 	"github.com/hashicorp/consul/api"
 	"github.com/pkg/errors"
 	"github.com/spf13/viper"
@@ -37,12 +38,14 @@ import (
 	// import system check domain package
 	_syscheckConfig "github.com/DMS-SMS/v1-health-check/syscheck/config"
 	_syscheckChanDelivery "github.com/DMS-SMS/v1-health-check/syscheck/delivery/channel"
+	_syscheckHttpDelivery "github.com/DMS-SMS/v1-health-check/syscheck/delivery/http"
 	_syscheckRepo "github.com/DMS-SMS/v1-health-check/syscheck/repository/elasticsearch"
 	_syscheckUcase "github.com/DMS-SMS/v1-health-check/syscheck/usecase"
 
 	// import service check domain package
 	_srvcheckConfig "github.com/DMS-SMS/v1-health-check/srvcheck/config"
 	_srvcheckChanDelivery "github.com/DMS-SMS/v1-health-check/srvcheck/delivery/channel"
+	_srvcheckHttpDelivery "github.com/DMS-SMS/v1-health-check/srvcheck/delivery/http"
 	_srvcheckRepo "github.com/DMS-SMS/v1-health-check/srvcheck/repository/elasticsearch"
 	_srvcheckUcase "github.com/DMS-SMS/v1-health-check/srvcheck/usecase"
 )
@@ -60,10 +63,6 @@ func init() {
 }
 
 func main() {
-	// profile 작업 완료
-	// ping 다른 방식으로 때리기
-	// API 노출
-
 	// add elasticsearch API connection
 	esCli, err := es.NewClient(es.Config{
 		Addresses: []string{config.App.ESAddress()},
@@ -154,6 +153,14 @@ func main() {
 	_srvcheckChanDelivery.NewElasticsearchCheckHandler(time.Tick(_srvcheckConfig.App.ESCheckDeliveryPingCycle()), seu)
 	_srvcheckChanDelivery.NewSwarmpitCheckHandler(time.Tick(_srvcheckConfig.App.SwarmpitCheckDeliveryPingCycle()), ssu)
 	_srvcheckChanDelivery.NewConsulCheckHandler(time.Tick(_srvcheckConfig.App.ConsulCheckDeliveryPingCycle()), scsu)
+
+	// expose usecase method to HTTP API
+	r := gin.Default()
+	_syscheckHttpDelivery.NewSyscheckHandler(r, sdu, scu, smu)
+	_srvcheckHttpDelivery.NewSrvcheckHandler(r, scsu, seu, ssu)
+
+	gin.SetMode(gin.ReleaseMode)
+	go func() { _ = r.Run(":8888") }()
 
 	// handle signal to graceful shutdown
 	sigs := make(chan os.Signal, 1)
