@@ -21,7 +21,7 @@ func (da *dockerAgent) GetContainerWithServiceName(srv string) (interface {
 	var (
 		ctx = context.Background()
 	)
-	
+
 	containers, err := da.dkrCli.ContainerList(ctx, types.ContainerListOptions{})
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to get container list from docker")
@@ -54,7 +54,7 @@ func (da *dockerAgent) GetContainerWithServiceName(srv string) (interface {
 			memoryUsage: size,
 		}, nil
 	}
-	
+
 	return nil, errors.New("container with that service name does't exist")
 }
 

@@ -60,10 +60,10 @@ func (mc *MemoryCheckHistory) DottedMapWithPrefix(prefix string) (m map[string]i
 	}
 
 	// setting public field value in dotted map
-	m[prefix + "total_usage_memory"] = mc.TotalUsageMemory.String()
-	m[prefix + "docker_usage_memory"] = mc.DockerUsageMemory.String()
-	m[prefix + "temporary_free_memory"] = mc.TemporaryFreeMemory.String()
-	m[prefix + "most_memory_consume_container"] = mc.MostMemoryConsumeContainer
+	m[prefix+"total_usage_memory"] = mc.TotalUsageMemory.String()
+	m[prefix+"docker_usage_memory"] = mc.DockerUsageMemory.String()
+	m[prefix+"temporary_free_memory"] = mc.TemporaryFreeMemory.String()
+	m[prefix+"most_memory_consume_container"] = mc.MostMemoryConsumeContainer
 
 	return
 }

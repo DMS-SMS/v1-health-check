@@ -58,12 +58,12 @@ func NewESConsulCheckHistoryRepository(
 	return repo
 }
 
-// Implement Migrate method of ConsulCheckHistoryRepository interface
+// Migrate implement Migrate method of domain.ConsulCheckHistoryRepository
 func (ecr *esConsulCheckHistoryRepository) Migrate() error {
 	return ecr.esMigrator.Migrate(ecr.myCfg, ecr.esCli, ecr.reqBodyWriter)
 }
 
-// Implement Store method of ConsulCheckHistoryRepository interface
+// Store implement Store method of domain.ConsulCheckHistoryRepository
 func (ecr *esConsulCheckHistoryRepository) Store(history *domain.ConsulCheckHistory) (b []byte, err error) {
 	body, _ := json.Marshal(history.DottedMapWithPrefix(""))
 	if _, err = ecr.reqBodyWriter.Write(body); err != nil {
@@ -78,9 +78,9 @@ func (ecr *esConsulCheckHistoryRepository) Store(history *domain.ConsulCheckHist
 	}
 
 	resp, err := (esapi.IndexRequest{
-		Index:        ecr.myCfg.IndexName(),
-		Body:         bytes.NewReader(buf.Bytes()),
-		Timeout:      time.Second * 5,
+		Index:   ecr.myCfg.IndexName(),
+		Body:    bytes.NewReader(buf.Bytes()),
+		Timeout: time.Second * 5,
 	}).Do(context.Background(), ecr.esCli)
 
 	if err != nil {

@@ -37,7 +37,7 @@ func (sa *sysAgent) GetRemainDiskCapacity() (size bytesize.ByteSize, err error) 
 // PruneDockerSystem prune docker system(build cache, containers, images, networks) and return reclaimed space size
 func (sa *sysAgent) PruneDockerSystem() (reclaimed bytesize.ByteSize, err error) {
 	var (
-		ctx = context.Background()
+		ctx  = context.Background()
 		args = filters.Args{}
 	)
 

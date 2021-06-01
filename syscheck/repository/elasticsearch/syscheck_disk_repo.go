@@ -74,9 +74,9 @@ func (edr *esDiskCheckHistoryRepository) Store(history *domain.DiskCheckHistory)
 	}
 
 	resp, err := (esapi.IndexRequest{
-		Index:        edr.myCfg.IndexName(),
-		Body:         bytes.NewReader(buf.Bytes()),
-		Timeout:      time.Second * 5,
+		Index:   edr.myCfg.IndexName(),
+		Body:    bytes.NewReader(buf.Bytes()),
+		Timeout: time.Second * 5,
 	}).Do(context.Background(), edr.esCli)
 
 	if err != nil {

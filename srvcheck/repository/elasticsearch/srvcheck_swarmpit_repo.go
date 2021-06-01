@@ -78,9 +78,9 @@ func (esr *esSwarmpitCheckHistoryRepository) Store(history *domain.SwarmpitCheck
 	}
 
 	resp, err := (esapi.IndexRequest{
-		Index:        esr.myCfg.IndexName(),
-		Body:         bytes.NewReader(buf.Bytes()),
-		Timeout:      time.Second * 5,
+		Index:   esr.myCfg.IndexName(),
+		Body:    bytes.NewReader(buf.Bytes()),
+		Timeout: time.Second * 5,
 	}).Do(context.Background(), esr.esCli)
 
 	if err != nil {

@@ -17,6 +17,7 @@ import (
 
 // elasticsearchCheckStatus is type to int constant represent current elasticsearch check process status
 type elasticsearchCheckStatus int
+
 const (
 	elasticsearchStatusHealthy    elasticsearchCheckStatus = iota // represent elasticsearch check status is healthy
 	elasticsearchStatusRecovering                                 // represent it's recovering elasticsearch status now

@@ -78,9 +78,9 @@ func (eer *esElasticsearchCheckHistoryRepository) Store(history *domain.Elastics
 	}
 
 	resp, err := (esapi.IndexRequest{
-		Index:        eer.myCfg.IndexName(),
-		Body:         bytes.NewReader(buf.Bytes()),
-		Timeout:      time.Second * 5,
+		Index:   eer.myCfg.IndexName(),
+		Body:    bytes.NewReader(buf.Bytes()),
+		Timeout: time.Second * 5,
 	}).Do(context.Background(), eer.esCli)
 
 	if err != nil {

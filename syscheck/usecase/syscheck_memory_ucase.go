@@ -18,6 +18,7 @@ import (
 
 // memoryCheckStatus is type to int constant represent current memory check process status
 type memoryCheckStatus int
+
 const (
 	memoryStatusHealthy    memoryCheckStatus = iota // represent memory check status is healthy
 	memoryStatusWarning                             // represent memory check status is warning now

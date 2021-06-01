@@ -17,6 +17,7 @@ import (
 
 // cpuCheckStatus is type to int constant represent current cpu check process status
 type cpuCheckStatus int
+
 const (
 	cpuStatusHealthy    cpuCheckStatus = iota // represent cpu check status is healthy
 	cpuStatusWarning                          // represent cpu check status is warning now

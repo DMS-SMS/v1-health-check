@@ -40,7 +40,7 @@ type reqBodyWriter interface {
 }
 
 // esRepositoryMigrator is struct that Migrate es repository using parameter variable
-type esRepositoryMigrator struct {}
+type esRepositoryMigrator struct{}
 
 // Migrate method, if index doesn't exist, create index with name and shard number in esRepositoryComponentConfig
 func (erm esRepositoryMigrator) Migrate(cfg esRepositoryComponentConfig, cli *elasticsearch.Client, w reqBodyWriter) error {

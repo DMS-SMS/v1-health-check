@@ -29,7 +29,7 @@ func (sa *sysAgent) GetTotalSystemCPUUsage() (usage float64, err error) {
 	}
 
 	total := float64(after.Total - before.Total)
-	percent := float64(after.User-before.User + after.System-before.System) / total * 100
+	percent := float64(after.User-before.User+after.System-before.System) / total * 100
 	usage = float64(runtime.NumCPU()) / 100 * percent
 	return
 }

@@ -74,9 +74,9 @@ func (emr *esMemoryCheckHistoryRepository) Store(history *domain.MemoryCheckHist
 	}
 
 	resp, err := (esapi.IndexRequest{
-		Index:        emr.myCfg.IndexName(),
-		Body:         bytes.NewReader(buf.Bytes()),
-		Timeout:      time.Second * 5,
+		Index:   emr.myCfg.IndexName(),
+		Body:    bytes.NewReader(buf.Bytes()),
+		Timeout: time.Second * 5,
 	}).Do(context.Background(), emr.esCli)
 
 	if err != nil {

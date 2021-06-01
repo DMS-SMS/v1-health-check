@@ -15,10 +15,10 @@ import (
 
 // GetClusterHealth return interface have various get method about cluster health inform
 func (ea *elasticsearchAgent) GetClusterHealth() (interface {
-	ActivePrimaryShards() int                       // get active primary shards number in cluster health result
-	ActiveShards() int                              // get active shards number in cluster health result
-	UnassignedShards() int                          // get unassigned shards number in cluster health result
-	ActiveShardsPercent() float64                   // get active shards percent in cluster health result
+	ActivePrimaryShards() int     // get active primary shards number in cluster health result
+	ActiveShards() int            // get active shards number in cluster health result
+	UnassignedShards() int        // get unassigned shards number in cluster health result
+	ActiveShardsPercent() float64 // get active shards percent in cluster health result
 }, error) {
 	var (
 		ctx = context.Background()

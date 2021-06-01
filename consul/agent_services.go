@@ -48,12 +48,12 @@ type srvIter struct {
 }
 
 // HasNext method return if srvIter has next element
-func(si *srvIter) HasNext() bool {
+func (si *srvIter) HasNext() bool {
 	return si.x < len(si.srv)
 }
 
 // Next method return next service id, address
-func(si *srvIter) Next() (id, addr string) {
+func (si *srvIter) Next() (id, addr string) {
 	id = si.srv[si.x].id
 	addr = si.srv[si.x].addr
 	si.x++

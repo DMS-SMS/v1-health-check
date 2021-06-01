@@ -39,7 +39,7 @@ var requiredContainers = []string{
 }
 
 // systemCheckUsecaseComponent contains required component to syscheck usecase implementation as field
-type systemCheckUsecaseComponentConfig interface {}
+type systemCheckUsecaseComponentConfig interface{}
 
 // slackChatAgency is interface that agent the slack api about chatting
 // you can see implementation in slack package
@@ -55,16 +55,20 @@ type dockerAgency interface {
 }
 
 // bytesizeComparator is struct type having bytesize.ByteSize type field which is used for compare with another bytesize.ByteSize
-type bytesizeComparator struct { V bytesize.ByteSize }
+type bytesizeComparator struct{ V bytesize.ByteSize }
 
 // isMoreThan return boolean if size of instance which call this method is more than parameter's size
-func (comparator bytesizeComparator) isMoreThan(target bytesize.ByteSize) bool { return comparator.V > target }
+func (comparator bytesizeComparator) isMoreThan(target bytesize.ByteSize) bool {
+	return comparator.V > target
+}
 
 // isMoreThan return boolean if size of instance which call this method is less than parameter's size
-func (comparator bytesizeComparator) isLessThan(target bytesize.ByteSize) bool { return comparator.V < target }
+func (comparator bytesizeComparator) isLessThan(target bytesize.ByteSize) bool {
+	return comparator.V < target
+}
 
 // float64Comparator is struct type having float64 type field which is used for compare with another float
-type float64Comparator struct { V float64 }
+type float64Comparator struct{ V float64 }
 
 // isMoreThan return boolean if value of instance which call this method is more than parameter's size
 func (comparator float64Comparator) isMoreThan(target float64) bool { return comparator.V > target }

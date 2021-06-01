@@ -8,7 +8,7 @@
 package grpc
 
 // gRPCAgent is struct that agent various command about gRPC including ping for connection check, etc ...
-type gRPCAgent struct {}
+type gRPCAgent struct{}
 
 // NewGRPCAgent return new instance of gRPCAgent pointer type initialized with parameter
 func NewGRPCAgent() *gRPCAgent {

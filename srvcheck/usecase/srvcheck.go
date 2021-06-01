@@ -27,7 +27,7 @@ const (
 )
 
 // serviceCheckUsecaseComponentConfig contains required component to service usecase implementation as field
-type serviceCheckUsecaseComponentConfig interface {}
+type serviceCheckUsecaseComponentConfig interface{}
 
 // slackChatAgency is interface that agent the slack api about chatting
 // you can see implementation in slack package
@@ -49,7 +49,7 @@ type dockerAgency interface {
 }
 
 // intComparator is struct type having int type field which is used for compare with another int
-type intComparator struct { V int }
+type intComparator struct{ V int }
 
 // isMoreThan return boolean if value of instance which call this method is more than parameter's size
 func (comparator intComparator) isMoreThan(target int) bool { return comparator.V > target }
@@ -58,10 +58,14 @@ func (comparator intComparator) isMoreThan(target int) bool { return comparator.
 func (comparator intComparator) isLessThan(target int) bool { return comparator.V < target }
 
 // bytesizeComparator is struct type having bytesize.ByteSize type field which is used for compare with another bytesize.ByteSize
-type bytesizeComparator struct { V bytesize.ByteSize }
+type bytesizeComparator struct{ V bytesize.ByteSize }
 
 // isMoreThan return boolean if size of instance which call this method is more than parameter's size
-func (comparator bytesizeComparator) isMoreThan(target bytesize.ByteSize) bool { return comparator.V > target }
+func (comparator bytesizeComparator) isMoreThan(target bytesize.ByteSize) bool {
+	return comparator.V > target
+}
 
 // isMoreThan return boolean if size of instance which call this method is less than parameter's size
-func (comparator bytesizeComparator) isLessThan(target bytesize.ByteSize) bool { return comparator.V < target }
+func (comparator bytesizeComparator) isLessThan(target bytesize.ByteSize) bool {
+	return comparator.V < target
+}

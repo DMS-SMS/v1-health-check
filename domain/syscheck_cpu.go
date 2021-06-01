@@ -59,10 +59,10 @@ func (ch *CPUCheckHistory) DottedMapWithPrefix(prefix string) (m map[string]inte
 	}
 
 	// setting public field value in dotted map
-	m[prefix + "total_usage_core"] = ch.TotalUsageCore
-	m[prefix + "docker_usage_core"] = ch.DockerUsageCore
-	m[prefix + "temporary_free_core"] = ch.TemporaryFreeCore
-	m[prefix + "most_cpu_consume_container"] = ch.MostCPUConsumeContainer
+	m[prefix+"total_usage_core"] = ch.TotalUsageCore
+	m[prefix+"docker_usage_core"] = ch.DockerUsageCore
+	m[prefix+"temporary_free_core"] = ch.TemporaryFreeCore
+	m[prefix+"most_cpu_consume_container"] = ch.MostCPUConsumeContainer
 
 	return
 }

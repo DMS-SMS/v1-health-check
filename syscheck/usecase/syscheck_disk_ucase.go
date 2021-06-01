@@ -17,6 +17,7 @@ import (
 
 // diskCheckStatus is type to int constant represent current disk check process status
 type diskCheckStatus int
+
 const (
 	diskStatusHealthy    diskCheckStatus = iota // represent disk check status is healthy
 	diskStatusRecovering                        // represent it's recovering disk status now

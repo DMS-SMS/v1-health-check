@@ -19,6 +19,7 @@ import (
 
 // consulCheckStatus is type to int constant represent current consul check process status
 type consulCheckStatus int
+
 const (
 	consulStatusHealthy    consulCheckStatus = iota // represent consul check status is healthy
 	consulStatusRecovering                          // represent it's recovering consul status now
@@ -225,8 +226,8 @@ func (ccu *consulCheckUsecase) checkConsul(ctx context.Context) (history *domain
 	// check services that don't have any instances registered in consul
 	var unableSrvs []string
 	for _, srv := range ccu.myCfg.CheckTargetServices() {
-		if len(srvM[ccu.myCfg.ConsulServiceNameSpace() + srv]) == 0 {
-			unableSrvs = append(unableSrvs, ccu.myCfg.DockerServiceNameSpace() + srv)
+		if len(srvM[ccu.myCfg.ConsulServiceNameSpace()+srv]) == 0 {
+			unableSrvs = append(unableSrvs, ccu.myCfg.DockerServiceNameSpace()+srv)
 		}
 	}
 

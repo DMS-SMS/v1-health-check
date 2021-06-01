@@ -54,8 +54,8 @@ func (dh *DiskCheckHistory) DottedMapWithPrefix(prefix string) (m map[string]int
 	}
 
 	// setting public field value in dotted map
-	m[prefix + "remaining_capacity"] = dh.RemainingCap.String()
-	m[prefix + "reclaimed_capacity"] = dh.ReclaimedCap.String()
+	m[prefix+"remaining_capacity"] = dh.RemainingCap.String()
+	m[prefix+"reclaimed_capacity"] = dh.ReclaimedCap.String()
 
 	return
 }

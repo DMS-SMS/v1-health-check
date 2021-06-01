@@ -66,12 +66,12 @@ func (ch *ConsulCheckHistory) DottedMapWithPrefix(prefix string) (m map[string]i
 	}
 
 	// setting public field value in dotted map
-	m[prefix + "instances_per_service"] = ch.InstancesPerService
-	m[prefix + "if_instance_deregistered"] = ch.IfInstanceDeregistered
-	m[prefix + "deregistered_instances"] = strings.Join(ch.DeregisteredInstances, " | ")
-	m[prefix + "deregister_failed_instances"] = strings.Join(ch.DeregisterFailedInstances, " | ")
-	m[prefix + "if_container_restarted"] = ch.IfContainerRestarted
-	m[prefix + "restarted_containers"] = strings.Join(ch.RestartedContainers, " | ")
+	m[prefix+"instances_per_service"] = ch.InstancesPerService
+	m[prefix+"if_instance_deregistered"] = ch.IfInstanceDeregistered
+	m[prefix+"deregistered_instances"] = strings.Join(ch.DeregisteredInstances, " | ")
+	m[prefix+"deregister_failed_instances"] = strings.Join(ch.DeregisterFailedInstances, " | ")
+	m[prefix+"if_container_restarted"] = ch.IfContainerRestarted
+	m[prefix+"restarted_containers"] = strings.Join(ch.RestartedContainers, " | ")
 
 	return
 }

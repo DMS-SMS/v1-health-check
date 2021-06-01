@@ -289,6 +289,6 @@ func init() {
 }
 
 // function returns pointer variable generated from parameter
-func _string(s string) *string { return &s }
-func _int(i int) *int {return &i}
-func _float64(f float64) *float64 {return &f}
+func _string(s string) *string    { return &s }
+func _int(i int) *int             { return &i }
+func _float64(f float64) *float64 { return &f }

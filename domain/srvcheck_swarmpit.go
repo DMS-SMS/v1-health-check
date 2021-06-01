@@ -54,8 +54,8 @@ func (sh *SwarmpitCheckHistory) DottedMapWithPrefix(prefix string) (m map[string
 	}
 
 	// setting public field value in dotted map
-	m[prefix + "swarmpit_app_memory_usage"] = sh.SwarmpitAppMemoryUsage.String()
-	m[prefix + "if_swarmpit_app_restarted"] = sh.IfSwarmpitAppRestarted
+	m[prefix+"swarmpit_app_memory_usage"] = sh.SwarmpitAppMemoryUsage.String()
+	m[prefix+"if_swarmpit_app_restarted"] = sh.IfSwarmpitAppRestarted
 
 	return
 }
