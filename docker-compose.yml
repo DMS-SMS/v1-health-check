@@ -17,6 +17,10 @@ services:
       - CONFIG_FILE=${CONFIG_FILE}
       - SLACK_API_TOKEN=${SLACK_API_TOKEN}
       - SLACK_CHAT_CHANNEL=${SLACK_CHAT_CHANNEL}
+      - SMS_AWS_ID=${SMS_AWS_ID}
+      - SMS_AWS_KEY=${SMS_AWS_KEY}
+      - SMS_AWS_REGION=${SMS_AWS_REGION}
+      - SMS_AWS_BUCKET=${SMS_AWS_BUCKET}
     volumes:
       - ./config.yaml:/usr/share/health-check/config.yaml
       - /var/run/docker.sock:/var/run/docker.sock
