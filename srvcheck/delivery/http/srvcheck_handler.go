@@ -23,9 +23,9 @@ func NewSrvcheckHandler(r *gin.Engine, cu domain.ConsulCheckUseCase, eu domain.E
 		sUsecase: su,
 	}
 
-	r.POST("service-check/types/disk", h.CheckConsul)
-	r.POST("service-check/types/cpu", h.CheckElasticsearch)
-	r.POST("service-check/types/memory", h.CheckSwarmpit)
+	r.POST("service-check/types/consul", h.CheckConsul)
+	r.POST("service-check/types/elasticsearch", h.CheckElasticsearch)
+	r.POST("service-check/types/swarmpit", h.CheckSwarmpit)
 }
 
 // CheckConsul method deliver HTTP request to CheckConsul method of domain.ConsulCheckUseCase
