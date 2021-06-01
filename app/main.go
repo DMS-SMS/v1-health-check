@@ -6,6 +6,9 @@ package main
 import (
 	// import Go SDK package
 	"context"
+	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/credentials"
+	"github.com/aws/aws-sdk-go/aws/session"
 	"log"
 	"os"
 	"os/signal"
@@ -27,6 +30,7 @@ import (
 	"github.com/DMS-SMS/v1-health-check/elasticsearch"
 	"github.com/DMS-SMS/v1-health-check/grpc"
 	"github.com/DMS-SMS/v1-health-check/json"
+	"github.com/DMS-SMS/v1-health-check/profiler"
 	"github.com/DMS-SMS/v1-health-check/slack"
 	"github.com/DMS-SMS/v1-health-check/system"
 
@@ -56,6 +60,10 @@ func init() {
 }
 
 func main() {
+	// profile 작업 완료
+	// ping 다른 방식으로 때리기
+	// API 노출
+
 	// add elasticsearch API connection
 	esCli, err := es.NewClient(es.Config{
 		Addresses: []string{config.App.ESAddress()},
@@ -81,6 +89,30 @@ func main() {
 		log.Fatal(errors.Wrap(err, "failed to create consul client"))
 	}
 
+	// add aws session connection
+	awsSess, err := session.NewSession(&aws.Config{
+		Region:      aws.String(config.App.AWSRegion()),
+		Credentials: credentials.NewStaticCredentials(config.App.AWSAccountID(), config.App.AWSAccountKey(), ""),
+	})
+	if err != nil {
+		log.Fatal(errors.Wrap(err, "failed to create aws session"))
+	}
+
+	// define ctx having WaitGroup in value & which is type of cancelCtx
+	wg := &sync.WaitGroup{}
+	ctx, cancel := context.WithCancel(context.WithValue(context.Background(), "WaitGroup", wg))
+
+	// start profiling with goroutine until stop process
+	prof := profiler.New(awsSess, wg, config.App)
+	go func(profileFunc func()) {
+		for {
+			if ctx.Err() == context.Canceled {
+				break
+			}
+			profileFunc()
+		}
+	}(prof.StartProfiling)
+
 	// add docker, system, slack, elasticsearch agent
 	_dkr := docker.NewAgent(dkrCli)
 	_sys := system.NewAgent(dkrCli)
@@ -88,10 +120,6 @@ func main() {
 	_es := elasticsearch.NewAgent(esCli)
 	_csl := consul.NewAgent(cslCli)
 	_rpc := grpc.NewGRPCAgent()
-
-	// define ctx having WaitGroup in value & which is type of cancelCtx
-	wg := &sync.WaitGroup{}
-	ctx, cancel := context.WithCancel(context.WithValue(context.Background(), "WaitGroup", wg))
 
 	// about syscheck domain
 	// syscheck domain repository
@@ -133,9 +161,12 @@ func main() {
 	s := <-sigs
 	log.Printf("SIGNAL TO STOP PROCESS WAS NOTIFIED!, SIGNAL: %s", s)
 
-	log.Println("CANCEL DELIVERY CONTEXT & WAIT TO ALL HANDLING GROUP DONE!")
 	cancel()
-	wg.Wait()
+	log.Println("CANCEL DELIVERY CONTEXT & WAIT TO ALL HANDLING GROUP DONE!")
 
+	prof.StopProfiling(s)
+	log.Println("STOP PROFILING & SAVE PROFILE RESULT TO AWS S3!")
+
+	wg.Wait()
 	log.Println("ALL HANDLING GROUP WAS DONE! SUCCEED TO GRACEFUL SHUTDOWN.")
 }
