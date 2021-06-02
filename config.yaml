@@ -11,7 +11,7 @@ app:
 
 syscheck:
   diskcheck:
-    minCapacity: "2GB"
+    minCapacity: "4GB"
   cpucheck:
     cpuWarningUsage: 1.0
     cpuMaximumUsage: 1.5
