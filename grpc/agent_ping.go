@@ -12,6 +12,9 @@ import (
 
 // PingToCheckConn ping for connection check to gRPC node
 func (ga *gRPCAgent) PingToCheckConn(ctx context.Context, target string, opts ...grpc.DialOption) error {
-	_, err := grpc.DialContext(ctx, target, grpc.WithInsecure(), grpc.WithBlock())
+	conn, err := grpc.DialContext(ctx, target, grpc.WithInsecure(), grpc.WithBlock())
+	if conn != nil {
+		_ = conn.Close()
+	}
 	return errors.Wrapf(err, "failed to dial gRPC with context, target: %s", target)
 }
